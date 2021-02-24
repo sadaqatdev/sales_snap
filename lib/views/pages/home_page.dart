@@ -23,9 +23,6 @@ class HomePage extends StatelessWidget {
           height: Get.height,
           padding: EdgeInsets.only(left: 12, right: 12, top: 12),
           child: GetBuilder<HomeController>(builder: (controller) {
-            if (controller.enable) {
-              return getRecentSave();
-            }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -61,7 +58,7 @@ class HomePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(22)),
                       height: 40,
                       color: Colors.green,
-                      child: Text('Fetch'),
+                      child: Text('Go'),
                       onPressed: () async {
                         if (formKey.currentState.validate()) {
                           controller.fetch();
@@ -73,75 +70,9 @@ class HomePage extends StatelessWidget {
                 SizedBox(
                   height: 12,
                 ),
-                // Obx(() {
-                //   return Image.network(controller.imageUrl.value);
-                // }),
-                SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      controller.price ?? '',
-                      style: TextStyle(
-                        fontSize: 24,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-
-                Text(controller.title ?? '', style: lable),
-
-                SizedBox(
-                  height: 12,
-                ),
-                // Obx(() {
-                //   return Text(
-                //     controller.desc.value,
-                //     style: bodyStyle,
-                //   );
-                // }),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          side:
-                              BorderSide(color: Theme.of(context).primaryColor),
-                          borderRadius: BorderRadius.circular(22)),
-                      color: Colors.green,
-                      child: Text('Visit Site'),
-                      onPressed: () async {
-                        _routes.to(context, ItemDetailsPage());
-                      },
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          side:
-                              BorderSide(color: Theme.of(context).primaryColor),
-                          borderRadius: BorderRadius.circular(22)),
-                      color: Colors.green,
-                      child: Text('Save'),
-                      onPressed: () async {
-                        // SystemAlertWindow.closeSystemWindow();
-                        //String path = await NativeScreenshot.takeScreenshot();
-                        //print(path.toString());
-                        print('-------save---------');
-                        print(controller.saveproduc());
-                      },
-                    )
-                  ],
-                ),
+                controller.enable
+                    ? getRecentSave(bodyStyle)
+                    : productWidget(controller, lable, context),
                 SizedBox(
                   height: 12,
                 ),
@@ -153,25 +84,95 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget getRecentSave() {
+  Column productWidget(
+      HomeController controller, TextStyle lable, BuildContext context) {
     return Column(
       children: [
-        Expanded(
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.8,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 5),
-            itemBuilder: (BuildContext context, int index) {
-              return Center(
-                child: Text('asdasdad'),
-              );
-            },
-            itemCount: 10,
-          ),
-        )
+        Image.network(img),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              controller.price ?? '',
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 16,
+        ),
+        Text(controller.title ?? '', style: lable),
+        SizedBox(
+          height: 12,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            MaterialButton(
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Theme.of(context).primaryColor),
+                  borderRadius: BorderRadius.circular(22)),
+              color: Colors.green,
+              child: Text('Visit Site'),
+              onPressed: () async {
+                _routes.to(context, ItemDetailsPage());
+              },
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            MaterialButton(
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Theme.of(context).primaryColor),
+                  borderRadius: BorderRadius.circular(22)),
+              color: Colors.green,
+              child: Text('Save'),
+              onPressed: () async {
+                // SystemAlertWindow.closeSystemWindow();
+                //String path = await NativeScreenshot.takeScreenshot();
+                //print(path.toString());
+                print('-------save---------');
+                controller.saveproduc();
+              },
+            )
+          ],
+        ),
       ],
+    );
+  }
+
+  Widget getRecentSave(bodyStyle) {
+    return Expanded(
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.81,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 5),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.network(img),
+                SizedBox(
+                  height: 6,
+                ),
+                Text(
+                  'Lulolamenon',
+                  style: bodyStyle,
+                )
+              ],
+            ),
+          );
+        },
+        itemCount: 10,
+      ),
     );
   }
 }

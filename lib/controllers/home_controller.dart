@@ -9,6 +9,10 @@ import 'package:html/dom.dart' as dom;
 import 'package:http/http.dart' as http;
 import 'package:sales_snap/repositories/database_helper.dart';
 
+var img =
+    'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351';
+String url =
+    'https://shop.lululemon.com/p/bags/All-Your-Small-Things-Pouch-Mini/_/prod8900741?color=45739&sz=ONESIZE';
 void backgroundFetchHeadlessTask(HeadlessTask task) async {
   // var taskId = task.taskId;
   print('---------------------');
@@ -67,13 +71,8 @@ class HomeController extends GetxController {
   String price = '';
 
   bool enable = true;
-  int _status = 0;
 
   List list = List<WebDetails>();
-
-  var img =
-      'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351';
-  List<String> _events = [];
 
   final intRegex = RegExp(r'\s+(\d+)\s+', multiLine: false);
   final doubleRegex = RegExp(r'^[a-zA-Z0-9]+$');
@@ -105,65 +104,41 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetch() async {
-    String url =
-        'https://shop.lululemon.com/p/bags/All-Your-Small-Things-Pouch-Mini/_/prod8900741?color=45739&sz=ONESIZE';
+    String urlNew = textEditingController.text;
     final responce = await http.Client().get(Uri.parse(url));
 
     if (responce.statusCode == 200) {
-      print('-----------------');
+      print('---------200--------');
       dom.Document document = parse(responce.body);
-      // document.attributes['src'];
 
       int index = url.indexOf('.com');
 
-      print(index);
       list.forEach((item) {
         if (url.substring(8, index) == item.webUrl) {
-          // print(document
-          //     .querySelector('product-images__image')
-          //     .attributes['srcset']);
-          // print(document
-          //     .querySelector(
-          //         '.pdp-title div[itemprop="name"]')
-          //     .text);
-          print('------img-----------');
-          // print(document
-          //     .querySelector('img[data-test="product-image"]')
-          //     .attributes['src']);
-          // print(document
-          //     .querySelector('product-images__image'));
           print(document.getElementsByClassName('price-1SDQy price')[0].text);
           String title =
               document.querySelector('.pdp-title div[itemprop="name"]').text;
           String price =
               document.getElementsByClassName('price-1SDQy price')[0].text;
+
           print('-------------------');
+
           print(price.replaceAll(RegExp('[^0-9]'), ''));
+
           updatePage(price: price, title: title, desc: 'desc');
+
           int p = int.parse(price.replaceAll(RegExp('[^0-9]'), ''));
+
           savedProduct = WebDetails(
-              title: title,
-              price: price,
-              desc: descR,
-              imgUrl: img,
-              priceNumber: p.toString(),
-              webUrl: url.substring(8, index));
+            title: title,
+            price: price,
+            desc: descR,
+            imgUrl: img,
+            priceNumber: p.toString(),
+            webUrl: url.substring(8, index),
+          );
         }
       });
-      // print(document
-      //     .querySelector('.pdp-title div[itemprop="name"]')
-      //     .text);
-      // print(document
-      //     .getElementsByClassName('price-1SDQy price')[0]
-      //     .text);
-      // controller.updatePage( pictureContainer-36lBu
-      //     desc: , product-name d-none d-lg-block
-      //     title: document.getElementsByClassName(
-      //         'product-name d-none d-lg-block'),
-      //     // imageurl: document
-      //     //     .getElementsByClassName('zoom-viewer-link'),
-      //     price:
-      //         document.getElementsByClassName('color-group'));
     }
   }
 
@@ -200,6 +175,7 @@ class HomeController extends GetxController {
     this.desc = desc;
     this.price = price;
     savedProduct = savedProduct;
+    enable = false;
     update();
   }
 
