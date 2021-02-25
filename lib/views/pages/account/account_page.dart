@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/account_controller.dart';
+import 'package:sales_snap/views/pages/account/update_profile.dart';
+
 import 'package:sales_snap/views/widgets/appBar.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
 
@@ -174,7 +176,9 @@ class AccountPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24),
                             side: BorderSide(color: Colors.blueAccent)),
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(() => UpdateProfile());
+                        },
                         child: Text(
                           'Update',
                         ),

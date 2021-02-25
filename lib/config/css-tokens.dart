@@ -21,6 +21,7 @@ const ar = {
     '[class*="current-price"]',
     '[class*="current-price"]',
     '[class*="ty-price"]',
+    '[class*="markdown-prices"]',
     '[class*=price-box price-final_price]',
     '//*[starts-with(@*, "product-info-price")]',
     '//*[starts-with(@*, "product-page-price" )]',
@@ -53,6 +54,7 @@ const ar = {
     '//*[starts-with(@*, "loaded--img")]',
     '//*[starts-with(@*, "--img")]',
     '[data-test="component-media-gallery_activeSlide-0"]',
+    '[property="og:image"]',
   ],
   "title": [
     '[property="og:title"]',
@@ -84,6 +86,7 @@ const ar = {
     '[class*=productView-title]',
     '[class*=product-block-title]',
     '[class*=product-title]',
+    '[class*=product-name]',
   ],
 };
 

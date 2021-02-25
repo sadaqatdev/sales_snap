@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/pages/items_details_page.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class HomePage extends StatelessWidget {
   final Routes _routes = Routes();
 
-  final HomeController controller = Get.put(HomeController());
+  final HomeController homecontroller = Get.put(HomeController());
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -20,9 +22,9 @@ class HomePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           width: Get.width,
-          height: Get.height,
+          height: 1500,
           padding: EdgeInsets.only(left: 12, right: 12, top: 12),
-          child: GetBuilder<HomeController>(builder: (controller) {
+          child: GetBuilder<HomeController>(builder: (homecontroller) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -31,10 +33,11 @@ class HomePage extends StatelessWidget {
                     Form(
                       key: formKey,
                       child: Expanded(
+                        flex: 5,
                         child: Container(
                           height: 44,
                           child: TextFormField(
-                            controller: controller.textEditingController,
+                            controller: homecontroller.textEditingController,
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Url is Empty';
@@ -61,7 +64,7 @@ class HomePage extends StatelessWidget {
                       child: Text('Go'),
                       onPressed: () async {
                         if (formKey.currentState.validate()) {
-                          controller.fetch();
+                          homecontroller.fetch();
                         }
                       },
                     )
@@ -70,9 +73,35 @@ class HomePage extends StatelessWidget {
                 SizedBox(
                   height: 12,
                 ),
-                controller.enable
-                    ? getRecentSave(bodyStyle)
-                    : productWidget(controller, lable, context),
+                Expanded(
+                  child: WebView(
+                    gestureNavigationEnabled: true,
+                    javascriptMode: JavascriptMode.unrestricted,
+                    onWebViewCreated: (webController) async {
+                      homecontroller.completerController
+                          .complete(webController);
+                      String p = await webController.evaluateJavascript('''
+
+                     window.onload = function() {
+                              var data = document.querySelector('')
+                              
+                            }
+                    
+                      
+                      ''').then((value) {
+                        print(value);
+                        return value;
+                      });
+
+                      print('==============pppp=========');
+
+                      print(p);
+                    },
+                    javascriptChannels: Set.from([]),
+                    initialUrl:
+                        'https://shop.lululemon.com/p/mens-jackets-and-outerwear/Expeditionist-Anorak/_/prod10370103?color=0001',
+                  ),
+                ),
                 SizedBox(
                   height: 12,
                 ),
@@ -85,7 +114,7 @@ class HomePage extends StatelessWidget {
   }
 
   Column productWidget(
-      HomeController controller, TextStyle lable, BuildContext context) {
+      HomeController homecontroller, TextStyle lable, BuildContext context) {
     return Column(
       children: [
         Image.network(img),
@@ -93,7 +122,7 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              controller.price ?? '',
+              homecontroller.price ?? '',
               style: TextStyle(
                 fontSize: 24,
               ),
@@ -106,7 +135,7 @@ class HomePage extends StatelessWidget {
         SizedBox(
           height: 16,
         ),
-        Text(controller.title ?? '', style: lable),
+        Text(homecontroller.title ?? '', style: lable),
         SizedBox(
           height: 12,
         ),
@@ -137,7 +166,7 @@ class HomePage extends StatelessWidget {
                 //String path = await NativeScreenshot.takeScreenshot();
                 //print(path.toString());
                 print('-------save---------');
-                controller.saveproduc();
+                homecontroller.saveproduc();
               },
             )
           ],

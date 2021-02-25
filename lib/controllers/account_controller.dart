@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/models/m_user.dart';
@@ -9,6 +10,7 @@ class AccountCntroller extends GetxController {
   FireStoreMethod _method = FireStoreMethod();
   bool pushNotification;
   final pref = GetStorage();
+
   @override
   void onInit() {
     String val = pref.read('notificationEnable');

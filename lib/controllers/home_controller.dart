@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,11 +11,12 @@ import 'package:sales_snap/models/web_details.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:http/http.dart' as http;
 import 'package:sales_snap/repositories/database_helper.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 var img =
     'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351';
 String url =
-    'https://shop.lululemon.com/p/bags/All-Your-Small-Things-Pouch-Mini/_/prod8900741?color=45739&sz=ONESIZE';
+    'https://www.lululemon.co.uk/en-gb/p/fast-and-free-short-sleeve/prod9450010.html?dwvar_prod9450010_color=42306';
 void backgroundFetchHeadlessTask(HeadlessTask task) async {
   // var taskId = task.taskId;
   print('---------------------');
@@ -87,13 +91,23 @@ class HomeController extends GetxController {
 
   // FireStoreMethod _fireStoreMethod = FireStoreMethod();
 
+  final Completer<WebViewController> completerController =
+      Completer<WebViewController>();
+
   @override
   void onInit() {
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+
     initNotifications();
+
     initPlatformState();
+
     BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+
     initList();
+
     textEditingController = TextEditingController();
+
     super.onInit();
   }
 
@@ -108,38 +122,54 @@ class HomeController extends GetxController {
     final responce = await http.Client().get(Uri.parse(url));
 
     if (responce.statusCode == 200) {
-      print('---------200--------');
-      dom.Document document = parse(responce.body);
+      try {
+        print('---------200--------');
 
-      int index = url.indexOf('.com');
+        dom.Document document = parse(responce.body);
 
-      list.forEach((item) {
-        if (url.substring(8, index) == item.webUrl) {
-          print(document.getElementsByClassName('price-1SDQy price')[0].text);
-          String title =
-              document.querySelector('.pdp-title div[itemprop="name"]').text;
-          String price =
-              document.getElementsByClassName('price-1SDQy price')[0].text;
-
-          print('-------------------');
-
-          print(price.replaceAll(RegExp('[^0-9]'), ''));
-
-          updatePage(price: price, title: title, desc: 'desc');
-
-          int p = int.parse(price.replaceAll(RegExp('[^0-9]'), ''));
-
-          savedProduct = WebDetails(
-            title: title,
-            price: price,
-            desc: descR,
-            imgUrl: img,
-            priceNumber: p.toString(),
-            webUrl: url.substring(8, index),
-          );
-        }
-      });
+        print(document);
+        enable = false;
+        update();
+        // print(document.querySelectorAll('[class*="-price]'));
+      } catch (e) {
+        print(e.toString());
+      }
+    } else {
+      Get.showSnackbar(GetBar(
+        message: responce.statusCode.toString(),
+      ));
     }
+  }
+
+  void extract(dom.Document document) {
+    int index = url.indexOf('.com');
+
+    list.forEach((item) {
+      if (url.substring(8, index) == item.webUrl) {
+        print(document.getElementsByClassName('price-1SDQy price')[0].text);
+        String title =
+            document.querySelector('.pdp-title div[itemprop="name"]').text;
+        String price =
+            document.getElementsByClassName('price-1SDQy price')[0].text;
+
+        print('-------------------');
+
+        print(price.replaceAll(RegExp('[^0-9]'), ''));
+
+        updatePage(price: price, title: title, desc: 'desc');
+
+        int p = int.parse(price.replaceAll(RegExp('[^0-9]'), ''));
+
+        savedProduct = WebDetails(
+          title: title,
+          price: price,
+          desc: descR,
+          imgUrl: img,
+          priceNumber: p.toString(),
+          webUrl: url.substring(8, index),
+        );
+      }
+    });
   }
 
   saveproduc() {
