@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
@@ -10,8 +13,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 class HomePage extends StatelessWidget {
   final Routes _routes = Routes();
 
-  final HomeController homecontroller = Get.put(HomeController());
+  WebViewController webViewcontroller;
   final formKey = GlobalKey<FormState>();
+  final c = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -73,31 +77,39 @@ class HomePage extends StatelessWidget {
                 SizedBox(
                   height: 12,
                 ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    print(" 🚀 debuging at line 106");
+                    webViewcontroller.evaluateJavascript(
+                        '''
+                        window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);
+                        window.SNAP.postMessage(document.querySelectorAll(".pdp img")[0].getAttribute('srcset').split('w,')[0]); 
+                        ''');
+                  },
+                  icon: Text("🚀 "),
+                  label: Text("Load"),
+                ),
                 Expanded(
                   child: WebView(
                     gestureNavigationEnabled: true,
                     javascriptMode: JavascriptMode.unrestricted,
-                    onWebViewCreated: (webController) async {
-                      homecontroller.completerController
-                          .complete(webController);
-                      String p = await webController.evaluateJavascript('''
-
-                     window.onload = function() {
-                              var data = document.querySelector('')
-                              
-                            }
-                    
-                      
-                      ''').then((value) {
-                        print(value);
-                        return value;
-                      });
-
-                      print('==============pppp=========');
-
-                      print(p);
+                    javascriptChannels: [
+                      JavascriptChannel(
+                          name: 'SNAP',
+                          onMessageReceived: (message) {
+                           
+                            print(message.message);
+                            
+                          })
+                    ].toSet(),
+                    onPageFinished: (url) {
+                      print(" 🚀 debuging at line 106");
+                      webViewcontroller.evaluateJavascript(
+                          'window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);');
                     },
-                    javascriptChannels: Set.from([]),
+                    onWebViewCreated: (WebViewController _webViewController) {
+                      webViewcontroller = _webViewController;
+                    },
                     initialUrl:
                         'https://shop.lululemon.com/p/mens-jackets-and-outerwear/Expeditionist-Anorak/_/prod10370103?color=0001',
                   ),

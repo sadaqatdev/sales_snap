@@ -91,16 +91,13 @@ class HomeController extends GetxController {
 
   // FireStoreMethod _fireStoreMethod = FireStoreMethod();
 
-  final Completer<WebViewController> completerController =
-      Completer<WebViewController>();
 
   @override
   void onInit() {
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
 
-    initNotifications();
+    // initNotifications();
 
-    initPlatformState();
+    // initPlatformState();
 
     BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 
