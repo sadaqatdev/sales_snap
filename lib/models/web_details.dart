@@ -6,7 +6,7 @@ class WebDetails {
   String title;
   String imgUrl;
   String desc;
-  String price;
+  String priceHtmlTag;
   String priceNumber;
 
   WebDetails({
@@ -14,7 +14,7 @@ class WebDetails {
     this.title,
     this.imgUrl,
     this.desc,
-    this.price,
+    this.priceHtmlTag,
     this.priceNumber,
   });
 
@@ -23,7 +23,7 @@ class WebDetails {
     String title,
     String imgUrl,
     String desc,
-    String price,
+    String priceHtmlTag,
     String priceNumber,
   }) {
     return WebDetails(
@@ -31,7 +31,7 @@ class WebDetails {
       title: title ?? this.title,
       imgUrl: imgUrl ?? this.imgUrl,
       desc: desc ?? this.desc,
-      price: price ?? this.price,
+      priceHtmlTag: priceHtmlTag ?? this.priceHtmlTag,
       priceNumber: priceNumber ?? this.priceNumber,
     );
   }
@@ -42,7 +42,7 @@ class WebDetails {
       'title': title,
       'imgUrl': imgUrl,
       'desc': desc,
-      'price': price,
+      'priceHtmlTag': priceHtmlTag,
       'priceNumber': priceNumber,
     };
   }
@@ -55,7 +55,7 @@ class WebDetails {
       title: map['title'],
       imgUrl: map['imgUrl'],
       desc: map['desc'],
-      price: map['price'],
+      priceHtmlTag: map['priceHtmlTag'],
       priceNumber: map['priceNumber'],
     );
   }
@@ -67,7 +67,7 @@ class WebDetails {
 
   @override
   String toString() {
-    return 'WebDetails(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, price: $price, priceNumber: $priceNumber)';
+    return 'WebDetails(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber)';
   }
 
   @override
@@ -79,7 +79,7 @@ class WebDetails {
         o.title == title &&
         o.imgUrl == imgUrl &&
         o.desc == desc &&
-        o.price == price &&
+        o.priceHtmlTag == priceHtmlTag &&
         o.priceNumber == priceNumber;
   }
 
@@ -89,7 +89,7 @@ class WebDetails {
         title.hashCode ^
         imgUrl.hashCode ^
         desc.hashCode ^
-        price.hashCode ^
+        priceHtmlTag.hashCode ^
         priceNumber.hashCode;
   }
 }

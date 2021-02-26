@@ -1,22 +1,22 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:html/dom.dart';
+
 import 'package:html/parser.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/web_details.dart';
-import 'package:html/dom.dart' as dom;
 import 'package:http/http.dart' as http;
 import 'package:sales_snap/repositories/database_helper.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:sales_snap/repositories/firestore_methods.dart';
 
 var img =
     'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351';
 String url =
-    'https://www.lululemon.co.uk/en-gb/p/fast-and-free-short-sleeve/prod9450010.html?dwvar_prod9450010_color=42306';
+    'https://shop.lululemon.com/p/mens-jackets-and-outerwear/Expeditionist-Anorak/_/prod10370103?color=0001';
 void backgroundFetchHeadlessTask(HeadlessTask task) async {
   // var taskId = task.taskId;
   print('---------------------');
@@ -69,6 +69,16 @@ Future _showNotification() async {
 class HomeController extends GetxController {
   TextEditingController textEditingController;
 
+  FlutterLocalNotificationsPlugin fltrNotification;
+
+  SavedController _savedController = Get.put(SavedController());
+
+  WebDetails savedProduct;
+
+  DatabaseHelper _helper = DatabaseHelper();
+
+  FireStoreMethod _fireStoreMethod = FireStoreMethod();
+
   String imageUrl = '';
   String title = '';
   String desc = '';
@@ -79,22 +89,13 @@ class HomeController extends GetxController {
   List list = List<WebDetails>();
 
   final intRegex = RegExp(r'\s+(\d+)\s+', multiLine: false);
+
   final doubleRegex = RegExp(r'^[a-zA-Z0-9]+$');
-  FlutterLocalNotificationsPlugin fltrNotification;
-
-  SavedController _savedController = Get.put(SavedController());
-
-  WebDetails savedProduct;
-  DatabaseHelper _helper = DatabaseHelper();
 
   var descR = 'This is a freebie for everyone,but if u wanna invite me a beer';
 
-  // FireStoreMethod _fireStoreMethod = FireStoreMethod();
-
-
   @override
   void onInit() {
-
     // initNotifications();
 
     // initPlatformState();
@@ -115,20 +116,23 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetch() async {
-    String urlNew = textEditingController.text;
     final responce = await http.Client().get(Uri.parse(url));
 
     if (responce.statusCode == 200) {
       try {
-        print('---------200--------');
+        Document document = parse(responce.body);
 
-        dom.Document document = parse(responce.body);
+        String newPrice =
+            document.querySelectorAll("*[class*=\'price\']")[0].innerHtml;
 
-        print(document);
-        enable = false;
-        update();
-        // print(document.querySelectorAll('[class*="-price]'));
+        print('-----------new price------------------');
+        print(newPrice);
+        int index = newPrice.indexOf('class="');
+        int lasindex = newPrice.indexOf('\">');
+        String s = newPrice.substring(index, lasindex);
+        print(document.getElementsByClassName(s));
       } catch (e) {
+        print('----Error-----');
         print(e.toString());
       }
     } else {
@@ -138,7 +142,7 @@ class HomeController extends GetxController {
     }
   }
 
-  void extract(dom.Document document) {
+  void extract(Document document) {
     int index = url.indexOf('.com');
 
     list.forEach((item) {
@@ -159,7 +163,7 @@ class HomeController extends GetxController {
 
         savedProduct = WebDetails(
           title: title,
-          price: price,
+          priceHtmlTag: price,
           desc: descR,
           imgUrl: img,
           priceNumber: p.toString(),
@@ -169,9 +173,33 @@ class HomeController extends GetxController {
     });
   }
 
-  saveproduc() {
-    _helper.setWebDetails(savedProduct).then((i) {
-      _savedController.getSavedList();
+  saveProduct() {
+    _fireStoreMethod.saveItems(savedProduct).then((value) {
+      _helper.setWebDetails(savedProduct).then((i) {
+        _savedController.getSavedList();
+      });
+    });
+  }
+
+  Future<void> comparePrice() async {
+    List<WebDetails> _list = await _helper.getWebDetails();
+    _list.forEach((element) async {
+      String url = element.webUrl;
+      String priceHtmlTag = element.priceHtmlTag;
+      String price = element.priceNumber;
+
+      final responce = await http.Client().get(Uri.parse(url));
+
+      if (responce.statusCode == 200) {
+        try {
+          Document document = parse(responce.body);
+          String newPrice =
+              document.querySelectorAll("*[class*=\'price\']")[0].toString();
+        } catch (e) {
+          print('----Error-----');
+          print(e.toString());
+        }
+      }
     });
   }
 
@@ -180,17 +208,17 @@ class HomeController extends GetxController {
         title: '.pdp-title div[itemprop="name"]',
         webUrl: 'shop.lululemon',
         imgUrl: 'pictureContainer-36lBu',
-        price: 'price-1SDQy price'));
+        priceHtmlTag: 'price-1SDQy price'));
     list.add(WebDetails(
         imgUrl: 'ShotView',
-        price:
+        priceHtmlTag:
             'pdp-price pdp-price_type_normal pdp-price_color_orange pdp-price_size_xl',
         title: 'pdp-mod-product-badge-title',
         webUrl: 'daraz.pk'));
 
     list.add(WebDetails(
         imgUrl: 'e1usmzj05 css-1t6je5j e18nnme30',
-        price:
+        priceHtmlTag:
             'pdp-price pdp-price_type_normal pdp-price_color_orange pdp-price_size_xl',
         title: 'css-j5fhoc ehm8gc85',
         webUrl: 'www.harrods.com'));

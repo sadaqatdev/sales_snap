@@ -73,7 +73,7 @@ class SavedTileWidget extends StatelessWidget {
                       ),
                       SizedBox(width: 10),
                       Text(
-                        saveItemList[index].price,
+                        saveItemList[index].priceHtmlTag,
                         style: title.copyWith(color: Colors.red),
                       )
                     ],
