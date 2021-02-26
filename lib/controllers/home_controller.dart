@@ -116,14 +116,14 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetch() async {
-    final responce = await http.Client().get(Uri.parse(url));
+    final response = await http.Client().get(Uri.parse(url));
 
-    if (responce.statusCode == 200) {
+    if (response.statusCode == 200) {
       try {
-        Document document = parse(responce.body);
+        Document document = parse(response.body);
 
         String newPrice =
-            document.querySelectorAll("*[class*=\'price\']")[0].innerHtml;
+            document.querySelectorAll('*[class*="price"]')[0].text;
 
         print('-----------new price------------------');
         print(newPrice);
@@ -137,7 +137,7 @@ class HomeController extends GetxController {
       }
     } else {
       Get.showSnackbar(GetBar(
-        message: responce.statusCode.toString(),
+        message: response.statusCode.toString(),
       ));
     }
   }
@@ -188,11 +188,11 @@ class HomeController extends GetxController {
       String priceHtmlTag = element.priceHtmlTag;
       String price = element.priceNumber;
 
-      final responce = await http.Client().get(Uri.parse(url));
+      final response = await http.Client().get(Uri.parse(url));
 
-      if (responce.statusCode == 200) {
+      if (response.statusCode == 200) {
         try {
-          Document document = parse(responce.body);
+          Document document = parse(response.body);
           String newPrice =
               document.querySelectorAll("*[class*=\'price\']")[0].toString();
         } catch (e) {
