@@ -215,7 +215,7 @@ getTitle(String domData) {
 
 var imageSet = [];
 setImage(_data) {
-  titleSet.add(_data);
+  imageSet.add(_data);
 }
 
 getImage(String domData) {

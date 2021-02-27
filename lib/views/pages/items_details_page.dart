@@ -10,8 +10,7 @@ class ItemDetailsPage extends StatefulWidget {
 }
 
 class _ItemDetailsPageState extends State<ItemDetailsPage> {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  WebViewController webViewcontroller;
 
   @override
   void initState() {
@@ -25,11 +24,24 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
       child: WebView(
         gestureNavigationEnabled: true,
         javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (controller) {
-          _controller.complete(controller);
+        javascriptChannels: [
+          JavascriptChannel(
+              name: 'SNAP',
+              onMessageReceived: (message) {
+                print('-------in snap---------------');
+                print(message.message);
+              })
+        ].toSet(),
+        onPageFinished: (url) {
+          print(" 🚀 debuging at line 106");
+          webViewcontroller.evaluateJavascript(
+              'window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);');
+        },
+        onWebViewCreated: (WebViewController _webViewController) {
+          webViewcontroller = _webViewController;
         },
         initialUrl:
-            'https://www.lululemon.co.uk/en-gb/p/fast-and-free-short-sleeve/prod9450010.html?dwvar_prod9450010_color=37995',
+            'https://shop.lululemon.com/p/mens-jackets-and-outerwear/Expeditionist-Anorak/_/prod10370103?color=0001',
       ),
     );
   }
