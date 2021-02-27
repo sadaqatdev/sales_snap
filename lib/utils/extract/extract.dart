@@ -25,6 +25,116 @@ const productAttributeMap = {
     "Price",
     "price",
   ],
+  "title": [
+//meta tag
+    ":title",
+    "description",
+    ":description",
+
+/////item prop
+    "name",
+    "pdp_h1",
+
+    //class
+    "product-name",
+    "product-description__name",
+    "__name",
+    "item-name",
+    "pdp-title",
+    "product-name",
+    "product_name",
+    "produit_title",
+    "product__title",
+    "font-primary",
+    "short-title",
+    "page-title",
+    "productName_title",
+    "productName",
+    "BrandTitle",
+    "productBrandTitle",
+    "pl-Heading",
+    "pdp__heading",
+    "title--",
+    "page-title",
+    "pl-Heading",
+    "product-single__title",
+    "page-title",
+    "product-title",
+    "product__title",
+    "product-page__title",
+    "__title",
+    "productName_title",
+    "product_title",
+    "productName_title",
+    "productHeading",
+    "product-description",
+    "pinfo__heading",
+    "listing-page-title",
+    "lblProductName",
+    "lblProduct",
+    "productTitle",
+    "itemTitle",
+    "product-title",
+    "hero-info-title",
+  ],
+  "image": [
+    //meta tag
+    ":image",
+
+    /////item prop
+    "image",
+    //class
+    "image_src",
+    "popup-img"
+        "product-gallery__image ng-scope",
+    "product-image",
+    "item active",
+    "product-title",
+    "b-product_images-main_image",
+    "swiper-zoom-container",
+    "mb-3 long-description",
+    "ProductImages-imgLink",
+    "pdp-slider",
+    "product-image",
+
+    "ProductImage-",
+    "img-responsive product__image"
+        "product-image",
+    "productImages-",
+    "slick-slide",
+    "zoomImgMask",
+    " ls-is-cached lazyloaded",
+    "product-image-zoom",
+    "productpage-image",
+    "productImageCarousel_image",
+    "athenaProductImageCarousel_image",
+    "productBrandTitle",
+    "js-big-image",
+    "product-gallery-image",
+    "image-wrapper",
+    "s7staticimage",
+    "ProductImage",
+    "sticker",
+    "pl-FluidImage-image",
+    "img-wrap",
+    "zoomImg",
+    "product-carousel-image",
+    "main-image",
+    "productImageCarousel_image",
+    "image_item",
+    "SGBOXU1_image",
+    "amp-page",
+    "slick-slide",
+    "slick-slide slick-current slick-active",
+    "pimages__image pimages__image--image pimages__image--1 pimages__image--active",
+
+    //id
+    "imgProduct",
+    "FeaturedImage",
+    "amp-originalImage",
+//data-test
+    "image",
+  ]
 };
 
 const filters = [
@@ -34,10 +144,11 @@ const filters = [
   "class",
   "id",
   "data-test-element",
+  "data-test-id"
 ];
 var dataSet = [];
 setData(_data) {
-  dataSet.add(_data);  
+  dataSet.add(_data);
 }
 
 getData(String domData) {
@@ -68,17 +179,70 @@ getData(String domData) {
   print('data 🚀🚀  ${dataSet[0]}  ${dataSet[1]} ${dataSet[2]}');
 }
 
-/* <meta property="og:type" content="product">
-<meta property="og:title" content="Hornchurch Chelsea Boot">
-<meta property="og:image" content="http://cdn.shopify.com/s/files/1/0252/3276/9072/products/hornchurch-chelsea-boot-933092_grande.jpg?v=1583060559">
-<meta property="og:image:secure_url" content="https://cdn.shopify.com/s/files/1/0252/3276/9072/products/hornchurch-chelsea-boot-933092_grande.jpg?v=1583060559">
-<meta property="og:image" content="http://cdn.shopify.com/s/files/1/0252/3276/9072/products/hornchurch-chelsea-boot-460602_grande.jpg?v=1583060559">
-<meta property="og:image:secure_url" content="https://cdn.shopify.com/s/files/1/0252/3276/9072/products/hornchurch-chelsea-boot-460602_grande.jpg?v=1583060559">
-<meta property="og:image" content="http://cdn.shopify.com/s/files/1/0252/3276/9072/products/hornchurch-chelsea-boot-484916_grande.jpg?v=1583060559">
-<meta property="og:image:secure_url" content="https://cdn.shopify.com/s/files/1/0252/3276/9072/products/hornchurch-chelsea-boot-484916_grande.jpg?v=1583060559">
-<meta property="product:price:amount" content="60.00">
-<meta property="product:price:currency" content="GBP">
-<meta property="og:description" content="Find the Walk London Hornchurch Chelsea Boot in Stone Suede online at Walklondonshoes.co.uk . Free Worldwide Express Delivery &amp; Same Day Dispatch available on Mens Footwear">
-<meta property="og:url" content="https://www.walklondonshoes.com/products/hornchurch-chelsea-boot-stone">
-<meta property="og:site_name" content="Walk London">
-  */
+var titleSet = [];
+setTitle(_data) {
+  titleSet.add(_data);
+}
+
+getTitle(String domData) {
+  final htmlDocument = parseHtmlDocument(domData);
+
+  productAttributeMap['title'].forEach((attrValue) {
+    filters.forEach((filter) {
+      // print('[$filter*="$attrValue"]');
+
+      var _data = htmlDocument.querySelectorAll('[$filter*="$attrValue"]');
+
+      _data.forEach((Element element) {
+        if (filter.contains("prop")) {
+          if (element.attributes['content'] != null) {
+            if (element.attributes['content'].trim().isNotEmpty) {
+              setTitle(element.attributes['content'].replaceAll(" ", ""));
+            }
+          }
+        } else if (element.innerText != null) {
+          if (element.innerText.trim().isNotEmpty) {
+            setTitle(element.innerText.replaceAll(" ", ""));
+          }
+        }
+      });
+    });
+  });
+
+  print('title== 🚀🚀 ${titleSet.toString()}');
+  print('title== 🚀🚀 ${titleSet.length}');
+}
+
+var imageSet = [];
+setImage(_data) {
+  titleSet.add(_data);
+}
+
+getImage(String domData) {
+  final htmlDocument = parseHtmlDocument(domData);
+
+  productAttributeMap['image'].forEach((attrValue) {
+    filters.forEach((filter) {
+      // print('[$filter*="$attrValue"]');
+
+      var _data = htmlDocument.querySelectorAll('[$filter*="$attrValue"]');
+
+      _data.forEach((Element element) {
+        if (filter.contains("prop")) {
+          if (element.attributes['content'] != null) {
+            if (element.attributes['content'].trim().isNotEmpty) {
+              setImage(element.attributes['content'].replaceAll(" ", ""));
+            }
+          }
+        } else if (element.innerText != null) {
+          if (element.innerText.trim().isNotEmpty) {
+            setImage(element.innerText.replaceAll(" ", ""));
+          }
+        }
+      });
+    });
+  });
+
+  print('title== 🚀🚀 ${imageSet.toString()}');
+  print('title== 🚀🚀 ${imageSet.length}');
+}

@@ -14,11 +14,11 @@ void main() async {
   await GetStorage().initStorage;
   Settings(persistenceEnabled: true);
 
-  final response = await http.Client().get(
-      "https://uk.bookshop.org/books/girl-a/9780008389055?aid=896");
+  final response = await http.Client()
+      .get("https://uk.bookshop.org/books/girl-a/9780008389055?aid=896");
 
   if (response.statusCode == 200) {
-    getData(response.body); 
+    getImage(response.body);
   }
 
   runApp(App());
