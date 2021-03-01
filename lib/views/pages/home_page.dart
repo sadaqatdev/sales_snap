@@ -130,7 +130,9 @@ class HomePage extends StatelessWidget {
         SizedBox(
           height: 16,
         ),
-        Text(homecontroller.title ?? '', style: lable),
+        Text(homecontroller.title ?? '',
+            style:
+                lable.copyWith(height: 1.5, wordSpacing: 1, letterSpacing: 1)),
         SizedBox(
           height: 12,
         ),

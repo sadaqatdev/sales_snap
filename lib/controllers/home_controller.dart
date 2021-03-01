@@ -104,10 +104,8 @@ class HomeController extends GetxController {
 
     BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 
-    initList();
-
     textEditingController = TextEditingController();
-
+    // textEditingController.text = url;
     super.onInit();
   }
 
@@ -117,16 +115,21 @@ class HomeController extends GetxController {
     super.onClose();
   }
 
+  void enableValue(bool val) {
+    enable = val;
+    showProgress = val;
+    update();
+  }
+
   Future<void> fetch() async {
-    enable = true;
-    showProgress = true;
+    enableValue(true);
     try {
-      final response = await http.Client().get(Uri.parse(url));
+      final response = await http.get(Uri.parse(textEditingController.text));
 
       if (response.statusCode == 200) {
-        imageUrl = getImage(response.body)[0];
+        // imageUrl = getImage(response.body)[0];
         title = getTitle(response.body)[0];
-        price = getPrice(response.body)[0];
+        // price = getPrice(response.body)[0];
 
         showProgress = false;
         update();
@@ -134,16 +137,14 @@ class HomeController extends GetxController {
         Get.showSnackbar(GetBar(
           message: response.statusCode.toString(),
         ));
-        enable = false;
-        showProgress = false;
+        enableValue(false);
         update();
       }
     } catch (e) {
       Get.showSnackbar(GetBar(
         message: e.toString(),
       ));
-      enable = false;
-      showProgress = false;
+      enableValue(false);
       update();
       print('----Error-----');
       print(e.toString());
@@ -178,27 +179,6 @@ class HomeController extends GetxController {
         }
       }
     });
-  }
-
-  initList() {
-    list.add(WebDetails(
-        title: '.pdp-title div[itemprop="name"]',
-        webUrl: 'shop.lululemon',
-        imgUrl: 'pictureContainer-36lBu',
-        priceHtmlTag: 'price-1SDQy price'));
-    list.add(WebDetails(
-        imgUrl: 'ShotView',
-        priceHtmlTag:
-            'pdp-price pdp-price_type_normal pdp-price_color_orange pdp-price_size_xl',
-        title: 'pdp-mod-product-badge-title',
-        webUrl: 'daraz.pk'));
-
-    list.add(WebDetails(
-        imgUrl: 'e1usmzj05 css-1t6je5j e18nnme30',
-        priceHtmlTag:
-            'pdp-price pdp-price_type_normal pdp-price_color_orange pdp-price_size_xl',
-        title: 'css-j5fhoc ehm8gc85',
-        webUrl: 'www.harrods.com'));
   }
 
   void updatePage({imageurl, title, desc, price}) {

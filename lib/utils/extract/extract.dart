@@ -28,6 +28,7 @@ const productAttributeMap = {
   "title": [
 //meta tag
     ":title",
+    "title",
     "description",
     ":description",
 
@@ -39,6 +40,7 @@ const productAttributeMap = {
     "product-name",
     "product-description__name",
     "__name",
+    "title",
     "item-name",
     "pdp-title",
     "product-name",
@@ -74,7 +76,7 @@ const productAttributeMap = {
     "lblProduct",
     "productTitle",
     "itemTitle",
-    "product-title",
+    "title",
     "hero-info-title",
   ],
   "image": [
@@ -86,7 +88,8 @@ const productAttributeMap = {
         "product-gallery__image ng-scope",
     "product-image",
     "item active",
-    "product-title",
+    "imgTagWrapper",
+
     "b-product_images-main_image",
     "swiper-zoom-container",
     "mb-3 long-description",
@@ -127,6 +130,7 @@ const productAttributeMap = {
     //id
     "imgProduct",
     "FeaturedImage",
+    "imgTagWrapperId",
     "amp-originalImage",
 //data-test
     "image",
@@ -156,7 +160,8 @@ Map<String, dynamic> getPrice(String domData) {
 
       var _data = htmlDocument.querySelectorAll('[$filter*="$attrValue"]');
 
-  print('price _data 🚀🚀  ${dataSet[0]}  ${dataSet[1]} ${dataSet[2]}');
+      print('price _data 🚀🚀  ${dataSet[0]}  ${dataSet[1]} ${dataSet[2]}');
+
       _data.forEach((Element element) {
         if (filter.contains("prop")) {
           if (element.attributes['content'] != null) {
@@ -242,7 +247,7 @@ List<String> getImage(String domData) {
       if (attrValue.runtimeType.toString().contains("Map")) {
         _data = htmlDocument
             .querySelectorAll("${attrValue['parent']} ${attrValue['child']}");
-      print("the runtime type .... ${_data.toString()}");
+        print("the runtime type .... ${_data.toString()}");
       } else {
         _data = htmlDocument.querySelectorAll('[$filter*="$attrValue"]');
       }
@@ -251,19 +256,20 @@ List<String> getImage(String domData) {
         if (filter.contains("prop")) {
           if (element.attributes['content'] != null) {
             if (element.attributes['content'].trim().isNotEmpty) {
-              var prop = element.attributes['content'].replaceAll(" ", "");
+              String prop = element.attributes['content'].replaceAll(" ", "");
               print('------runtime type------');
-              print(prop.indexOf('http'));
+              print(prop.indexOf('.com'));
 
-              if (prop.contains('http')) setImage(prop);
+              if (prop.contains('http') || prop.contains('.com'))
+                setImage(prop);
             }
           }
         } else if (element.innerText != null) {
           if (element.innerText.trim().isNotEmpty) {
-            var data = element.innerText.replaceAll(" ", "");
+            String data = element.innerText.replaceAll(" ", "");
             print('------runtime type------');
 
-            if (data.contains('http')) setImage(data);
+            if (data.contains('http') || data.contains('.com')) setImage(data);
           }
         }
       });
