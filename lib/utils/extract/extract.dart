@@ -6,6 +6,7 @@ const productAttributeMap = {
     ":price:amount",
     ":price:currency",
     "priceCurrency",
+    "product-price",
     "price",
     "product-main ProductPriceBlock__Price",
     "priceblock_dealprice",
@@ -82,10 +83,12 @@ const productAttributeMap = {
   "image": [
     //meta tag
     ":image:",
-    //class
     "image_src",
-    "popup-img"
-        "product-gallery__image ng-scope",
+    {"parent": ".ProductImagery", "child": "img"},
+    {"parent": ".image", "child": "img"},
+    {"parent": ".product-image", "child": "img"},
+    {"parent": ".product-gallery", "child": "img"},
+    "popup-img",
     "product-image",
     "item active",
     "imgTagWrapper",
@@ -126,7 +129,6 @@ const productAttributeMap = {
     "slick-slide",
     "slick-slide slick-current slick-active",
     "pimages",
-    {"parent": ".ProductImagery", "child": "img"},
     //id
     "imgProduct",
     "FeaturedImage",
@@ -139,9 +141,9 @@ const productAttributeMap = {
 
 const filters = [
   "property",
+  "class",
   "itemprop",
   "item-prop",
-  "class",
   "id",
   "data-test-element",
   "data-test-id"
@@ -160,8 +162,6 @@ Map<String, dynamic> getPrice(String domData) {
 
       var _data = htmlDocument.querySelectorAll('[$filter*="$attrValue"]');
 
-      print('price _data 🚀🚀  ${dataSet[0]}  ${dataSet[1]} ${dataSet[2]}');
-
       _data.forEach((Element element) {
         if (filter.contains("prop")) {
           if (element.attributes['content'] != null) {
@@ -178,9 +178,8 @@ Map<String, dynamic> getPrice(String domData) {
     });
   });
 
-  print('price data 🚀🚀  ${dataSet[0]}  ${dataSet[1]} ${dataSet[2]}');
   var currentCurrency = "";
-  var s = ["USD", "\$", "£"];
+  var s = ["USD", "\$", "£", "PKR"];
 
   dataSet.forEach((sign) {
     s.forEach((currency) {
@@ -194,7 +193,15 @@ Map<String, dynamic> getPrice(String domData) {
     });
   });
 
-  return {"currency": currentCurrency, "data": dataSet};
+  dataSet = dataSet.toSet().toList();
+  var newDataSet = [];
+  dataSet.forEach((e) {
+    if (e != currentCurrency) {
+      newDataSet.add(e);
+    }
+  });
+  print('price data 🚀🚀  $newDataSet');
+  return {"currency": currentCurrency, "amount": newDataSet[0]};
 }
 
 List<String> titleSet = [];
@@ -229,7 +236,7 @@ List<String> getTitle(String domData) {
 
   print('title== 🚀🚀 ${titleSet.toString()}');
   print('title== 🚀🚀 ${titleSet.length}');
-  return titleSet;
+  return titleSet.toSet().toList();
 }
 
 List<String> imageSet = [];
@@ -238,45 +245,48 @@ setImage(_data) {
 }
 
 List<String> getImage(String domData) {
+  imageSet = [];
   final htmlDocument = parseHtmlDocument(domData);
 
   productAttributeMap['image'].forEach((dynamic attrValue) {
     filters.forEach((filter) {
-      // print('[$filter*="$attrValue"]');
+      print('[$filter*="$attrValue"]');
       var _data;
       if (attrValue.runtimeType.toString().contains("Map")) {
         _data = htmlDocument
             .querySelectorAll("${attrValue['parent']} ${attrValue['child']}");
-        print("the runtime type .... ${_data.toString()}");
+        print(
+            "the runtime type .... ${attrValue['parent']} ${attrValue['child']}");
       } else {
         _data = htmlDocument.querySelectorAll('[$filter*="$attrValue"]');
-      }
 
-      _data.forEach((Element element) {
-        if (filter.contains("prop")) {
-          if (element.attributes['content'] != null) {
-            if (element.attributes['content'].trim().isNotEmpty) {
-              String prop = element.attributes['content'].replaceAll(" ", "");
+        _data.forEach((Element element) {
+          if (filter.contains("prop")) {
+            if (element.attributes['content'] != null) {
+              if (element.attributes['content'].trim().isNotEmpty) {
+                String prop = element.attributes['content'].replaceAll(" ", "");
+                print('------runtime type------');
+                print(prop.indexOf('.com'));
+
+                if (prop.contains('http') || prop.contains('.com'))
+                  setImage(prop);
+              }
+            }
+          } else if (element.innerText != null) {
+            if (element.innerText.trim().isNotEmpty) {
+              String data = element.innerText.replaceAll(" ", "");
               print('------runtime type------');
-              print(prop.indexOf('.com'));
 
-              if (prop.contains('http') || prop.contains('.com'))
-                setImage(prop);
+              if (data.contains('http') || data.contains('.com'))
+                setImage(data);
             }
           }
-        } else if (element.innerText != null) {
-          if (element.innerText.trim().isNotEmpty) {
-            String data = element.innerText.replaceAll(" ", "");
-            print('------runtime type------');
-
-            if (data.contains('http') || data.contains('.com')) setImage(data);
-          }
-        }
-      });
+        });
+      }
     });
   });
 
   print('images== 🚀🚀 ${imageSet.toString()}');
   print('images== 🚀🚀 ${imageSet.length}');
-  return imageSet;
+  return imageSet.toSet().toList();
 }

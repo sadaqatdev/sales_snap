@@ -112,12 +112,18 @@ class HomePage extends StatelessWidget {
       HomeController homecontroller, TextStyle lable, BuildContext context) {
     return Column(
       children: [
-        Image.network(homecontroller.imageUrl ?? img),
+        Column(
+          children: homecontroller.imageUrls
+              .map(
+                (image) => Image.network(image ?? img),
+              )
+              .toList(),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              homecontroller.price ?? '',
+              homecontroller.price.toString() ?? '',
               style: TextStyle(
                 fontSize: 24,
               ),

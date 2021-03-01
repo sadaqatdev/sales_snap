@@ -81,7 +81,7 @@ class HomeController extends GetxController {
 
   FireStoreMethod _fireStoreMethod = FireStoreMethod();
 
-  String imageUrl = '';
+  List<String> imageUrls = [];
   String title = '';
   String desc = '';
   String price = '';
@@ -127,10 +127,10 @@ class HomeController extends GetxController {
       final response = await http.get(Uri.parse(textEditingController.text));
 
       if (response.statusCode == 200) {
-        // imageUrl = getImage(response.body)[0];
+        imageUrls = getImage(response.body);
         title = getTitle(response.body)[0];
-        // price = getPrice(response.body)[0];
-
+        Map<String, dynamic> priceMap = getPrice(response.body);
+        price = "${priceMap['currency']} ${priceMap['amount']}";
         showProgress = false;
         update();
       } else {
@@ -181,8 +181,8 @@ class HomeController extends GetxController {
     });
   }
 
-  void updatePage({imageurl, title, desc, price}) {
-    this.imageUrl = imageurl;
+  void updatePage({imageurls, title, desc, price}) {
+    this.imageUrls = imageurls;
     this.title = title;
     this.desc = desc;
     this.price = price;
