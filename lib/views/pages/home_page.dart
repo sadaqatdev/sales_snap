@@ -4,6 +4,7 @@ import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/pages/items_details_page.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
+import 'package:sales_snap/views/widgets/snakbar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class HomePage extends StatelessWidget {
@@ -73,41 +74,15 @@ class HomePage extends StatelessWidget {
                 SizedBox(
                   height: 12,
                 ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    print(" 🚀 debuging at line 106");
-                    webViewcontroller.evaluateJavascript('''
-                        window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);
-                        window.SNAP.postMessage(document.querySelectorAll(".pdp img")[0].getAttribute('srcset').split('w,')[0]); 
-                        ''');
-                  },
-                  icon: Text("🚀 "),
-                  label: Text("Load"),
-                ),
-                // Expanded(
-                //   child: WebView(
-                //     gestureNavigationEnabled: true,
-                //     javascriptMode: JavascriptMode.unrestricted,
-                //     javascriptChannels: [
-                //       JavascriptChannel(
-                //           name: 'SNAP',
-                //           onMessageReceived: (message) {
-                //             print('-------in snap---------------');
-                //             print(message.message);
-                //           })
-                //     ].toSet(),
-                //     onPageFinished: (url) {
-                //       print(" 🚀 debuging at line 106");
-                //       webViewcontroller.evaluateJavascript(
-                //           'window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);');
-                //     },
-                //     onWebViewCreated: (WebViewController _webViewController) {
-                //       webViewcontroller = _webViewController;
-                //     },
-                //     initialUrl:
-                //         'https://shop.lululemon.com/p/mens-jackets-and-outerwear/Expeditionist-Anorak/_/prod10370103?color=0001',
-                //   ),
-                // ),
+                GetBuilder<HomeController>(builder: (controller) {
+                  if (controller.showProgress) {
+                    return progressBar();
+                  } else {
+                    return controller.enable
+                        ? productWidget(homecontroller, lable, context)
+                        : getRecentSave(bodyStyle);
+                  }
+                }),
                 SizedBox(
                   height: 12,
                 ),
@@ -137,7 +112,7 @@ class HomePage extends StatelessWidget {
       HomeController homecontroller, TextStyle lable, BuildContext context) {
     return Column(
       children: [
-        Image.network(img),
+        Image.network(homecontroller.imageUrl ?? img),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -225,3 +200,39 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+// ElevatedButton.icon(
+//   onPressed: () {
+//     print(" 🚀 debuging at line 106");
+//     webViewcontroller.evaluateJavascript('''
+//         window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);
+//         window.SNAP.postMessage(document.querySelectorAll(".pdp img")[0].getAttribute('srcset').split('w,')[0]);
+//         ''');
+//   },
+//   icon: Text("🚀 "),
+//   label: Text("Load"),
+// ),
+// Expanded(
+//   child: WebView(
+//     gestureNavigationEnabled: true,
+//     javascriptMode: JavascriptMode.unrestricted,
+//     javascriptChannels: [
+//       JavascriptChannel(
+//           name: 'SNAP',
+//           onMessageReceived: (message) {
+//             print('-------in snap---------------');
+//             print(message.message);
+//           })
+//     ].toSet(),
+//     onPageFinished: (url) {
+//       print(" 🚀 debuging at line 106");
+//       webViewcontroller.evaluateJavascript(
+//           'window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);');
+//     },
+//     onWebViewCreated: (WebViewController _webViewController) {
+//       webViewcontroller = _webViewController;
+//     },
+//     initialUrl:
+//         'https://shop.lululemon.com/p/mens-jackets-and-outerwear/Expeditionist-Anorak/_/prod10370103?color=0001',
+//   ),
+// ),

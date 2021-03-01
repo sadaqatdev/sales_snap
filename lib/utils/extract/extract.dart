@@ -79,10 +79,7 @@ const productAttributeMap = {
   ],
   "image": [
     //meta tag
-    ":image",
-
-    /////item prop
-    "image",
+    ":image:",
     //class
     "image_src",
     "popup-img"
@@ -146,12 +143,12 @@ const filters = [
   "data-test-element",
   "data-test-id"
 ];
-var dataSet = [];
+List<String> dataSet = [];
 setData(_data) {
   dataSet.add(_data);
 }
 
-getData(String domData) {
+List<String> getPrice(String domData) {
   final htmlDocument = parseHtmlDocument(domData);
 
   productAttributeMap['price'].forEach((attrValue) {
@@ -176,15 +173,34 @@ getData(String domData) {
     });
   });
 
-  print('data 🚀🚀  ${dataSet[0]}  ${dataSet[1]} ${dataSet[2]}');
+  print('price data 🚀🚀  ${dataSet[0]}  ${dataSet[1]} ${dataSet[2]}');
+  var currentCurrency = null;
+  var s = [
+    "USD",
+    "\$",
+  ];
+
+  s.forEach((currency) {
+    dataSet.forEach((sign) {
+      print('----------in-------------');
+      if (currentCurrency == null) {
+        if (sign.contains(currency)) {
+          currentCurrency = currency;
+          print('----------currency-------------');
+          print(currentCurrency);
+        }
+      }
+    });
+  });
+  return dataSet;
 }
 
-var titleSet = [];
+List<String> titleSet = [];
 setTitle(_data) {
   titleSet.add(_data);
 }
 
-getTitle(String domData) {
+List<String> getTitle(String domData) {
   final htmlDocument = parseHtmlDocument(domData);
 
   productAttributeMap['title'].forEach((attrValue) {
@@ -211,14 +227,15 @@ getTitle(String domData) {
 
   print('title== 🚀🚀 ${titleSet.toString()}');
   print('title== 🚀🚀 ${titleSet.length}');
+  return titleSet;
 }
 
-var imageSet = [];
+List<String> imageSet = [];
 setImage(_data) {
   imageSet.add(_data);
 }
 
-getImage(String domData) {
+List<String> getImage(String domData) {
   final htmlDocument = parseHtmlDocument(domData);
 
   productAttributeMap['image'].forEach((attrValue) {
@@ -231,18 +248,26 @@ getImage(String domData) {
         if (filter.contains("prop")) {
           if (element.attributes['content'] != null) {
             if (element.attributes['content'].trim().isNotEmpty) {
-              setImage(element.attributes['content'].replaceAll(" ", ""));
+              var prop = element.attributes['content'].replaceAll(" ", "");
+              print('------runtime type------');
+              print(prop.indexOf('http'));
+
+              if (prop.contains('http')) setImage(prop);
             }
           }
         } else if (element.innerText != null) {
           if (element.innerText.trim().isNotEmpty) {
-            setImage(element.innerText.replaceAll(" ", ""));
+            var data = element.innerText.replaceAll(" ", "");
+            print('------runtime type------');
+
+            if (data.contains('http')) setImage(data);
           }
         }
       });
     });
   });
 
-  print('title== 🚀🚀 ${imageSet.toString()}');
-  print('title== 🚀🚀 ${imageSet.length}');
+  print('images== 🚀🚀 ${imageSet.toString()}');
+  print('images== 🚀🚀 ${imageSet.length}');
+  return imageSet;
 }

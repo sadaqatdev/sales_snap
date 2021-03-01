@@ -12,6 +12,7 @@ import 'package:sales_snap/models/web_details.dart';
 import 'package:http/http.dart' as http;
 import 'package:sales_snap/repositories/database_helper.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
+import 'package:sales_snap/utils/extract/extract.dart';
 
 var img =
     'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351';
@@ -66,6 +67,7 @@ Future _showNotification() async {
       payload: "Task");
 }
 
+////////////CONTROLLER START/////////////////////////////////////////////////////////////
 class HomeController extends GetxController {
   TextEditingController textEditingController;
 
@@ -84,8 +86,8 @@ class HomeController extends GetxController {
   String desc = '';
   String price = '';
 
-  bool enable = true;
-
+  bool enable = false;
+  bool showProgress = false;
   List list = List<WebDetails>();
 
   final intRegex = RegExp(r'\s+(\d+)\s+', multiLine: false);
@@ -116,61 +118,36 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetch() async {
-    final response = await http.Client().get(Uri.parse(url));
+    enable = true;
+    showProgress = true;
+    try {
+      final response = await http.Client().get(Uri.parse(url));
 
-    if (response.statusCode == 200) {
-      try {
-        Document document = parse(response.body);
+      if (response.statusCode == 200) {
+        imageUrl = getImage(response.body)[0];
+        title = getTitle(response.body)[0];
+        price = getPrice(response.body)[0];
 
-        String newPrice =
-            document.querySelectorAll('*[class*="price"]')[0].text;
-
-        print('-----------new price------------------');
-        print(newPrice);
-        int index = newPrice.indexOf('class="');
-        int lasindex = newPrice.indexOf('\">');
-        String s = newPrice.substring(index, lasindex);
-        print(document.getElementsByClassName(s));
-      } catch (e) {
-        print('----Error-----');
-        print(e.toString());
+        showProgress = false;
+        update();
+      } else {
+        Get.showSnackbar(GetBar(
+          message: response.statusCode.toString(),
+        ));
+        enable = false;
+        showProgress = false;
+        update();
       }
-    } else {
+    } catch (e) {
       Get.showSnackbar(GetBar(
-        message: response.statusCode.toString(),
+        message: e.toString(),
       ));
+      enable = false;
+      showProgress = false;
+      update();
+      print('----Error-----');
+      print(e.toString());
     }
-  }
-
-  void extract(Document document) {
-    int index = url.indexOf('.com');
-
-    list.forEach((item) {
-      if (url.substring(8, index) == item.webUrl) {
-        print(document.getElementsByClassName('price-1SDQy price')[0].text);
-        String title =
-            document.querySelector('.pdp-title div[itemprop="name"]').text;
-        String price =
-            document.getElementsByClassName('price-1SDQy price')[0].text;
-
-        print('-------------------');
-
-        print(price.replaceAll(RegExp('[^0-9]'), ''));
-
-        updatePage(price: price, title: title, desc: 'desc');
-
-        int p = int.parse(price.replaceAll(RegExp('[^0-9]'), ''));
-
-        savedProduct = WebDetails(
-          title: title,
-          priceHtmlTag: price,
-          desc: descR,
-          imgUrl: img,
-          priceNumber: p.toString(),
-          webUrl: url.substring(8, index),
-        );
-      }
-    });
   }
 
   saveProduct() {
@@ -347,3 +324,39 @@ class HomeController extends GetxController {
     update();
   }
 }
+
+// if (url.substring(8, index) == item.webUrl) {
+//   print(document.getElementsByClassName('price-1SDQy price')[0].text);
+//   String title =
+//       document.querySelector('.pdp-title div[itemprop="name"]').text;
+//   String price =
+//       document.getElementsByClassName('price-1SDQy price')[0].text;
+
+//   print('-------------------');
+
+//   print(price.replaceAll(RegExp('[^0-9]'), ''));
+
+//   updatePage(price: price, title: title, desc: 'desc');
+
+//   int p = int.parse(price.replaceAll(RegExp('[^0-9]'), ''));
+
+//   savedProduct = WebDetails(
+//     title: title,
+//     priceHtmlTag: price,
+//     desc: descR,
+//     imgUrl: img,
+//     priceNumber: p.toString(),
+//     webUrl: url.substring(8, index),
+//   );
+// // }
+//         Document document = parse(response.body);
+
+//         String newPrice =
+//             document.querySelectorAll('*[class*="price"]')[0].text;
+
+//         print('-----------new price------------------');
+//         print(newPrice);
+//         int index = newPrice.indexOf('class="');
+//         int lasindex = newPrice.indexOf('\">');
+//         String s = newPrice.substring(index, lasindex);
+//         print(document.getElementsByClassName(s));
