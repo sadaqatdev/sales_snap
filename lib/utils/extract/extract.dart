@@ -93,7 +93,6 @@ const productAttributeMap = {
     "ProductImages-imgLink",
     "pdp-slider",
     "product-image",
-
     "ProductImage-",
     "img-responsive product__image"
         "product-image",
@@ -123,8 +122,8 @@ const productAttributeMap = {
     "amp-page",
     "slick-slide",
     "slick-slide slick-current slick-active",
-    "pimages__image pimages__image--image pimages__image--1 pimages__image--active",
-
+    "pimages",
+    {"parent": ".ProductImagery", "child": "img"},
     //id
     "imgProduct",
     "FeaturedImage",
@@ -148,7 +147,7 @@ setData(_data) {
   dataSet.add(_data);
 }
 
-List<String> getPrice(String domData) {
+Map<String, dynamic> getPrice(String domData) {
   final htmlDocument = parseHtmlDocument(domData);
 
   productAttributeMap['price'].forEach((attrValue) {
@@ -157,6 +156,7 @@ List<String> getPrice(String domData) {
 
       var _data = htmlDocument.querySelectorAll('[$filter*="$attrValue"]');
 
+  print('price _data 🚀🚀  ${dataSet[0]}  ${dataSet[1]} ${dataSet[2]}');
       _data.forEach((Element element) {
         if (filter.contains("prop")) {
           if (element.attributes['content'] != null) {
@@ -174,16 +174,12 @@ List<String> getPrice(String domData) {
   });
 
   print('price data 🚀🚀  ${dataSet[0]}  ${dataSet[1]} ${dataSet[2]}');
-  var currentCurrency = null;
-  var s = [
-    "USD",
-    "\$",
-  ];
+  var currentCurrency = "";
+  var s = ["USD", "\$", "£"];
 
-  s.forEach((currency) {
-    dataSet.forEach((sign) {
-      print('----------in-------------');
-      if (currentCurrency == null) {
+  dataSet.forEach((sign) {
+    s.forEach((currency) {
+      if (currentCurrency.isEmpty) {
         if (sign.contains(currency)) {
           currentCurrency = currency;
           print('----------currency-------------');
@@ -192,7 +188,8 @@ List<String> getPrice(String domData) {
       }
     });
   });
-  return dataSet;
+
+  return {"currency": currentCurrency, "data": dataSet};
 }
 
 List<String> titleSet = [];
@@ -238,11 +235,17 @@ setImage(_data) {
 List<String> getImage(String domData) {
   final htmlDocument = parseHtmlDocument(domData);
 
-  productAttributeMap['image'].forEach((attrValue) {
+  productAttributeMap['image'].forEach((dynamic attrValue) {
     filters.forEach((filter) {
       // print('[$filter*="$attrValue"]');
-
-      var _data = htmlDocument.querySelectorAll('[$filter*="$attrValue"]');
+      var _data;
+      if (attrValue.runtimeType.toString().contains("Map")) {
+        _data = htmlDocument
+            .querySelectorAll("${attrValue['parent']} ${attrValue['child']}");
+      print("the runtime type .... ${_data.toString()}");
+      } else {
+        _data = htmlDocument.querySelectorAll('[$filter*="$attrValue"]');
+      }
 
       _data.forEach((Element element) {
         if (filter.contains("prop")) {

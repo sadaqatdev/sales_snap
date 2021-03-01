@@ -143,7 +143,7 @@ class HomePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(22)),
               color: Colors.green,
               child: Text('Visit Site'),
-              onPressed: () async {
+              onPressed: () {
                 _routes.to(context, ItemDetailsPage());
               },
             ),
