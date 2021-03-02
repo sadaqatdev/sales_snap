@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/models/web_details.dart';
-import 'package:sales_snap/views/widgets/snakbar.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
@@ -16,6 +15,7 @@ final String desc = 'desc';
 final String price = 'price';
 final String imgUrl = 'imgUrl';
 final String priceNumber = 'priceNumber';
+final String priceHtmlTag = 'priceHtmlTag';
 
 class DatabaseHelper {
   static Database _database;
@@ -53,6 +53,7 @@ class DatabaseHelper {
           $desc text,
           $imgUrl text,
           $price text,
+          $priceHtmlTag text,
           $priceNumber text)
         ''');
       },

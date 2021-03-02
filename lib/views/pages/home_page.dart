@@ -18,94 +18,128 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final bodyStyle = Theme.of(context).textTheme.bodyText2;
     final lable = Theme.of(context).textTheme.headline1;
-    return Scaffold(
-      appBar: appBar(context, 'Sales Snap'),
-      body: SingleChildScrollView(
-        child: Container(
-          width: Get.width,
-          height: 1500,
-          padding: EdgeInsets.only(left: 12, right: 12, top: 12),
-          child: GetBuilder<HomeController>(builder: (homecontroller) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return GetBuilder<HomeController>(builder: (homecontroller) {
+      return Scaffold(
+        appBar: appBar(context, 'Sales Snap'),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.only(left: 12, right: 12, top: 12),
+            child: Stack(
               children: [
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Form(
-                      key: formKey,
-                      child: Expanded(
-                        flex: 5,
-                        child: Container(
-                          height: 44,
-                          child: TextFormField(
-                            controller: homecontroller.textEditingController,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Url is Empty';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'Enter URL of Product',
+                    Row(
+                      children: [
+                        Form(
+                          key: formKey,
+                          child: Expanded(
+                            flex: 5,
+                            child: Container(
+                              height: 44,
+                              child: TextFormField(
+                                controller:
+                                    homecontroller.textEditingController,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Url is Empty';
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  hintText: 'Enter URL of Product',
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        MaterialButton(
+                          shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                  color: Theme.of(context).primaryColor),
+                              borderRadius: BorderRadius.circular(22)),
+                          height: 40,
+                          color: Colors.green,
+                          child: Text('Go'),
+                          onPressed: () async {
+                            FocusScope.of(context).unfocus();
+                            if (formKey.currentState.validate()) {
+                              homecontroller.fetch();
+                            }
+                          },
+                        )
+                      ],
                     ),
                     SizedBox(
-                      width: 12,
+                      height: 12,
                     ),
-                    MaterialButton(
-                      shape: RoundedRectangleBorder(
+                    homecontroller.enable
+                        ? productWidget(homecontroller, lable, context)
+                        : getRecentSave(bodyStyle),
+                    SizedBox(
+                      height: 12,
+                    ),
+                  ],
+                ),
+                homecontroller.showProgress
+                    ? Positioned(
+                        top: 50,
+                        left: Get.width / 2 - 50,
+                        child: progressBar(),
+                      )
+                    : SizedBox()
+              ],
+            ),
+          ),
+        ),
+        floatingActionButton: homecontroller.enable
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton.icon(
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
                           side:
                               BorderSide(color: Theme.of(context).primaryColor),
                           borderRadius: BorderRadius.circular(22)),
-                      height: 40,
-                      color: Colors.green,
-                      child: Text('Go'),
-                      onPressed: () async {
-                        if (formKey.currentState.validate()) {
-                          homecontroller.fetch();
-                        }
-                      },
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                GetBuilder<HomeController>(builder: (controller) {
-                  if (controller.showProgress) {
-                    return progressBar();
-                  } else {
-                    return controller.enable
-                        ? productWidget(homecontroller, lable, context)
-                        : getRecentSave(bodyStyle);
-                  }
-                }),
-                SizedBox(
-                  height: 12,
-                ),
-              ],
-            );
-          }),
-        ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            child: Icon(Icons.save),
-            onPressed: () {},
-          ),
-          SizedBox(width: 24),
-          FloatingActionButton(
-            child: Icon(Icons.web),
-            onPressed: () {},
-          ),
-        ],
-      ),
-    );
+                    )),
+                    onPressed: () {
+                      homecontroller.saveProduct();
+                    },
+                    icon: Icon(Icons.save_alt),
+                    label: Text("Save"),
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  ElevatedButton.icon(
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                          side:
+                              BorderSide(color: Theme.of(context).primaryColor),
+                          borderRadius: BorderRadius.circular(22)),
+                    )),
+                    onPressed: () {
+                      if (formKey.currentState.validate())
+                        _routes.to(
+                            context,
+                            ItemDetailsPage(
+                              url: homecontroller.textEditingController.text,
+                            ));
+                    },
+                    icon: Icon(Icons.public),
+                    label: Text("WebSite"),
+                  ),
+                ],
+              )
+            : Container(),
+      );
+    });
   }
 
   Column productWidget(
@@ -115,9 +149,12 @@ class HomePage extends StatelessWidget {
         Column(
           children: homecontroller.imageUrls
               .map(
-                (image) => Image.network(image ?? img),
+                (image) => Image.network(image),
               )
               .toList(),
+        ),
+        SizedBox(
+          height: 16,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -140,46 +177,16 @@ class HomePage extends StatelessWidget {
             style:
                 lable.copyWith(height: 1.5, wordSpacing: 1, letterSpacing: 1)),
         SizedBox(
-          height: 12,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Theme.of(context).primaryColor),
-                  borderRadius: BorderRadius.circular(22)),
-              color: Colors.green,
-              child: Text('Visit Site'),
-              onPressed: () {
-                _routes.to(context, ItemDetailsPage());
-              },
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Theme.of(context).primaryColor),
-                  borderRadius: BorderRadius.circular(22)),
-              color: Colors.green,
-              child: Text('Save'),
-              onPressed: () async {
-                // SystemAlertWindow.closeSystemWindow();
-                //String path = await NativeScreenshot.takeScreenshot();
-                //print(path.toString());
-                print('-------save---------');
-                homecontroller.saveProduct();
-              },
-            )
-          ],
-        ),
+          height: 16,
+        )
       ],
     );
   }
 
   Widget getRecentSave(bodyStyle) {
-    return Expanded(
+    return Container(
+      height: Get.height,
+      width: Get.width,
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -203,7 +210,7 @@ class HomePage extends StatelessWidget {
             ),
           );
         },
-        itemCount: 10,
+        itemCount: 12,
       ),
     );
   }

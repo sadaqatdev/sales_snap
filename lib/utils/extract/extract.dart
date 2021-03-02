@@ -1,3 +1,5 @@
+import 'package:regexed_validator/regexed_validator.dart';
+import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:universal_html/html.dart';
 import 'package:universal_html/parsing.dart';
 
@@ -166,11 +168,13 @@ Map<String, dynamic> getPrice(String domData) {
         if (filter.contains("prop")) {
           if (element.attributes['content'] != null) {
             if (element.attributes['content'].trim().isNotEmpty) {
+              HomeController.priceHtmlTag = '[$filter*="$attrValue"]';
               setData(element.attributes['content'].replaceAll(" ", ""));
             }
           }
         } else if (element.innerText != null) {
           if (element.innerText.trim().isNotEmpty) {
+            HomeController.priceHtmlTag = '[$filter*="$attrValue"]';
             setData(element.innerText.replaceAll(" ", ""));
           }
         }
@@ -186,8 +190,6 @@ Map<String, dynamic> getPrice(String domData) {
       if (currentCurrency.isEmpty) {
         if (sign.contains(currency)) {
           currentCurrency = currency;
-          print('----------currency-------------');
-          print(currentCurrency);
         }
       }
     });
@@ -200,7 +202,7 @@ Map<String, dynamic> getPrice(String domData) {
       newDataSet.add(e);
     }
   });
-  print('price data 🚀🚀  $newDataSet');
+
   return {"currency": currentCurrency, "amount": newDataSet[0]};
 }
 
@@ -234,8 +236,6 @@ List<String> getTitle(String domData) {
     });
   });
 
-  print('title== 🚀🚀 ${titleSet.toString()}');
-  print('title== 🚀🚀 ${titleSet.length}');
   return titleSet.toSet().toList();
 }
 
@@ -250,13 +250,10 @@ List<String> getImage(String domData) {
 
   productAttributeMap['image'].forEach((dynamic attrValue) {
     filters.forEach((filter) {
-      print('[$filter*="$attrValue"]');
       var _data;
       if (attrValue.runtimeType.toString().contains("Map")) {
         _data = htmlDocument
             .querySelectorAll("${attrValue['parent']} ${attrValue['child']}");
-        print(
-            "the runtime type .... ${attrValue['parent']} ${attrValue['child']}");
       } else {
         _data = htmlDocument.querySelectorAll('[$filter*="$attrValue"]');
 
@@ -265,20 +262,15 @@ List<String> getImage(String domData) {
             if (element.attributes['content'] != null) {
               if (element.attributes['content'].trim().isNotEmpty) {
                 String prop = element.attributes['content'].replaceAll(" ", "");
-                print('------runtime type------');
-                print(prop.indexOf('.com'));
 
-                if (prop.contains('http') || prop.contains('.com'))
-                  setImage(prop);
+                if (prop.contains('http')) setImage(prop);
               }
             }
           } else if (element.innerText != null) {
             if (element.innerText.trim().isNotEmpty) {
               String data = element.innerText.replaceAll(" ", "");
-              print('------runtime type------');
 
-              if (data.contains('http') || data.contains('.com'))
-                setImage(data);
+              if (data.contains('http')) setImage(data);
             }
           }
         });
@@ -286,7 +278,5 @@ List<String> getImage(String domData) {
     });
   });
 
-  print('images== 🚀🚀 ${imageSet.toString()}');
-  print('images== 🚀🚀 ${imageSet.length}');
   return imageSet.toSet().toList();
 }

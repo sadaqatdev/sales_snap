@@ -1,14 +1,13 @@
 import 'dart:convert';
 
 class WebDetails {
-  // static final savedProduct = List<WebDetails>();
   String webUrl;
   String title;
   String imgUrl;
   String desc;
   String priceHtmlTag;
   String priceNumber;
-
+  String price;
   WebDetails({
     this.webUrl,
     this.title,
@@ -16,6 +15,7 @@ class WebDetails {
     this.desc,
     this.priceHtmlTag,
     this.priceNumber,
+    this.price,
   });
 
   WebDetails copyWith({
@@ -25,6 +25,7 @@ class WebDetails {
     String desc,
     String priceHtmlTag,
     String priceNumber,
+    String price,
   }) {
     return WebDetails(
       webUrl: webUrl ?? this.webUrl,
@@ -33,6 +34,7 @@ class WebDetails {
       desc: desc ?? this.desc,
       priceHtmlTag: priceHtmlTag ?? this.priceHtmlTag,
       priceNumber: priceNumber ?? this.priceNumber,
+      price: price ?? this.price,
     );
   }
 
@@ -44,6 +46,7 @@ class WebDetails {
       'desc': desc,
       'priceHtmlTag': priceHtmlTag,
       'priceNumber': priceNumber,
+      'price': price,
     };
   }
 
@@ -57,6 +60,7 @@ class WebDetails {
       desc: map['desc'],
       priceHtmlTag: map['priceHtmlTag'],
       priceNumber: map['priceNumber'],
+      price: map['price'],
     );
   }
 
@@ -67,7 +71,7 @@ class WebDetails {
 
   @override
   String toString() {
-    return 'WebDetails(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber)';
+    return 'WebDetails(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber, price: $price)';
   }
 
   @override
@@ -80,7 +84,8 @@ class WebDetails {
         o.imgUrl == imgUrl &&
         o.desc == desc &&
         o.priceHtmlTag == priceHtmlTag &&
-        o.priceNumber == priceNumber;
+        o.priceNumber == priceNumber &&
+        o.price == price;
   }
 
   @override
@@ -90,6 +95,7 @@ class WebDetails {
         imgUrl.hashCode ^
         desc.hashCode ^
         priceHtmlTag.hashCode ^
-        priceNumber.hashCode;
+        priceNumber.hashCode ^
+        price.hashCode;
   }
 }

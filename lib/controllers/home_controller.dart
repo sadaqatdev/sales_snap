@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:html/dom.dart';
@@ -75,8 +76,6 @@ class HomeController extends GetxController {
 
   SavedController _savedController = Get.put(SavedController());
 
-  WebDetails savedProduct;
-
   DatabaseHelper _helper = DatabaseHelper();
 
   FireStoreMethod _fireStoreMethod = FireStoreMethod();
@@ -85,15 +84,16 @@ class HomeController extends GetxController {
   String title = '';
   String desc = '';
   String price = '';
-
+  static String priceHtmlTag = '';
   bool enable = false;
   bool showProgress = false;
   List list = List<WebDetails>();
 
-  final intRegex = RegExp(r'\s+(\d+)\s+', multiLine: false);
-
-  final doubleRegex = RegExp(r'^[a-zA-Z0-9]+$');
-
+  final doubleRegex =
+      RegExp(r'[-+]?\d*\.\d+|\d+", "Current Level: -13.2 db or 14.2 or 3');
+  final fRegex = RegExp(r'\s+(\d+\.\d+)\s+\$');
+  var newR = RegExp(r'^(.*?)([\d\.,]+)(.*)$');
+  final reg = RegExp(r'[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$');
   var descR = 'This is a freebie for everyone,but if u wanna invite me a beer';
 
   @override
@@ -117,34 +117,45 @@ class HomeController extends GetxController {
 
   void enableValue(bool val) {
     enable = val;
+
+    update();
+  }
+
+  void showProgrss(val) {
     showProgress = val;
     update();
   }
 
   Future<void> fetch() async {
     enableValue(true);
+    showProgrss(true);
     try {
-      final response = await http.get(Uri.parse(textEditingController.text));
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
+        imageUrls = [];
+        title = '';
+        price = '';
+        Map<String, dynamic> priceMap = {};
         imageUrls = getImage(response.body);
         title = getTitle(response.body)[0];
-        Map<String, dynamic> priceMap = getPrice(response.body);
+        priceMap = getPrice(response.body);
         price = "${priceMap['currency']} ${priceMap['amount']}";
-        showProgress = false;
-        update();
+
+        showProgrss(false);
       } else {
         Get.showSnackbar(GetBar(
           message: response.statusCode.toString(),
         ));
         enableValue(false);
-        update();
+        showProgrss(false);
       }
     } catch (e) {
       Get.showSnackbar(GetBar(
         message: e.toString(),
       ));
       enableValue(false);
+      showProgrss(false);
       update();
       print('----Error-----');
       print(e.toString());
@@ -152,11 +163,36 @@ class HomeController extends GetxController {
   }
 
   saveProduct() {
-    _fireStoreMethod.saveItems(savedProduct).then((value) {
-      _helper.setWebDetails(savedProduct).then((i) {
-        _savedController.getSavedList();
+    if (title.isNotEmpty && price.isNotEmpty ||
+        HomeController.priceHtmlTag.isNotEmpty ||
+        textEditingController.text.isNotEmpty) {
+      showProgrss(true);
+      Iterable<String> p = doubleRegex.allMatches(price).map((e) => e.group(0));
+      WebDetails savedProduct = WebDetails(
+          title: title,
+          imgUrl: imageUrls[0] ?? img,
+          priceHtmlTag: HomeController.priceHtmlTag,
+          priceNumber: p.first,
+          price: price,
+          webUrl: textEditingController.text);
+
+      _fireStoreMethod.saveItems(savedProduct).then((value) {
+        _helper.setWebDetails(savedProduct).then((i) {
+          _savedController.getSavedList();
+          snakBar('Save Sucessfully');
+          showProgrss(false);
+        });
       });
-    });
+    } else {
+      snakBar('Product Details are Empty');
+    }
+  }
+
+  void snakBar(s) {
+    Get.showSnackbar(GetBar(
+      message: s,
+      duration: Duration(seconds: 3),
+    ));
   }
 
   Future<void> comparePrice() async {
@@ -179,16 +215,6 @@ class HomeController extends GetxController {
         }
       }
     });
-  }
-
-  void updatePage({imageurls, title, desc, price}) {
-    this.imageUrls = imageurls;
-    this.title = title;
-    this.desc = desc;
-    this.price = price;
-    savedProduct = savedProduct;
-    enable = false;
-    update();
   }
 
   void initNotifications() {
