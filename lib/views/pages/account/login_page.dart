@@ -163,8 +163,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 _controller.isLoding.value
                     ? Positioned(
-                        top: 70,
-                        left: Get.width / 2,
+                        top: 110,
+                        left: Get.width / 2 - 50,
                         child: progressBar(),
                       )
                     : SizedBox()

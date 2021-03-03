@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -42,6 +44,13 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
           webViewcontroller = _webViewController;
         },
         initialUrl: widget.url,
+        gestureRecognizers: Set()
+          ..add(Factory<TapGestureRecognizer>(() => TapGestureRecognizer()
+            ..onTapDown = (tap) {
+              print('----------Tap');
+              webViewcontroller.evaluateJavascript(
+                  'window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);');
+            })),
       ),
     );
   }

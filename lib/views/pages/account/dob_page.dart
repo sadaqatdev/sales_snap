@@ -58,7 +58,7 @@ class _DobPageState extends State<DobPage> {
                   lastDate: DateTime.now(),
                   currentDate: selectedDate,
                   onDateChanged: (DateTime value) {
-                    SignUpController.dob = value.toString();
+                    SignUpController.dob = value.toString().substring(0, 11);
                     selectedDate = value;
                     setState(() {});
                   },

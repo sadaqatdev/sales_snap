@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/web_details.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/pages/items_details_page.dart';
 
 class SavedTab extends StatelessWidget {
-  const SavedTab({
+  SavedTab({
     Key key,
   }) : super(key: key);
 
@@ -35,69 +36,97 @@ class SavedTileWidget extends StatelessWidget {
     this.index,
     this.saveItemList,
   }) : super(key: key);
+
   final Routes _routes = Routes();
+
+  final controller = Get.put(HomeController());
+
   @override
   Widget build(BuildContext context) {
     final title = Theme.of(context).textTheme.headline2;
 
-    return InkWell(
-      onTap: () {
-        _routes.to(
-            context,
-            ItemDetailsPage(
-              url: saveItemList[index].webUrl,
-            ));
-      },
-      child: Container(
-        height: 115,
-        padding: EdgeInsets.only(left: 8, right: 8),
-        child: Card(
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            elevation: 6,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Image.network(
-                  saveItemList[index].imgUrl,
-                  width: 110,
-                  height: 110,
-                ),
-                SizedBox(
-                  width: 12,
-                ),
-                Column(
+    return Container(
+      padding: EdgeInsets.only(left: 8, right: 8),
+      child: Card(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 6,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.network(
+                saveItemList[index].imgUrl,
+                width: 110,
+                height: 110,
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
                       height: 2,
                     ),
-                    Expanded(
-                      child: Text(
-                        saveItemList[index].title,
-                        overflow: TextOverflow.fade,
-                        style: title.copyWith(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
+                    Text(
+                      saveItemList[index].title,
+                      style: title,
+                      maxLines: 3,
+                    ),
+                    SizedBox(
+                      height: 2,
                     ),
                     Text(
                       saveItemList[index].price,
+                      maxLines: 1,
                       style: title.copyWith(color: Colors.red),
                     ),
                     SizedBox(
-                      height: 6,
+                      height: 2,
                     ),
-                    Text(saveItemList[index].webUrl),
-                    SizedBox(
-                      height: 5,
-                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton.icon(
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius: BorderRadius.circular(22)),
+                          )),
+                          onPressed: () {
+                            _routes.to(
+                                context,
+                                ItemDetailsPage(
+                                  url: saveItemList[index].webUrl,
+                                ));
+                          },
+                          icon: Icon(Icons.badge),
+                          label: Text("Buy"),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            print('---------------------');
+                            controller.deleteProduct(saveItemList[index].id);
+                          },
+                        ),
+                        SizedBox(
+                          width: 12,
+                        )
+                      ],
+                    )
                   ],
-                )
-              ],
-            )),
-      ),
+                ),
+              )
+            ],
+          )),
     );
   }
 }

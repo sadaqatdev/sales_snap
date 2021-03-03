@@ -13,7 +13,6 @@ class HomePage extends StatelessWidget {
   WebViewController webViewcontroller;
   final formKey = GlobalKey<FormState>();
   final _homeController = Get.put(HomeController());
-
   @override
   Widget build(BuildContext context) {
     final bodyStyle = Theme.of(context).textTheme.bodyText2;
@@ -183,36 +182,57 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget getRecentSave(bodyStyle) {
-    return Container(
-      height: Get.height,
-      width: Get.width,
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.81,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 5),
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.network(img),
-                SizedBox(
-                  height: 6,
-                ),
-                Text(
-                  'Lulolamenon',
-                  style: bodyStyle,
-                )
-              ],
+  Widget getRecentSave(TextStyle bodyStyle) {
+    print('------------------');
+    print(_homeController.saveList.length);
+    return _homeController.saveList.length == 0
+        ? Container(
+            padding: EdgeInsets.only(top: 30),
+            child: Center(
+              child: Text('You have not save any product.'),
+            ))
+        : Container(
+            height: Get.height,
+            width: Get.width,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.85,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 5),
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  child: Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.network(
+                          _homeController.saveList[index].imgUrl,
+                          height: 100,
+                        ),
+                        SizedBox(
+                          height: 6,
+                        ),
+                        Text(
+                          _homeController.saveList[index].title,
+                          style: bodyStyle.copyWith(fontSize: 14),
+                          maxLines: 2,
+                        ),
+                        SizedBox(
+                          height: 6,
+                        ),
+                        Text(
+                          _homeController.saveList[index].price,
+                          style: bodyStyle.copyWith(color: Colors.red),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+              itemCount: _homeController.saveList.length,
             ),
           );
-        },
-        itemCount: 12,
-      ),
-    );
   }
 }
 

@@ -72,6 +72,7 @@ class DatabaseHelper {
       ));
       return result;
     }
+    return 0;
   }
 
   Future<List<WebDetails>> getWebDetails() async {
@@ -80,6 +81,7 @@ class DatabaseHelper {
     var db = await this.database;
     var result = await db.query(tableWebDtails);
     result.forEach((element) {
+      print(element.toString());
       var alarmInfo = WebDetails.fromMap(element);
       _alarms.add(alarmInfo);
     });

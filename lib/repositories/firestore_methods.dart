@@ -66,6 +66,13 @@ class FireStoreMethod {
     return 'ok';
   }
 
+  Future<String> updateUser(MUser user) async {
+    CollectionReference _collection = _firestore.collection('user');
+    await _collection.doc(_currentUser.uid).update(user.toMap());
+
+    return 'ok';
+  }
+
   Future<MUser> getMuser() async {
     CollectionReference _collection = _firestore.collection('user');
     DocumentSnapshot _snap = await _collection.doc(_currentUser.uid).get();

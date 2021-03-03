@@ -1,4 +1,3 @@
-import 'package:regexed_validator/regexed_validator.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:universal_html/html.dart';
 import 'package:universal_html/parsing.dart';

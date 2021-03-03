@@ -18,8 +18,12 @@ class AccountPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           width: Get.width,
-          height: Get.height - 100,
-          padding: EdgeInsets.only(left: 24, right: 24, top: 10, bottom: 10),
+          height: Get.height,
+          padding: EdgeInsets.only(
+            left: 24,
+            right: 24,
+            top: 10,
+          ),
           child: GetBuilder<AccountCntroller>(builder: (controller) {
             if (_accountCntroller.isLoding) {
               return progressBar();
@@ -99,6 +103,24 @@ class AccountPage extends StatelessWidget {
                       SizedBox(
                         width: 12,
                       ),
+                      Text('Gender', style: lableStyle),
+                      SizedBox(
+                        width: 24,
+                      ),
+                      Text(
+                        controller.user.gender,
+                        style: style,
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 12,
+                      ),
                       Text('Password', style: lableStyle),
                       SizedBox(
                         width: 24,
@@ -151,19 +173,33 @@ class AccountPage extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
+                    height: 12,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: Text('Your Intrests'),
+                  ),
+                  Wrap(
+                      children: controller.user.intersts
+                          .map((e) => Padding(
+                                padding: const EdgeInsets.only(left: 8, top: 8),
+                                child: Text('$e ,'),
+                              ))
+                          .toList()),
+                  SizedBox(
                     height: 16,
                   ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Text('Terms and Conditions', style: lableStyle),
-                      SizedBox(
-                        width: 24,
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     SizedBox(
+                  //       width: 12,
+                  //     ),
+                  //     Text('Terms and Conditions', style: lableStyle),
+                  //     SizedBox(
+                  //       width: 24,
+                  //     ),
+                  //   ],
+                  // ),
                   Spacer(
                     flex: 2,
                   ),
@@ -177,7 +213,11 @@ class AccountPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(24),
                             side: BorderSide(color: Colors.blueAccent)),
                         onPressed: () {
-                          Get.to(() => UpdateProfile());
+                          Get.to(() => UpdateProfile(
+                                dobController: controller.user.dob,
+                                email: controller.user.email,
+                                name: controller.user.name,
+                              ));
                         },
                         child: Text(
                           'Update',

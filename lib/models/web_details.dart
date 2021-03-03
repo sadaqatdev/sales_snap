@@ -8,15 +8,16 @@ class WebDetails {
   String priceHtmlTag;
   String priceNumber;
   String price;
-  WebDetails({
-    this.webUrl,
-    this.title,
-    this.imgUrl,
-    this.desc,
-    this.priceHtmlTag,
-    this.priceNumber,
-    this.price,
-  });
+  int id;
+  WebDetails(
+      {this.webUrl,
+      this.title,
+      this.imgUrl,
+      this.desc,
+      this.priceHtmlTag,
+      this.priceNumber,
+      this.price,
+      this.id});
 
   WebDetails copyWith({
     String webUrl,
@@ -54,14 +55,14 @@ class WebDetails {
     if (map == null) return null;
 
     return WebDetails(
-      webUrl: map['webUrl'],
-      title: map['title'],
-      imgUrl: map['imgUrl'],
-      desc: map['desc'],
-      priceHtmlTag: map['priceHtmlTag'],
-      priceNumber: map['priceNumber'],
-      price: map['price'],
-    );
+        webUrl: map['webUrl'],
+        title: map['title'],
+        imgUrl: map['imgUrl'],
+        desc: map['desc'],
+        priceHtmlTag: map['priceHtmlTag'],
+        priceNumber: map['priceNumber'],
+        price: map['price'],
+        id: map['id']);
   }
 
   String toJson() => json.encode(toMap());

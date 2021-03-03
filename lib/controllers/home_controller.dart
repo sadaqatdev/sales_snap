@@ -81,13 +81,17 @@ class HomeController extends GetxController {
   FireStoreMethod _fireStoreMethod = FireStoreMethod();
 
   List<String> imageUrls = [];
+
   String title = '';
   String desc = '';
   String price = '';
   static String priceHtmlTag = '';
   bool enable = false;
   bool showProgress = false;
+
   List list = List<WebDetails>();
+
+  List<WebDetails> saveList = [];
 
   final doubleRegex =
       RegExp(r'[-+]?\d*\.\d+|\d+", "Current Level: -13.2 db or 14.2 or 3');
@@ -101,7 +105,7 @@ class HomeController extends GetxController {
     // initNotifications();
 
     // initPlatformState();
-
+    getSavedList();
     BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 
     textEditingController = TextEditingController();
@@ -113,6 +117,12 @@ class HomeController extends GetxController {
   void onClose() {
     textEditingController.dispose();
     super.onClose();
+  }
+
+  void getSavedList() async {
+    saveList = await _helper.getWebDetails();
+
+    update();
   }
 
   void enableValue(bool val) {
@@ -186,6 +196,14 @@ class HomeController extends GetxController {
     } else {
       snakBar('Product Details are Empty');
     }
+  }
+
+  deleteProduct(index) {
+    _helper.delete(index).then((value) {
+      print('----------delete');
+      print(value);
+      _savedController.getSavedList();
+    });
   }
 
   void snakBar(s) {
@@ -325,10 +343,6 @@ class HomeController extends GetxController {
   //   _fireStoreMethod.saveItems(webDetails).then((e) {});
   // }
 
-  void getSavedList() async {
-    list = await _helper.getWebDetails();
-    update();
-  }
 }
 
 // if (url.substring(8, index) == item.webUrl) {
