@@ -43,7 +43,8 @@ const productAttributeMap = {
     "product-description__name",
     "__name",
     "title",
-    "item-name",
+    "Title"
+        "item-name",
     "pdp-title",
     "product-name",
     "product_name",
@@ -93,15 +94,15 @@ const productAttributeMap = {
     "product-image",
     "item active",
     "imgTagWrapper",
-
+    "__image",
     "b-product_images-main_image",
     "swiper-zoom-container",
-    "mb-3 long-description",
+    "-image",
     "ProductImages-imgLink",
     "pdp-slider",
     "product-image",
     "ProductImage-",
-    "img-responsive product__image"
+    "product__image"
         "product-image",
     "productImages-",
     "slick-slide",
@@ -121,12 +122,13 @@ const productAttributeMap = {
     "pl-FluidImage-image",
     "img-wrap",
     "zoomImg",
+    "ShotView",
     "product-carousel-image",
     "main-image",
     "productImageCarousel_image",
     "image_item",
     "SGBOXU1_image",
-    "amp-page",
+
     "slick-slide",
     "slick-slide slick-current slick-active",
     "pimages",
@@ -168,19 +170,22 @@ Map<String, dynamic> getPrice(String domData) {
           if (element.attributes['content'] != null) {
             if (element.attributes['content'].trim().isNotEmpty) {
               HomeController.priceHtmlTag = '[$filter*="$attrValue"]';
+              print(
+                  '==Price==========${element.attributes['content'].replaceAll(" ", "")}');
               setData(element.attributes['content'].replaceAll(" ", ""));
             }
           }
         } else if (element.innerText != null) {
           if (element.innerText.trim().isNotEmpty) {
             HomeController.priceHtmlTag = '[$filter*="$attrValue"]';
+            print('==Price==========${element.innerText.replaceAll(" ", "")}');
             setData(element.innerText.replaceAll(" ", ""));
           }
         }
       });
     });
   });
-
+  print('=======price lenght===== ${titleSet.length}');
   var currentCurrency = "";
   var s = ["USD", "\$", "£", "PKR"];
 
@@ -223,18 +228,22 @@ List<String> getTitle(String domData) {
         if (filter.contains("prop")) {
           if (element.attributes['content'] != null) {
             if (element.attributes['content'].trim().isNotEmpty) {
+              print(
+                  '------Title  data 2-------- ${element.attributes['content'].replaceAll(" ", "")}');
               setTitle(element.attributes['content'].replaceAll(" ", ""));
             }
           }
         } else if (element.innerText != null) {
           if (element.innerText.trim().isNotEmpty) {
+            print(
+                '------Title data 2-------- ${element.innerText.replaceAll(" ", "")}');
             setTitle(element.innerText.replaceAll(" ", ""));
           }
         }
       });
     });
   });
-
+  print('=======Title lenght===== ${titleSet.length}');
   return titleSet.toSet().toList();
 }
 
@@ -262,20 +271,27 @@ List<String> getImage(String domData) {
               if (element.attributes['content'].trim().isNotEmpty) {
                 String prop = element.attributes['content'].replaceAll(" ", "");
 
-                if (prop.contains('http')) setImage(prop);
+                if (prop.contains('http')) {
+                  print('------image up date-------- $prop');
+                  setImage(prop);
+                }
               }
             }
           } else if (element.innerText != null) {
             if (element.innerText.trim().isNotEmpty) {
               String data = element.innerText.replaceAll(" ", "");
 
-              if (data.contains('http')) setImage(data);
+              if (data.contains('http')) {
+                print('=======imge data======== $data');
+                setImage(data);
+              }
             }
           }
         });
       }
     });
   });
+  print('=======image lenght===== ${imageSet.length}');
 
   return imageSet.toSet().toList();
 }

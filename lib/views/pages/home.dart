@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
-import 'package:sales_snap/utils/routes/routes.dart';
-import 'package:sales_snap/views/pages/items_details_page.dart';
-import 'package:sales_snap/views/widgets/appBar.dart';
-import 'package:sales_snap/views/widgets/snakbar.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class HomePage extends StatelessWidget {
-  final Routes _routes = Routes();
-
-  WebViewController webViewcontroller;
   final formKey = GlobalKey<FormState>();
   final _homeController = Get.put(HomeController());
   @override
@@ -19,7 +11,9 @@ class HomePage extends StatelessWidget {
     final lable = Theme.of(context).textTheme.headline1;
     return GetBuilder<HomeController>(builder: (homecontroller) {
       return Scaffold(
-        appBar: appBar(context, 'Sales Snap'),
+        appBar: AppBar(
+          title: Text('Title'),
+        ),
         body: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.only(left: 12, right: 12, top: 12),
@@ -87,7 +81,7 @@ class HomePage extends StatelessWidget {
                     ? Positioned(
                         top: 50,
                         left: Get.width / 2 - 50,
-                        child: progressBar(),
+                        child: CircularProgressIndicator(),
                       )
                     : SizedBox()
               ],
@@ -123,14 +117,7 @@ class HomePage extends StatelessWidget {
                               BorderSide(color: Theme.of(context).primaryColor),
                           borderRadius: BorderRadius.circular(22)),
                     )),
-                    onPressed: () {
-                      if (formKey.currentState.validate())
-                        _routes.to(
-                            context,
-                            ItemDetailsPage(
-                              url: homecontroller.textEditingController.text,
-                            ));
-                    },
+                    onPressed: () {},
                     icon: Icon(Icons.public),
                     label: Text("WebSite"),
                   ),
@@ -235,39 +222,3 @@ class HomePage extends StatelessWidget {
           );
   }
 }
-
-// ElevatedButton.icon(
-//   onPressed: () {
-//     print(" 🚀 debuging at line 106");
-//     webViewcontroller.evaluateJavascript('''
-//         window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);
-//         window.SNAP.postMessage(document.querySelectorAll(".pdp img")[0].getAttribute('srcset').split('w,')[0]);
-//         ''');
-//   },
-//   icon: Text("🚀 "),
-//   label: Text("Load"),
-// ),
-// Expanded(
-//   child: WebView(
-//     gestureNavigationEnabled: true,
-//     javascriptMode: JavascriptMode.unrestricted,
-//     javascriptChannels: [
-//       JavascriptChannel(
-//           name: 'SNAP',
-//           onMessageReceived: (message) {
-//             print('-------in snap---------------');
-//             print(message.message);
-//           })
-//     ].toSet(),
-//     onPageFinished: (url) {
-//       print(" 🚀 debuging at line 106");
-//       webViewcontroller.evaluateJavascript(
-//           'window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);');
-//     },
-//     onWebViewCreated: (WebViewController _webViewController) {
-//       webViewcontroller = _webViewController;
-//     },
-//     initialUrl:
-//         'https://shop.lululemon.com/p/mens-jackets-and-outerwear/Expeditionist-Anorak/_/prod10370103?color=0001',
-//   ),
-// ),

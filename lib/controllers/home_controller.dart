@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,11 +20,13 @@ var img =
     'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351';
 String url =
     'https://shop.lululemon.com/p/mens-jackets-and-outerwear/Expeditionist-Anorak/_/prod10370103?color=0001';
+
 void backgroundFetchHeadlessTask(HeadlessTask task) async {
   // var taskId = task.taskId;
-  print('---------------------');
-  initNotifications();
-  _showNotification();
+  final controller = Get.put(HomeController());
+
+  controller.comparePrice();
+
   // var timeout = task.timeout;
   // HomeController _controller = HomeController();
   // if (timeout) {
@@ -43,31 +46,6 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
   //BackgroundFetch.finish(taskId);
 }
 
-FlutterLocalNotificationsPlugin fltrNotification;
-void initNotifications() {
-  var androidInitilize = AndroidInitializationSettings('ic_launcher');
-  var iOSinitilize = IOSInitializationSettings();
-  var initilizationsSettings =
-      InitializationSettings(android: androidInitilize, iOS: iOSinitilize);
-  fltrNotification = FlutterLocalNotificationsPlugin();
-  fltrNotification.initialize(
-    initilizationsSettings,
-  );
-}
-
-Future _showNotification() async {
-  var androidDetails = AndroidNotificationDetails(
-      "Channel ID", "Desi programmer", "This is my channel",
-      importance: Importance.max);
-  var iSODetails = IOSNotificationDetails();
-  var generalNotificationDetails =
-      NotificationDetails(android: androidDetails, iOS: iSODetails);
-
-  await fltrNotification.show(
-      0, "Task", "You created a Task", generalNotificationDetails,
-      payload: "Task");
-}
-
 ////////////CONTROLLER START/////////////////////////////////////////////////////////////
 class HomeController extends GetxController {
   TextEditingController textEditingController;
@@ -83,28 +61,26 @@ class HomeController extends GetxController {
   List<String> imageUrls = [];
 
   String title = '';
-  String desc = '';
+
   String price = '';
+
   static String priceHtmlTag = '';
+
   bool enable = false;
+
   bool showProgress = false;
 
-  List list = List<WebDetails>();
+  List<WebDetails> list = [];
 
   List<WebDetails> saveList = [];
 
-  final doubleRegex =
-      RegExp(r'[-+]?\d*\.\d+|\d+", "Current Level: -13.2 db or 14.2 or 3');
-  final fRegex = RegExp(r'\s+(\d+\.\d+)\s+\$');
-  var newR = RegExp(r'^(.*?)([\d\.,]+)(.*)$');
-  final reg = RegExp(r'[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$');
-  var descR = 'This is a freebie for everyone,but if u wanna invite me a beer';
+  var doubleRE = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
 
   @override
   void onInit() {
-    // initNotifications();
+    initNotifications();
 
-    // initPlatformState();
+    initPlatformState();
     getSavedList();
     BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 
@@ -138,32 +114,30 @@ class HomeController extends GetxController {
 
   Future<void> fetch() async {
     enableValue(true);
-    showProgrss(true);
+    //showProgrss(true);
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(textEditingController.text));
 
       if (response.statusCode == 200) {
-        imageUrls = [];
-        title = '';
-        price = '';
         Map<String, dynamic> priceMap = {};
-        imageUrls = getImage(response.body);
+        this.refresh();
+
         title = getTitle(response.body)[0];
+        sleep(Duration(seconds: 1));
         priceMap = getPrice(response.body);
+        sleep(Duration(seconds: 1));
+        imageUrls = getImage(response.body);
+
         price = "${priceMap['currency']} ${priceMap['amount']}";
 
         showProgrss(false);
       } else {
-        Get.showSnackbar(GetBar(
-          message: response.statusCode.toString(),
-        ));
+        snakBar(response.statusCode);
         enableValue(false);
         showProgrss(false);
       }
     } catch (e) {
-      Get.showSnackbar(GetBar(
-        message: e.toString(),
-      ));
+      snakBar(e);
       enableValue(false);
       showProgrss(false);
       update();
@@ -177,12 +151,13 @@ class HomeController extends GetxController {
         HomeController.priceHtmlTag.isNotEmpty ||
         textEditingController.text.isNotEmpty) {
       showProgrss(true);
-      Iterable<String> p = doubleRegex.allMatches(price).map((e) => e.group(0));
+      var p =
+          doubleRE.allMatches(price).map((m) => double.parse(m[0])).toList();
       WebDetails savedProduct = WebDetails(
           title: title,
           imgUrl: imageUrls[0] ?? img,
           priceHtmlTag: HomeController.priceHtmlTag,
-          priceNumber: p.first,
+          priceNumber: p.elementAt(0).toString(),
           price: price,
           webUrl: textEditingController.text);
 
@@ -215,18 +190,49 @@ class HomeController extends GetxController {
 
   Future<void> comparePrice() async {
     List<WebDetails> _list = await _helper.getWebDetails();
-    _list.forEach((element) async {
-      String url = element.webUrl;
-      String priceHtmlTag = element.priceHtmlTag;
-      String price = element.priceNumber;
 
-      final response = await http.Client().get(Uri.parse(url));
+    _list.forEach((element) async {
+      final response = await http.Client().get(Uri.parse(element.webUrl));
+
+      var newPricePareval;
+      var oldParseValue;
+
+      String oldPrice = element.priceNumber;
 
       if (response.statusCode == 200) {
         try {
           Document document = parse(response.body);
+
           String newPrice =
-              document.querySelectorAll("*[class*=\'price\']")[0].toString();
+              document.querySelectorAll(element.priceHtmlTag)[0].toString();
+          try {
+            if (oldPrice.isNum) {
+              oldParseValue = double.parse(oldPrice);
+            } else {
+              oldParseValue = doubleRE
+                  .allMatches(oldPrice)
+                  .map((m) => double.parse(m[0]))
+                  .toList();
+            }
+          } catch (e) {
+            snakBar(e);
+          }
+
+          try {
+            if (newPrice.isNum) {
+              newPricePareval = double.parse(newPrice);
+            } else {
+              newPricePareval = doubleRE
+                  .allMatches(newPrice)
+                  .map((m) => double.parse(m[0]))
+                  .toList();
+            }
+            if (newPricePareval < oldParseValue) {
+              _showNotification();
+            }
+          } catch (e) {
+            snakBar(e);
+          }
         } catch (e) {
           print('----Error-----');
           print(e.toString());
