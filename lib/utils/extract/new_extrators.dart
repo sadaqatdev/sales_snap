@@ -106,12 +106,14 @@ const productAttributeMap = {
     ////////inner html tages
     "{parent: '.component-media' child:'img',  }",
     "{parent: '.image__container' child:'img',  }",
+    "{parent: '.main-page' child:'img',  }",
     "{parent: '.image-viewer' child:'img',  }",
     "{parent: '.image' child:'img',  }",
     "{parent: '.product-detail' child:'img',  }",
     "{parent: '.thumb' child:'img',  }",
     "{parent: '.main-image' child:'img',  }",
     "{parent: '.product-media' child:'img',  }",
+    "{parent: '.image-media' child:'img',  }",
 
     "{parent: '.productName' child:'img',  }",
     "{parent: '.action-sub' child:'img',  }",
