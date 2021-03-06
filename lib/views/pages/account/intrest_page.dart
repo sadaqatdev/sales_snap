@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
@@ -17,6 +18,8 @@ class _IntrestPageState extends State<IntrestPage> {
 
   FireStoreMethod _method = FireStoreMethod();
   SignUpController _controller = Get.put(SignUpController());
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  String token = '';
   @override
   void initState() {
     _list = [
@@ -28,7 +31,12 @@ class _IntrestPageState extends State<IntrestPage> {
       'Travel & Accomodation',
     ];
     _isChecked = List<bool>.filled(_list.length, false);
+    getToken();
     super.initState();
+  }
+
+  void getToken() async {
+    token = await messaging.getToken();
   }
 
   @override
@@ -117,21 +125,26 @@ class _IntrestPageState extends State<IntrestPage> {
                     onPressed: () {
                       if (SignUpController.intersts.isEmpty) {
                         print(SignUpController.intersts);
+
                         Get.showSnackbar(GetBar(
                           message: 'Please select at least one interest',
                           duration: Duration(seconds: 2),
                         ));
+
                         return;
                       }
 
                       _method
-                          .setUser(MUser(
-                        dob: SignUpController.dob,
-                        email: SignUpController.email,
-                        gender: SignUpController.gender,
-                        intersts: SignUpController.intersts.toList(),
-                        name: SignUpController.name,
-                      ))
+                          .setUser(
+                        MUser(
+                          dob: SignUpController.dob,
+                          email: SignUpController.email,
+                          gender: SignUpController.gender,
+                          intersts: SignUpController.intersts.toList(),
+                          name: SignUpController.name,
+                          token: token,
+                        ),
+                      )
                           .then((s) {
                         Get.offAll(() => BottomNavBar());
                       });

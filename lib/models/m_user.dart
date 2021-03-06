@@ -9,6 +9,7 @@ class MUser {
   String dob;
   String gender;
   List<String> intersts;
+  String token;
   MUser({
     this.name,
     this.email,
@@ -16,6 +17,7 @@ class MUser {
     this.dob,
     this.gender,
     this.intersts,
+    this.token,
   });
 
   MUser copyWith({
@@ -25,6 +27,7 @@ class MUser {
     String dob,
     String gender,
     List<String> intersts,
+    String token,
   }) {
     return MUser(
       name: name ?? this.name,
@@ -33,6 +36,7 @@ class MUser {
       dob: dob ?? this.dob,
       gender: gender ?? this.gender,
       intersts: intersts ?? this.intersts,
+      token: token ?? this.token,
     );
   }
 
@@ -44,6 +48,7 @@ class MUser {
       'dob': dob,
       'gender': gender,
       'intersts': intersts,
+      'token': token,
     };
   }
 
@@ -57,6 +62,7 @@ class MUser {
       dob: map['dob'],
       gender: map['gender'],
       intersts: List<String>.from(map['intersts']),
+      token: map['token'],
     );
   }
 
@@ -66,7 +72,7 @@ class MUser {
 
   @override
   String toString() {
-    return 'MUser(name: $name, email: $email, imageUrl: $imageUrl, dob: $dob, gender: $gender, intersts: $intersts)';
+    return 'MUser(name: $name, email: $email, imageUrl: $imageUrl, dob: $dob, gender: $gender, intersts: $intersts, token: $token)';
   }
 
   @override
@@ -79,7 +85,8 @@ class MUser {
         o.imageUrl == imageUrl &&
         o.dob == dob &&
         o.gender == gender &&
-        listEquals(o.intersts, intersts);
+        listEquals(o.intersts, intersts) &&
+        o.token == token;
   }
 
   @override
@@ -89,6 +96,7 @@ class MUser {
         imageUrl.hashCode ^
         dob.hashCode ^
         gender.hashCode ^
-        intersts.hashCode;
+        intersts.hashCode ^
+        token.hashCode;
   }
 }

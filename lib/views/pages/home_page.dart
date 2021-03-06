@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
@@ -10,9 +11,21 @@ class HomePage extends StatelessWidget {
   final Routes _routes = Routes();
 
   final formKey = GlobalKey<FormState>();
+
   final _homeController = Get.put(HomeController());
+
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  String token;
+
+  void getToken() async {
+    token = await messaging.getToken();
+    print(token);
+  }
+
   @override
   Widget build(BuildContext context) {
+    getToken();
     final bodyStyle = Theme.of(context).textTheme.bodyText2;
     final lable = Theme.of(context).textTheme.headline1;
     return GetBuilder<HomeController>(

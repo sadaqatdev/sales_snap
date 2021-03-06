@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:background_fetch/background_fetch.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -55,6 +56,8 @@ class HomeController extends GetxController {
   DatabaseHelper _helper = DatabaseHelper();
 
   FireStoreMethod _fireStoreMethod = FireStoreMethod();
+
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   Extractor extractor = Extractor();
 
@@ -348,6 +351,27 @@ class HomeController extends GetxController {
         print('bbbbb[BackgroundFetch] stop success: $status');
       });
     }
+  }
+
+  void firebaseMessagin() async {
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        _showNotification();
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
   }
 
   // saveToFirestore(WebDetails webDetails) {

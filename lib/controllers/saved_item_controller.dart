@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/models/notification.dart';
 import 'package:sales_snap/models/web_details.dart';
