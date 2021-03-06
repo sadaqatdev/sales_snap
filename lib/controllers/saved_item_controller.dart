@@ -1,12 +1,23 @@
 import 'package:get/get.dart';
+import 'package:sales_snap/models/notification.dart';
 import 'package:sales_snap/models/web_details.dart';
 import 'package:sales_snap/repositories/database_helper.dart';
+import 'package:sales_snap/repositories/firestore_methods.dart';
 
 class SavedController extends GetxController {
   List<WebDetails> saveItemList = [];
-  // FireStoreMethod _method = FireStoreMethod();
+
+  List<WebDetails> buyItemList = [];
+
+  List<Notification> notificationList = [];
+
+  final _method = FireStoreMethod();
+
+  bool isLoading = false;
+
   onInit() {
     getSavedList();
+    getBuyList();
     super.onInit();
   }
 
@@ -17,8 +28,15 @@ class SavedController extends GetxController {
     update();
   }
 
-  // getSavedFireStoreList() async {
-  //   saveItemList = await _method.getSavedItems();
-  //   update();
-  // }
+  getBuyList() async {
+    buyItemList = await _method.getbuyItems();
+    isLoading = true;
+    update();
+  }
+
+  getNotifications() async {
+    notificationList = await _method.getNotifications();
+    isLoading = true;
+    update();
+  }
 }

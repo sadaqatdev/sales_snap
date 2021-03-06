@@ -10,11 +10,12 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String isLogin = loginInfo.read('isLogin');
+
     return GetMaterialApp(
-        theme: AppTheme.themeData,
-        debugShowCheckedModeBanner: false,
-        home:
-            isLogin?.contains('yes') ?? false ? BottomNavBar() : LoginSignUp());
+      theme: AppTheme.themeData,
+      debugShowCheckedModeBanner: false,
+      home: isLogin?.contains('yes') ?? false ? BottomNavBar() : LoginSignUp(),
+    );
   }
   // isLogin?.contains('yes') ?? false ? BottomNavBar() : LoginSignUp()
 }

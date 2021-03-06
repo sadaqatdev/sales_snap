@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,11 +14,6 @@ import 'package:http/http.dart' as http;
 import 'package:sales_snap/repositories/database_helper.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/utils/extract/extract.dart';
-
-var img =
-    'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351';
-String url =
-    'https://shop.lululemon.com/p/mens-jackets-and-outerwear/Expeditionist-Anorak/_/prod10370103?color=0001';
 
 void backgroundFetchHeadlessTask(HeadlessTask task) async {
   // var taskId = task.taskId;
@@ -48,6 +42,10 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
 
 ////////////CONTROLLER START/////////////////////////////////////////////////////////////
 class HomeController extends GetxController {
+  ///get
+
+  static HomeController get to => Get.find();
+
   TextEditingController textEditingController;
 
   FlutterLocalNotificationsPlugin fltrNotification;
@@ -57,6 +55,8 @@ class HomeController extends GetxController {
   DatabaseHelper _helper = DatabaseHelper();
 
   FireStoreMethod _fireStoreMethod = FireStoreMethod();
+
+  Extractor extractor = Extractor();
 
   List<String> imageUrls = [];
 
@@ -78,14 +78,16 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    initNotifications();
+    //initNotifications();
 
-    initPlatformState();
+    //initPlatformState();
+
     getSavedList();
+
     BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 
     textEditingController = TextEditingController();
-    // textEditingController.text = url;
+
     super.onInit();
   }
 
@@ -114,23 +116,26 @@ class HomeController extends GetxController {
 
   Future<void> fetch() async {
     enableValue(true);
-    //showProgrss(true);
+    showProgrss(true);
     try {
-      final response = await http.get(Uri.parse(textEditingController.text));
+      final response = await http.Client().get(textEditingController.text);
 
       if (response.statusCode == 200) {
         Map<String, dynamic> priceMap = {};
-        this.refresh();
 
-        title = getTitle(response.body)[0];
-        sleep(Duration(seconds: 1));
-        priceMap = getPrice(response.body);
-        sleep(Duration(seconds: 1));
-        imageUrls = getImage(response.body);
+        title = '';
+
+        title = extractor.getTitle(response.body)[0];
+
+        priceMap = extractor.getPrice(response.body);
 
         price = "${priceMap['currency']} ${priceMap['amount']}";
 
-        showProgrss(false);
+        imageUrls = extractor.getImage(response.body);
+
+        showProgress = false;
+
+        update();
       } else {
         snakBar(response.statusCode);
         enableValue(false);
@@ -140,7 +145,7 @@ class HomeController extends GetxController {
       snakBar(e);
       enableValue(false);
       showProgrss(false);
-      update();
+
       print('----Error-----');
       print(e.toString());
     }
@@ -155,7 +160,7 @@ class HomeController extends GetxController {
           doubleRE.allMatches(price).map((m) => double.parse(m[0])).toList();
       WebDetails savedProduct = WebDetails(
           title: title,
-          imgUrl: imageUrls[0] ?? img,
+          imgUrl: imageUrls[0],
           priceHtmlTag: HomeController.priceHtmlTag,
           priceNumber: p.elementAt(0).toString(),
           price: price,
@@ -183,7 +188,7 @@ class HomeController extends GetxController {
 
   void snakBar(s) {
     Get.showSnackbar(GetBar(
-      message: s,
+      message: s.toString(),
       duration: Duration(seconds: 3),
     ));
   }

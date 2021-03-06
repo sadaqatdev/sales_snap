@@ -17,13 +17,17 @@ class SavedTab extends StatelessWidget {
         width: Get.width,
         height: Get.height,
         child: GetBuilder<SavedController>(builder: (controller) {
-          return ListView.builder(
-            itemCount: controller.saveItemList.length,
-            itemBuilder: (context, index) {
-              return SavedTileWidget(
-                  saveItemList: controller.saveItemList, index: index);
-            },
-          );
+          return controller.saveItemList.isEmpty
+              ? Center(
+                  child: Text('No Saved Items'),
+                )
+              : ListView.builder(
+                  itemCount: controller.saveItemList.length,
+                  itemBuilder: (context, index) {
+                    return SavedTileWidget(
+                        saveItemList: controller.saveItemList, index: index);
+                  },
+                );
         }));
   }
 }

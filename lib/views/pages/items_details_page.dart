@@ -23,34 +23,36 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: WebView(
-        gestureNavigationEnabled: true,
-        javascriptMode: JavascriptMode.unrestricted,
-        javascriptChannels: [
-          JavascriptChannel(
-              name: 'SNAP',
-              onMessageReceived: (message) {
-                print('-------in snap---------------');
-                print(message.message);
-              })
-        ].toSet(),
-        onPageFinished: (url) {
-          print(" 🚀 debuging at line 106");
-          webViewcontroller.evaluateJavascript(
-              'window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);');
-        },
-        onWebViewCreated: (WebViewController _webViewController) {
-          webViewcontroller = _webViewController;
-        },
-        initialUrl: widget.url,
-        gestureRecognizers: Set()
-          ..add(Factory<TapGestureRecognizer>(() => TapGestureRecognizer()
-            ..onTapDown = (tap) {
-              print('----------Tap');
-              webViewcontroller.evaluateJavascript(
-                  'window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);');
-            })),
+    return SafeArea(
+      child: Container(
+        child: WebView(
+          gestureNavigationEnabled: true,
+          javascriptMode: JavascriptMode.unrestricted,
+          javascriptChannels: [
+            JavascriptChannel(
+                name: 'SNAP',
+                onMessageReceived: (message) {
+                  print('-------in snap---------------');
+                  print(message.message);
+                })
+          ].toSet(),
+          onPageFinished: (url) {
+            print(" 🚀 debuging at line 106");
+            webViewcontroller.evaluateJavascript(
+                'window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);');
+          },
+          onWebViewCreated: (WebViewController _webViewController) {
+            webViewcontroller = _webViewController;
+          },
+          initialUrl: widget.url,
+          gestureRecognizers: Set()
+            ..add(Factory<TapGestureRecognizer>(() => TapGestureRecognizer()
+              ..onTapDown = (tap) {
+                print('----------Tap');
+                webViewcontroller.evaluateJavascript(
+                    'window.SNAP.postMessage(document.querySelectorAll("*[class*=\'price\']")[0].innerText);');
+              })),
+        ),
       ),
     );
   }

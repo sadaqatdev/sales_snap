@@ -114,7 +114,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         child: Text('SignUp'),
                       ),
                       onPressed: () {
-                        if (_formKey.currentState.validate()) {
+                        bool emailValid = RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(emailContoller.text);
+                        if (_formKey.currentState.validate() && emailValid) {
                           controller.isLoding(true);
                           _repo
                               .handleSignUp(
@@ -131,6 +134,12 @@ class _SignUpPageState extends State<SignUpPage> {
                               duration: Duration(seconds: 3),
                             ));
                           });
+                        } else {
+                          controller.isLoding(false);
+                          Get.showSnackbar(GetBar(
+                            message: 'Enter Valid Email Address',
+                            duration: Duration(seconds: 3),
+                          ));
                         }
                       },
                     );

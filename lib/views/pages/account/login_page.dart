@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
     return SingleChildScrollView(
       child: Container(
         height: Get.height,
-        padding: EdgeInsets.only(left: 16, right: 16),
+        padding: EdgeInsets.only(left: 16, right: 16, top: 25),
         child: Form(
           key: formKey,
           child: Obx(() {
@@ -58,9 +58,15 @@ class _LoginPageState extends State<LoginPage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(
+                      height: 32,
+                    ),
                     Text(
                       'Login To App',
                       style: lablesStyle,
+                    ),
+                    SizedBox(
+                      height: 32,
                     ),
                     TextFormField(
                       controller: userNameController,
@@ -141,20 +147,26 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       onPressed: () async {
-                        if (userNameController.text.isNotEmpty) {
+                        bool emailValid = RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(userNameController.text);
+                        if (userNameController.text.isNotEmpty && emailValid) {
                           await _authRepo
                               .resetPassword(userNameController.text)
                               .then((msg) {
                             if (msg == 'ok') {
-                              Get.dialog(Text(
-                                  'Reset Link is Sent to Your Email Address'));
+                              Get.defaultDialog(
+                                  content: Text(
+                                      'Password Reset link is send to your Email address.'));
                             } else {
                               Get.dialog(Text(msg));
                             }
                           });
                         } else {
                           Get.showSnackbar(GetBar(
-                            message: 'Email is Empty',
+                            message:
+                                'Enter only Email, we send wassword link to your Email address',
+                            duration: Duration(seconds: 3),
                           ));
                         }
                       },
