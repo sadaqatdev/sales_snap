@@ -116,6 +116,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetch() async {
+<<<<<<< Updated upstream
     final response = await http.Client().get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -141,6 +142,18 @@ class HomeController extends GetxController {
       ));
     }
   }
+=======
+    enableValue(true);
+    showProgrss(true);
+
+    String url = textEditingController.text;
+    String host = Uri.parse(url).host;
+    try {
+      final response = await http.Client().get(url);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> priceMap = {};
+>>>>>>> Stashed changes
 
   void extract(Document document) {
     int index = url.indexOf('.com');
@@ -157,9 +170,25 @@ class HomeController extends GetxController {
 
         print(price.replaceAll(RegExp('[^0-9]'), ''));
 
+<<<<<<< Updated upstream
         updatePage(price: price, title: title, desc: 'desc');
 
         int p = int.parse(price.replaceAll(RegExp('[^0-9]'), ''));
+=======
+        
+
+        List<String> rawUrls = extractor.getImage(response.body);
+        rawUrls.forEach((String url) {
+          if (url.indexOf("//") == 0) {
+            imageUrls.add("https://$host${url.replaceAll('//', '/')}");
+          } else if (url.indexOf("/") == 0) {
+            imageUrls.add("https://$host$url");
+          } else if (!url.contains("http")) {
+            imageUrls.add("https://$host$url");
+          }
+        });
+        showProgress = false;
+>>>>>>> Stashed changes
 
         savedProduct = WebDetails(
           title: title,
