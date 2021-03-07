@@ -120,22 +120,42 @@ class HomeController extends GetxController {
   Future<void> fetch() async {
     enableValue(true);
     showProgrss(true);
+    title = "";
     try {
       final response = await http.Client().get(textEditingController.text);
 
       if (response.statusCode == 200) {
         Map<String, dynamic> priceMap = {};
 
-        title = '';
+        extractor.getTitles(response.body, (List<String> titles) {
+          title = titles[0];
 
-        title = extractor.getTitle(response.body)[0];
+          print("printing title at lin 135 $title");
+        });
 
-        priceMap = extractor.getPrice(response.body);
+        extractor.getImages(response.body, (List<String> images) {
+          imageUrls = images;
+          print("printing images at lin 141 $images");
+        }, textEditingController.text);
+        extractor.getPrices(response.body, (List<String> _prices) {
+          String price = _prices[0].trim();
+          int length = price.length;
+          if (length > 10) {
+            priceMap = {
+              "currency": extractor.getCurrency(response.body),
+              "amount": price.substring(0, 10)
+            };
+          } else {
+            priceMap = {
+              "currency": extractor.getCurrency(response.body),
+              "amount": price,
+            };
+          }
+          ;
+          print("printing prices at lin 143 $price");
+        }, textEditingController.text);
 
         price = "${priceMap['currency']} ${priceMap['amount']}";
-
-        imageUrls = extractor.getImage(response.body);
-
         showProgress = false;
 
         update();
