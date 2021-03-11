@@ -132,13 +132,14 @@ class HomePage extends StatelessWidget {
       HomeController homecontroller, TextStyle lable, BuildContext context) {
     return Column(
       children: [
-        Column(
-          children: homecontroller.imageUrls
-              .map(
-                (image) => Image.network(image),
-              )
-              .toList(),
-        ),
+        // Column(
+        //   children: homecontroller.imageUrls
+        //       .map(
+        //         (image) => Image.network(image),
+        //       )
+        //       .toList(),
+        // ),
+        Image.network(homecontroller.imageUrls[0]),
         SizedBox(
           height: 16,
         ),
