@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
@@ -18,7 +17,7 @@ class _IntrestPageState extends State<IntrestPage> {
 
   FireStoreMethod _method = FireStoreMethod();
   SignUpController _controller = Get.put(SignUpController());
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
   String token = '';
   @override
   void initState() {
@@ -31,12 +30,8 @@ class _IntrestPageState extends State<IntrestPage> {
       'Travel & Accomodation',
     ];
     _isChecked = List<bool>.filled(_list.length, false);
-    getToken();
-    super.initState();
-  }
 
-  void getToken() async {
-    token = await messaging.getToken();
+    super.initState();
   }
 
   @override

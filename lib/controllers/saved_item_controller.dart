@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/models/notification.dart';
 import 'package:sales_snap/models/web_details.dart';
@@ -6,9 +5,9 @@ import 'package:sales_snap/repositories/database_helper.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
 
 class SavedController extends GetxController {
-  List<WebDetails> saveItemList = [];
+  List<SavedProduct> saveItemList = [];
 
-  List<WebDetails> buyItemList = [];
+  List<SavedProduct> buyItemList = [];
 
   List<Notification> notificationList = [];
 
@@ -24,7 +23,8 @@ class SavedController extends GetxController {
 
   DatabaseHelper _helper = DatabaseHelper();
   void getSavedList() async {
-    saveItemList = await _helper.getWebDetails();
+    // saveItemList = await _helper.getWebDetails();
+    saveItemList = await _method.getSavedItems();
     print('list item------ ${saveItemList.length}');
     update();
   }

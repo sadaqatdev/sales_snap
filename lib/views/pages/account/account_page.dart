@@ -179,13 +179,18 @@ class AccountPage extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 12),
                     child: Text('Your Intrests'),
                   ),
-                  Wrap(
-                      children: controller.user.intersts
-                          .map((e) => Padding(
-                                padding: const EdgeInsets.only(left: 8, top: 8),
-                                child: Text('$e ,'),
-                              ))
-                          .toList()),
+                  Row(
+                    children: [
+                      Wrap(
+                          children: controller.user.intersts
+                              .map((e) => Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 8, top: 8),
+                                    child: Text('$e ,'),
+                                  ))
+                              .toList()),
+                    ],
+                  ),
                   SizedBox(
                     height: 16,
                   ),

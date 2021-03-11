@@ -37,7 +37,7 @@ dependencies:
   get_storage: ^1.4.0
   firebase_core: ^0.7.0
   firebase_auth: ^0.20.0+1
-  firebase_messaging: ^8.0.0-dev.14
+  # firebase_messaging: ^8.0.0-dev.14
   cloud_firestore: ^0.16.0
   google_sign_in: ^4.5.9
   webview_flutter: ^1.0.7
@@ -46,6 +46,7 @@ dependencies:
   background_fetch: ^0.7.0
   flutter_local_notifications: ^4.0.1
   universal_html: ^1.2.4
+  onesignal_flutter: ^2.6.3
 
 dev_dependencies:
   flutter_test:

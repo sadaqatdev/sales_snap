@@ -1,14 +1,16 @@
 import 'dart:async';
 
 import 'package:background_fetch/background_fetch.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:html/dom.dart';
 
 import 'package:html/parser.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/web_details.dart';
 import 'package:http/http.dart' as http;
@@ -57,8 +59,6 @@ class HomeController extends GetxController {
 
   FireStoreMethod _fireStoreMethod = FireStoreMethod();
 
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-
   Extractor extractor = Extractor();
 
   List<String> imageUrls = [];
@@ -73,11 +73,15 @@ class HomeController extends GetxController {
 
   bool showProgress = false;
 
-  List<WebDetails> list = [];
+  List<SavedProduct> list = [];
 
-  List<WebDetails> saveList = [];
+  List<SavedProduct> saveList = [];
 
   var doubleRE = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
+
+  final storage = GetStorage();
+
+  static String onesignalUserId;
 
   @override
   void onInit() {
@@ -90,7 +94,7 @@ class HomeController extends GetxController {
     BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 
     textEditingController = TextEditingController();
-
+    initOnSignal();
     super.onInit();
   }
 
@@ -154,27 +158,35 @@ class HomeController extends GetxController {
     }
   }
 
-  saveProduct() {
+  saveProduct() async {
     if (title.isNotEmpty && price.isNotEmpty ||
         HomeController.priceHtmlTag.isNotEmpty ||
         textEditingController.text.isNotEmpty) {
       showProgrss(true);
+
       var p =
           doubleRE.allMatches(price).map((m) => double.parse(m[0])).toList();
-      WebDetails savedProduct = WebDetails(
+
+      String id = storage.read('id');
+
+      SavedProduct savedProduct = SavedProduct(
           title: title,
           imgUrl: imageUrls[0],
           priceHtmlTag: HomeController.priceHtmlTag,
           priceNumber: p.elementAt(0).toString(),
           price: price,
-          webUrl: textEditingController.text);
+          webUrl: textEditingController.text,
+          msgToken: onesignalUserId);
 
       _fireStoreMethod.saveItems(savedProduct).then((value) {
-        _helper.setWebDetails(savedProduct).then((i) {
-          _savedController.getSavedList();
-          snakBar('Save Sucessfully');
-          showProgrss(false);
-        });
+        _savedController.getSavedList();
+
+        snakBar('Save Sucessfully');
+
+        showProgrss(false);
+        // _helper.setWebDetails(savedProduct).then((i) {
+
+        // });
       });
     } else {
       snakBar('Product Details are Empty');
@@ -184,7 +196,9 @@ class HomeController extends GetxController {
   deleteProduct(index) {
     _helper.delete(index).then((value) {
       print('----------delete');
+
       print(value);
+
       _savedController.getSavedList();
     });
   }
@@ -197,7 +211,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> comparePrice() async {
-    List<WebDetails> _list = await _helper.getWebDetails();
+    List<SavedProduct> _list = await _helper.getWebDetails();
 
     _list.forEach((element) async {
       final response = await http.Client().get(Uri.parse(element.webUrl));
@@ -353,25 +367,21 @@ class HomeController extends GetxController {
     }
   }
 
-  void firebaseMessagin() async {
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
-
-      if (message.notification != null) {
-        _showNotification();
-        print('Message also contained a notification: ${message.notification}');
-      }
+  void initOnSignal() async {
+    await OneSignal.shared.init('4cd671ff-1756-4e7a-8f03-f90a7bace30f');
+    OneSignal.shared
+        .setInFocusDisplayType(OSNotificationDisplayType.notification);
+    OneSignal.shared.setNotificationReceivedHandler((notification) {
+      print(notification.payload);
+      print('------------------');
     });
+    OSPermissionSubscriptionState status =
+        await OneSignal.shared.getPermissionSubscriptionState();
+
+    onesignalUserId = status.subscriptionStatus.userId;
+    print('-iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
+    print(onesignalUserId);
+    storage.write('id', onesignalUserId);
   }
 
   // saveToFirestore(WebDetails webDetails) {

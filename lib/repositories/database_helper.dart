@@ -61,7 +61,7 @@ class DatabaseHelper {
     return database;
   }
 
-  Future<int> setWebDetails(WebDetails alarmInfo) async {
+  Future<int> setWebDetails(SavedProduct alarmInfo) async {
     var db = await instance.database;
     if (db != null) {
       var result = await db.insert(tableWebDtails, alarmInfo.toMap());
@@ -75,14 +75,14 @@ class DatabaseHelper {
     return 0;
   }
 
-  Future<List<WebDetails>> getWebDetails() async {
-    List<WebDetails> _alarms = [];
+  Future<List<SavedProduct>> getWebDetails() async {
+    List<SavedProduct> _alarms = [];
 
     var db = await this.database;
     var result = await db.query(tableWebDtails);
     result.forEach((element) {
       print(element.toString());
-      var alarmInfo = WebDetails.fromMap(element);
+      var alarmInfo = SavedProduct.fromMap(element, '1');
       _alarms.add(alarmInfo);
     });
 

@@ -33,7 +33,7 @@ class SavedTab extends StatelessWidget {
 }
 
 class SavedTileWidget extends StatelessWidget {
-  final List<WebDetails> saveItemList;
+  final List<SavedProduct> saveItemList;
   final index;
   SavedTileWidget({
     Key key,

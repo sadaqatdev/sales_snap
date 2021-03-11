@@ -16,16 +16,17 @@ class FireStoreMethod {
     _collection = _firestore.collection('user_products');
   }
 
-  Future<void> saveItems(WebDetails details) async {
+  Future<String> saveItems(SavedProduct details) async {
     await _collection
         .doc(_currentUser.uid)
         .collection('saved_products')
         .doc()
         .set(details.toMap());
+    return 'ok';
   }
 
-  Future<List<WebDetails>> getSavedItems() async {
-    List<WebDetails> tempList = [];
+  Future<List<SavedProduct>> getSavedItems() async {
+    List<SavedProduct> tempList = [];
 
     QuerySnapshot _snap = await _collection
         .doc(_currentUser.uid)
@@ -34,13 +35,14 @@ class FireStoreMethod {
 
     if (_snap?.docs?.isNotEmpty ?? false)
       _snap.docs.forEach((qSnap) {
-        if (qSnap.exists) tempList.add(WebDetails.fromMap(qSnap.data()));
+        if (qSnap.exists)
+          tempList.add(SavedProduct.fromMap(qSnap.data(), qSnap.id));
       });
 
     return tempList;
   }
 
-  Future<void> buyItems(WebDetails details) async {
+  Future<void> buyItems(SavedProduct details) async {
     await _collection
         .doc(_currentUser.uid)
         .collection('buy_products')
@@ -48,15 +50,16 @@ class FireStoreMethod {
         .set(details.toMap());
   }
 
-  Future<List<WebDetails>> getbuyItems() async {
-    List<WebDetails> tempList = [];
+  Future<List<SavedProduct>> getbuyItems() async {
+    List<SavedProduct> tempList = [];
     QuerySnapshot _snap = await _collection
         .doc(_currentUser.uid)
         .collection('buy_products')
         .get();
     if (_snap?.docs?.isNotEmpty ?? false)
       _snap.docs.forEach((qSnap) {
-        if (qSnap.exists) tempList.add(WebDetails.fromMap(qSnap.data()));
+        if (qSnap.exists)
+          tempList.add(SavedProduct.fromMap(qSnap.data(), qSnap));
       });
 
     return tempList;
