@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/models/web_details.dart';
-import 'package:sales_snap/views/widgets/snakbar.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
@@ -16,6 +15,7 @@ final String desc = 'desc';
 final String price = 'price';
 final String imgUrl = 'imgUrl';
 final String priceNumber = 'priceNumber';
+final String priceHtmlTag = 'priceHtmlTag';
 
 class DatabaseHelper {
   static Database _database;
@@ -53,6 +53,7 @@ class DatabaseHelper {
           $desc text,
           $imgUrl text,
           $price text,
+          $priceHtmlTag text,
           $priceNumber text)
         ''');
       },
@@ -60,7 +61,7 @@ class DatabaseHelper {
     return database;
   }
 
-  Future<int> setWebDetails(WebDetails alarmInfo) async {
+  Future<int> setWebDetails(SavedProduct alarmInfo) async {
     var db = await instance.database;
     if (db != null) {
       var result = await db.insert(tableWebDtails, alarmInfo.toMap());
@@ -71,15 +72,17 @@ class DatabaseHelper {
       ));
       return result;
     }
+    return 0;
   }
 
-  Future<List<WebDetails>> getWebDetails() async {
-    List<WebDetails> _alarms = [];
+  Future<List<SavedProduct>> getWebDetails() async {
+    List<SavedProduct> _alarms = [];
 
     var db = await this.database;
     var result = await db.query(tableWebDtails);
     result.forEach((element) {
-      var alarmInfo = WebDetails.fromMap(element);
+      print(element.toString());
+      var alarmInfo = SavedProduct.fromMap(element, '1');
       _alarms.add(alarmInfo);
     });
 

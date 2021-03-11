@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sales_snap/controllers/saved_item_controller.dart';
+import 'package:sales_snap/views/widgets/snakbar.dart';
 
 class BuyedTab extends StatelessWidget {
   const BuyedTab({
@@ -8,12 +11,22 @@ class BuyedTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: ListView.builder(
-      itemCount: 12,
-      itemBuilder: (context, index) {
-        return BuyedTileWidget();
-      },
-    ));
+        child: GetBuilder<SavedController>(
+            init: SavedController(),
+            builder: (controller) {
+              return controller.buyItemList.isEmpty
+                  ? Center(
+                      child: Text('No Buy History'),
+                    )
+                  : controller.isLoading
+                      ? progressBar()
+                      : ListView.builder(
+                          itemCount: controller.buyItemList.length,
+                          itemBuilder: (context, index) {
+                            return BuyedTileWidget();
+                          },
+                        );
+            }));
   }
 }
 

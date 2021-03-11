@@ -26,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   final loginInfo = GetStorage();
 
   AuthRepo _repo = AuthRepo();
+
   @override
   void initState() {
     userNameController.text = 'sa@gm.com';
@@ -48,129 +49,140 @@ class _LoginPageState extends State<LoginPage> {
     return SingleChildScrollView(
       child: Container(
         height: Get.height,
-        padding: EdgeInsets.only(left: 16, right: 16),
+        padding: EdgeInsets.only(left: 16, right: 16, top: 25),
         child: Form(
           key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Login To App',
-                style: lablesStyle,
-              ),
-              TextFormField(
-                controller: userNameController,
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(hintText: 'User Name'),
-                validator: (value) {
-                  return userNameValidate(value);
-                },
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              TextFormField(
-                controller: passworController,
-                keyboardType: TextInputType.visiblePassword,
-                decoration: InputDecoration(hintText: 'Password'),
-                validator: (value) {
-                  return passwordValidate(value);
-                },
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Obx(() {
-                    if (_controller.isLoding.value) {
-                      return progressBar();
-                    }
-                    return MaterialButton(
+          child: Obx(() {
+            return Stack(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 32,
+                    ),
+                    Text(
+                      'Login To App',
+                      style: lablesStyle,
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    TextFormField(
+                      controller: userNameController,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(hintText: 'User Name'),
+                      validator: (value) {
+                        return userNameValidate(value);
+                      },
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    TextFormField(
+                      controller: passworController,
+                      keyboardType: TextInputType.visiblePassword,
+                      decoration: InputDecoration(hintText: 'Password'),
+                      validator: (value) {
+                        return passwordValidate(value);
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        MaterialButton(
+                          shape: RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.pink),
+                              borderRadius: BorderRadius.circular(22)),
+                          child: Center(
+                            child: Text('Login'),
+                          ),
+                          onPressed: () {
+                            login();
+                          },
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    MaterialButton(
+                      elevation: 6,
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.pink),
                           borderRadius: BorderRadius.circular(22)),
+                      color: Colors.redAccent,
                       child: Center(
-                        child: Text('Login'),
+                        child: Text('Google'),
                       ),
                       onPressed: () {
-                        login();
+                        googleLogin();
                       },
-                    );
-                  })
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Obx(() {
-                if (_controller.isLoding.value) {
-                  return progressBar();
-                }
-                return MaterialButton(
-                  elevation: 6,
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.pink),
-                      borderRadius: BorderRadius.circular(22)),
-                  color: Colors.redAccent,
-                  child: Center(
-                    child: Text('Google'),
-                  ),
-                  onPressed: () {
-                    googleLogin();
-                  },
-                );
-              }),
-              SizedBox(
-                height: 15,
-              ),
-              Obx(() {
-                if (_controller.isLoding.value) {
-                  return progressBar();
-                }
-                return MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(22)),
-                  color: Colors.blue,
-                  child: Center(
-                    child: Text('Facebook'),
-                  ),
-                  onPressed: () {
-                    googleLogin();
-                  },
-                );
-              }),
-              SizedBox(height: 14),
-              Text('or'),
-              SizedBox(height: 14),
-              MaterialButton(
-                child: Center(
-                  child: Text(
-                    'Reset Password',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(22)),
+                      color: Colors.blue,
+                      child: Center(
+                        child: Text('Facebook'),
+                      ),
+                      onPressed: () {
+                        googleLogin();
+                      },
+                    ),
+                    SizedBox(height: 14),
+                    Text('or'),
+                    SizedBox(height: 14),
+                    MaterialButton(
+                      child: Center(
+                        child: Text(
+                          'Reset Password',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      onPressed: () async {
+                        bool emailValid = RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(userNameController.text);
+                        if (userNameController.text.isNotEmpty && emailValid) {
+                          await _authRepo
+                              .resetPassword(userNameController.text)
+                              .then((msg) {
+                            if (msg == 'ok') {
+                              Get.defaultDialog(
+                                  content: Text(
+                                      'Password Reset link is send to your Email address.'));
+                            } else {
+                              Get.dialog(Text(msg));
+                            }
+                          });
+                        } else {
+                          Get.showSnackbar(GetBar(
+                            message:
+                                'Enter only Email, we send wassword link to your Email address',
+                            duration: Duration(seconds: 3),
+                          ));
+                        }
+                      },
+                    ),
+                  ],
                 ),
-                onPressed: () async {
-                  if (userNameController.text.isNotEmpty) {
-                    await _authRepo
-                        .resetPassword(userNameController.text)
-                        .then((msg) {
-                      if (msg == 'ok') {
-                        Get.dialog(
-                            Text('Reset Link is Sent to Your Email Address'));
-                      } else {
-                        Get.dialog(Text(msg));
-                      }
-                    });
-                  } else {
-                    Get.showSnackbar(GetBar(
-                      message: 'Email is Empty',
-                    ));
-                  }
-                },
-              ),
-            ],
-          ),
+                _controller.isLoding.value
+                    ? Positioned(
+                        top: 110,
+                        left: Get.width / 2 - 50,
+                        child: progressBar(),
+                      )
+                    : SizedBox()
+              ],
+            );
+          }),
         ),
       ),
     );

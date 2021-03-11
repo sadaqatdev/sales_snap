@@ -11,6 +11,8 @@ void showSnak(String title) {
 
 Widget progressBar() {
   return Center(
-    child: CircularProgressIndicator(),
+    child: CircularProgressIndicator(
+      strokeWidth: 5,
+    ),
   );
 }

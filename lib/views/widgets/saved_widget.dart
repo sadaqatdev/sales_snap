@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/web_details.dart';
+import 'package:sales_snap/utils/routes/routes.dart';
+import 'package:sales_snap/views/pages/items_details_page.dart';
 
 class SavedTab extends StatelessWidget {
-  const SavedTab({
+  SavedTab({
     Key key,
   }) : super(key: key);
 
@@ -14,33 +17,39 @@ class SavedTab extends StatelessWidget {
         width: Get.width,
         height: Get.height,
         child: GetBuilder<SavedController>(builder: (controller) {
-          return ListView.builder(
-            itemCount: controller.saveItemList.length,
-            itemBuilder: (context, index) {
-              return SavedTileWidget(
-                  saveItemList: controller.saveItemList, index: index);
-            },
-          );
+          return controller.saveItemList.isEmpty
+              ? Center(
+                  child: Text('No Saved Items'),
+                )
+              : ListView.builder(
+                  itemCount: controller.saveItemList.length,
+                  itemBuilder: (context, index) {
+                    return SavedTileWidget(
+                        saveItemList: controller.saveItemList, index: index);
+                  },
+                );
         }));
   }
 }
 
 class SavedTileWidget extends StatelessWidget {
-  final List<WebDetails> saveItemList;
+  final List<SavedProduct> saveItemList;
   final index;
-  const SavedTileWidget({
+  SavedTileWidget({
     Key key,
     this.index,
     this.saveItemList,
   }) : super(key: key);
 
+  final Routes _routes = Routes();
+
+  final controller = Get.put(HomeController());
+
   @override
   Widget build(BuildContext context) {
     final title = Theme.of(context).textTheme.headline2;
-    final bodyText = Theme.of(context).textTheme.bodyText2;
+
     return Container(
-      height: 115,
-      width: Get.width,
       padding: EdgeInsets.only(left: 8, right: 8),
       child: Card(
           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -58,43 +67,67 @@ class SavedTileWidget extends StatelessWidget {
               SizedBox(
                 width: 12,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        saveItemList[index].title.substring(0, 10),
-                        style: title.copyWith(
-                            color: Theme.of(context).primaryColor),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        saveItemList[index].priceHtmlTag,
-                        style: title.copyWith(color: Colors.red),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 6,
-                  ),
-                  Expanded(
-                    child: Text(
-                      saveItemList[index].desc.substring(0, 10),
-                      style: bodyText.copyWith(fontSize: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 2,
                     ),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(saveItemList[index].webUrl),
-                  SizedBox(
-                    height: 5,
-                  ),
-                ],
+                    Text(
+                      saveItemList[index].title,
+                      style: title,
+                      maxLines: 3,
+                    ),
+                    SizedBox(
+                      height: 2,
+                    ),
+                    Text(
+                      saveItemList[index].price,
+                      maxLines: 1,
+                      style: title.copyWith(color: Colors.red),
+                    ),
+                    SizedBox(
+                      height: 2,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton.icon(
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius: BorderRadius.circular(22)),
+                          )),
+                          onPressed: () {
+                            _routes.to(
+                                context,
+                                ItemDetailsPage(
+                                  url: saveItemList[index].webUrl,
+                                ));
+                          },
+                          icon: Icon(Icons.badge),
+                          label: Text("Buy"),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            print('---------------------');
+                            controller.deleteProduct(saveItemList[index].id);
+                          },
+                        ),
+                        SizedBox(
+                          width: 12,
+                        )
+                      ],
+                    )
+                  ],
+                ),
               )
             ],
           )),

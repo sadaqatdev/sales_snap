@@ -1,27 +1,29 @@
 import 'dart:async';
 
 import 'package:background_fetch/background_fetch.dart';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:html/dom.dart';
 
 import 'package:html/parser.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/web_details.dart';
 import 'package:http/http.dart' as http;
 import 'package:sales_snap/repositories/database_helper.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
+import 'package:sales_snap/utils/extract/extract.dart';
 
-var img =
-    'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351';
-String url =
-    'https://shop.lululemon.com/p/mens-jackets-and-outerwear/Expeditionist-Anorak/_/prod10370103?color=0001';
 void backgroundFetchHeadlessTask(HeadlessTask task) async {
   // var taskId = task.taskId;
-  print('---------------------');
-  initNotifications();
-  _showNotification();
+  final controller = Get.put(HomeController());
+
+  controller.comparePrice();
+
   // var timeout = task.timeout;
   // HomeController _controller = HomeController();
   // if (timeout) {
@@ -41,71 +43,58 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
   //BackgroundFetch.finish(taskId);
 }
 
-FlutterLocalNotificationsPlugin fltrNotification;
-void initNotifications() {
-  var androidInitilize = AndroidInitializationSettings('ic_launcher');
-  var iOSinitilize = IOSInitializationSettings();
-  var initilizationsSettings =
-      InitializationSettings(android: androidInitilize, iOS: iOSinitilize);
-  fltrNotification = FlutterLocalNotificationsPlugin();
-  fltrNotification.initialize(
-    initilizationsSettings,
-  );
-}
-
-Future _showNotification() async {
-  var androidDetails = AndroidNotificationDetails(
-      "Channel ID", "Desi programmer", "This is my channel",
-      importance: Importance.max);
-  var iSODetails = IOSNotificationDetails();
-  var generalNotificationDetails =
-      NotificationDetails(android: androidDetails, iOS: iSODetails);
-
-  await fltrNotification.show(
-      0, "Task", "You created a Task", generalNotificationDetails,
-      payload: "Task");
-}
-
+////////////CONTROLLER START/////////////////////////////////////////////////////////////
 class HomeController extends GetxController {
+  ///get
+
+  static HomeController get to => Get.find();
+
   TextEditingController textEditingController;
 
   FlutterLocalNotificationsPlugin fltrNotification;
 
   SavedController _savedController = Get.put(SavedController());
 
-  WebDetails savedProduct;
-
   DatabaseHelper _helper = DatabaseHelper();
 
   FireStoreMethod _fireStoreMethod = FireStoreMethod();
 
-  String imageUrl = '';
+  Extractor extractor = Extractor();
+
+  List<String> imageUrls = [];
+
   String title = '';
-  String desc = '';
+
   String price = '';
 
-  bool enable = true;
+  static String priceHtmlTag = '';
 
-  List list = List<WebDetails>();
+  bool enable = false;
 
-  final intRegex = RegExp(r'\s+(\d+)\s+', multiLine: false);
+  bool showProgress = false;
 
-  final doubleRegex = RegExp(r'^[a-zA-Z0-9]+$');
+  List<SavedProduct> list = [];
 
-  var descR = 'This is a freebie for everyone,but if u wanna invite me a beer';
+  List<SavedProduct> saveList = [];
+
+  var doubleRE = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
+
+  final storage = GetStorage();
+
+  static String onesignalUserId;
 
   @override
   void onInit() {
-    // initNotifications();
+    //initNotifications();
 
-    // initPlatformState();
+    //initPlatformState();
+
+    getSavedList();
 
     BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 
-    initList();
-
     textEditingController = TextEditingController();
-
+    initOnSignal();
     super.onInit();
   }
 
@@ -115,123 +104,183 @@ class HomeController extends GetxController {
     super.onClose();
   }
 
+  void getSavedList() async {
+    saveList = await _helper.getWebDetails();
+
+    update();
+  }
+
+  void enableValue(bool val) {
+    enable = val;
+
+    update();
+  }
+
+  void showProgrss(val) {
+    showProgress = val;
+    update();
+  }
+
   Future<void> fetch() async {
-    final response = await http.Client().get(Uri.parse(url));
+    enableValue(true);
+    showProgrss(true);
+    title = "";
+    try {
+      final response = await http.Client().get(textEditingController.text);
 
-    if (response.statusCode == 200) {
-      try {
-        Document document = parse(response.body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> priceMap = {};
 
-        String newPrice =
-            document.querySelectorAll('*[class*="price"]')[0].text;
+        extractor.getTitles(response.body, (List<String> titles) {
+          title = titles[0];
 
-        print('-----------new price------------------');
-        print(newPrice);
-        int index = newPrice.indexOf('class="');
-        int lasindex = newPrice.indexOf('\">');
-        String s = newPrice.substring(index, lasindex);
-        print(document.getElementsByClassName(s));
-      } catch (e) {
-        print('----Error-----');
-        print(e.toString());
+          print("printing title at lin 135 $title");
+        });
+
+        extractor.getImages(response.body, (List<String> images) {
+          imageUrls = images;
+          print("printing images at lin 141 $images");
+        }, textEditingController.text);
+        extractor.getPrices(response.body, (List<String> _prices) {
+          String price = _prices[0].trim();
+          int length = price.length;
+          if (length > 10) {
+            priceMap = {
+              "currency": extractor.getCurrency(response.body),
+              "amount": price.substring(0, 10)
+            };
+          } else {
+            priceMap = {
+              "currency": extractor.getCurrency(response.body),
+              "amount": price,
+            };
+          }
+          ;
+          print("printing prices at lin 143 $price");
+        }, textEditingController.text);
+
+        price = "${priceMap['currency']} ${priceMap['amount']}";
+        showProgress = false;
+
+        update();
+      } else {
+        snakBar(response.statusCode);
+        enableValue(false);
+        showProgrss(false);
       }
-    } else {
-      Get.showSnackbar(GetBar(
-        message: response.statusCode.toString(),
-      ));
+    } catch (e) {
+      snakBar(e);
+      enableValue(false);
+      showProgrss(false);
+
+      print('----Error-----');
+      print(e.toString());
     }
   }
 
-  void extract(Document document) {
-    int index = url.indexOf('.com');
+  saveProduct() async {
+    if (title.isNotEmpty && price.isNotEmpty ||
+        HomeController.priceHtmlTag.isNotEmpty ||
+        textEditingController.text.isNotEmpty) {
+      showProgrss(true);
 
-    list.forEach((item) {
-      if (url.substring(8, index) == item.webUrl) {
-        print(document.getElementsByClassName('price-1SDQy price')[0].text);
-        String title =
-            document.querySelector('.pdp-title div[itemprop="name"]').text;
-        String price =
-            document.getElementsByClassName('price-1SDQy price')[0].text;
+      var p =
+          doubleRE.allMatches(price).map((m) => double.parse(m[0])).toList();
 
-        print('-------------------');
+      String id = storage.read('id');
 
-        print(price.replaceAll(RegExp('[^0-9]'), ''));
-
-        updatePage(price: price, title: title, desc: 'desc');
-
-        int p = int.parse(price.replaceAll(RegExp('[^0-9]'), ''));
-
-        savedProduct = WebDetails(
+      SavedProduct savedProduct = SavedProduct(
           title: title,
-          priceHtmlTag: price,
-          desc: descR,
-          imgUrl: img,
-          priceNumber: p.toString(),
-          webUrl: url.substring(8, index),
-        );
-      }
+          imgUrl: imageUrls[0],
+          priceHtmlTag: HomeController.priceHtmlTag,
+          priceNumber: p.elementAt(0).toString(),
+          price: price,
+          webUrl: textEditingController.text,
+          msgToken: onesignalUserId);
+
+      _fireStoreMethod.saveItems(savedProduct).then((value) {
+        _savedController.getSavedList();
+
+        snakBar('Save Sucessfully');
+
+        showProgrss(false);
+        // _helper.setWebDetails(savedProduct).then((i) {
+
+        // });
+      });
+    } else {
+      snakBar('Product Details are Empty');
+    }
+  }
+
+  deleteProduct(index) {
+    _helper.delete(index).then((value) {
+      print('----------delete');
+
+      print(value);
+
+      _savedController.getSavedList();
     });
   }
 
-  saveProduct() {
-    _fireStoreMethod.saveItems(savedProduct).then((value) {
-      _helper.setWebDetails(savedProduct).then((i) {
-        _savedController.getSavedList();
-      });
-    });
+  void snakBar(s) {
+    Get.showSnackbar(GetBar(
+      message: s.toString(),
+      duration: Duration(seconds: 3),
+    ));
   }
 
   Future<void> comparePrice() async {
-    List<WebDetails> _list = await _helper.getWebDetails();
-    _list.forEach((element) async {
-      String url = element.webUrl;
-      String priceHtmlTag = element.priceHtmlTag;
-      String price = element.priceNumber;
+    List<SavedProduct> _list = await _helper.getWebDetails();
 
-      final response = await http.Client().get(Uri.parse(url));
+    _list.forEach((element) async {
+      final response = await http.Client().get(Uri.parse(element.webUrl));
+
+      var newPricePareval;
+      var oldParseValue;
+
+      String oldPrice = element.priceNumber;
 
       if (response.statusCode == 200) {
         try {
           Document document = parse(response.body);
+
           String newPrice =
-              document.querySelectorAll("*[class*=\'price\']")[0].toString();
+              document.querySelectorAll(element.priceHtmlTag)[0].toString();
+          try {
+            if (oldPrice.isNum) {
+              oldParseValue = double.parse(oldPrice);
+            } else {
+              oldParseValue = doubleRE
+                  .allMatches(oldPrice)
+                  .map((m) => double.parse(m[0]))
+                  .toList();
+            }
+          } catch (e) {
+            snakBar(e);
+          }
+
+          try {
+            if (newPrice.isNum) {
+              newPricePareval = double.parse(newPrice);
+            } else {
+              newPricePareval = doubleRE
+                  .allMatches(newPrice)
+                  .map((m) => double.parse(m[0]))
+                  .toList();
+            }
+            if (newPricePareval < oldParseValue) {
+              _showNotification();
+            }
+          } catch (e) {
+            snakBar(e);
+          }
         } catch (e) {
           print('----Error-----');
           print(e.toString());
         }
       }
     });
-  }
-
-  initList() {
-    list.add(WebDetails(
-        title: '.pdp-title div[itemprop="name"]',
-        webUrl: 'shop.lululemon',
-        imgUrl: 'pictureContainer-36lBu',
-        priceHtmlTag: 'price-1SDQy price'));
-    list.add(WebDetails(
-        imgUrl: 'ShotView',
-        priceHtmlTag:
-            'pdp-price pdp-price_type_normal pdp-price_color_orange pdp-price_size_xl',
-        title: 'pdp-mod-product-badge-title',
-        webUrl: 'daraz.pk'));
-
-    list.add(WebDetails(
-        imgUrl: 'e1usmzj05 css-1t6je5j e18nnme30',
-        priceHtmlTag:
-            'pdp-price pdp-price_type_normal pdp-price_color_orange pdp-price_size_xl',
-        title: 'css-j5fhoc ehm8gc85',
-        webUrl: 'www.harrods.com'));
-  }
-
-  void updatePage({imageurl, title, desc, price}) {
-    this.imageUrl = imageurl;
-    this.title = title;
-    this.desc = desc;
-    this.price = price;
-    savedProduct = savedProduct;
-    enable = false;
-    update();
   }
 
   void initNotifications() {
@@ -338,12 +387,61 @@ class HomeController extends GetxController {
     }
   }
 
+  void initOnSignal() async {
+    await OneSignal.shared.init('4cd671ff-1756-4e7a-8f03-f90a7bace30f');
+    OneSignal.shared
+        .setInFocusDisplayType(OSNotificationDisplayType.notification);
+    OneSignal.shared.setNotificationReceivedHandler((notification) {
+      print(notification.payload);
+      print('------------------');
+    });
+    OSPermissionSubscriptionState status =
+        await OneSignal.shared.getPermissionSubscriptionState();
+
+    onesignalUserId = status.subscriptionStatus.userId;
+    print('-iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
+    print(onesignalUserId);
+    storage.write('id', onesignalUserId);
+  }
+
   // saveToFirestore(WebDetails webDetails) {
   //   _fireStoreMethod.saveItems(webDetails).then((e) {});
   // }
 
-  void getSavedList() async {
-    list = await _helper.getWebDetails();
-    update();
-  }
 }
+
+// if (url.substring(8, index) == item.webUrl) {
+//   print(document.getElementsByClassName('price-1SDQy price')[0].text);
+//   String title =
+//       document.querySelector('.pdp-title div[itemprop="name"]').text;
+//   String price =
+//       document.getElementsByClassName('price-1SDQy price')[0].text;
+
+//   print('-------------------');
+
+//   print(price.replaceAll(RegExp('[^0-9]'), ''));
+
+//   updatePage(price: price, title: title, desc: 'desc');
+
+//   int p = int.parse(price.replaceAll(RegExp('[^0-9]'), ''));
+
+//   savedProduct = WebDetails(
+//     title: title,
+//     priceHtmlTag: price,
+//     desc: descR,
+//     imgUrl: img,
+//     priceNumber: p.toString(),
+//     webUrl: url.substring(8, index),
+//   );
+// // }
+//         Document document = parse(response.body);
+
+//         String newPrice =
+//             document.querySelectorAll('*[class*="price"]')[0].text;
+
+//         print('-----------new price------------------');
+//         print(newPrice);
+//         int index = newPrice.indexOf('class="');
+//         int lasindex = newPrice.indexOf('\">');
+//         String s = newPrice.substring(index, lasindex);
+//         print(document.getElementsByClassName(s));

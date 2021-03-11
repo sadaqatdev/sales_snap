@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sales_snap/repositories/firestore_methods.dart';
 
 class AuthRepo {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  final FireStoreMethod _fireStoreMethod = FireStoreMethod();
 
   Future<User> handleSignInEmail({String email, String password}) async {
     UserCredential result = await _auth

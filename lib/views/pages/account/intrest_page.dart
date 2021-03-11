@@ -17,6 +17,8 @@ class _IntrestPageState extends State<IntrestPage> {
 
   FireStoreMethod _method = FireStoreMethod();
   SignUpController _controller = Get.put(SignUpController());
+
+  String token = '';
   @override
   void initState() {
     _list = [
@@ -28,6 +30,7 @@ class _IntrestPageState extends State<IntrestPage> {
       'Travel & Accomodation',
     ];
     _isChecked = List<bool>.filled(_list.length, false);
+
     super.initState();
   }
 
@@ -117,21 +120,26 @@ class _IntrestPageState extends State<IntrestPage> {
                     onPressed: () {
                       if (SignUpController.intersts.isEmpty) {
                         print(SignUpController.intersts);
+
                         Get.showSnackbar(GetBar(
                           message: 'Please select at least one interest',
                           duration: Duration(seconds: 2),
                         ));
+
                         return;
                       }
 
                       _method
-                          .setUser(MUser(
-                        dob: SignUpController.dob,
-                        email: SignUpController.email,
-                        gender: SignUpController.gender,
-                        intersts: SignUpController.intersts.toList(),
-                        name: SignUpController.name,
-                      ))
+                          .setUser(
+                        MUser(
+                          dob: SignUpController.dob,
+                          email: SignUpController.email,
+                          gender: SignUpController.gender,
+                          intersts: SignUpController.intersts.toList(),
+                          name: SignUpController.name,
+                          token: token,
+                        ),
+                      )
                           .then((s) {
                         Get.offAll(() => BottomNavBar());
                       });
