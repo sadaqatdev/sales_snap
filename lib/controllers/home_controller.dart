@@ -178,19 +178,20 @@ class HomeController extends GetxController {
   }
 
   saveProduct() async {
-    if (title.isNotEmpty && price.isNotEmpty ||
-        HomeController.priceHtmlTag.isNotEmpty ||
-        textEditingController.text.isNotEmpty) {
+    if (true) {
       showProgrss(true);
+      OSPermissionSubscriptionState status =
+          await OneSignal.shared.getPermissionSubscriptionState();
 
+      onesignalUserId = status.subscriptionStatus.userId;
       var p =
           doubleRE.allMatches(price).map((m) => double.parse(m[0])).toList();
-
+      print(onesignalUserId);
       SavedProduct savedProduct = SavedProduct(
           title: title,
-          imgUrl: imageUrls[0],
+          imgUrl: imageUrls,
           priceHtmlTag: HomeController.priceHtmlTag,
-          priceNumber: p.elementAt(0).toString(),
+          priceNumber: price,
           price: price,
           webUrl: textEditingController.text,
           msgToken: onesignalUserId);

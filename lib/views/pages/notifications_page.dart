@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
+import 'package:sales_snap/utils/theme/app_theme.dart';
+import 'package:sales_snap/views/pages/offer_page.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
+import 'package:sales_snap/views/widgets/custom_button.dart';
 
 class NotificationPage extends StatelessWidget {
   @override
@@ -56,76 +59,73 @@ class SavedTileWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              // Image.network(
-              //   'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351',
-              //   width: 110,
-              //   height: 110,
-              // ),
+              Image.network(
+                'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351',
+                width: 130,
+              ),
               SizedBox(
                 width: 12,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'AvaCado',
-                        style: title.copyWith(
-                            color: Theme.of(context).primaryColor),
-                      ),
-                      SizedBox(
-                        width: 60,
-                      ),
-                      Text(
-                        '16\$',
-                        style: title.copyWith(color: Colors.red),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    'The item you saved, now its price is down',
-                    maxLines: 2,
-                    style: bodyText.copyWith(fontSize: 16),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Row(
-                    children: [
-                      Text('coupon: '),
-                      Text('SDD333332DSD23'),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Row(
                       children: [
-                        SizedBox(
-                          width: 200,
-                        ),
-                        MaterialButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                              side: BorderSide(color: Colors.blueAccent)),
-                          onPressed: () {},
-                          child: Text('Buy Now'),
+                        Text(
+                          'AvaCado',
+                          style: title.copyWith(
+                              color: Theme.of(context).primaryColor),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Text('SDD333332DSD23'),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          height: 45,
+                          width: 86,
+                          child: MaterialButton(
+                            color: AppTheme.customColorThree,
+                            padding: EdgeInsets.only(top: 16, bottom: 16),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(22)),
+                            onPressed: () {
+                              Get.to(() => OfferPage());
+                            },
+                            child: Text(
+                              'View Offer',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                  ],
+                ),
               )
             ],
           )),

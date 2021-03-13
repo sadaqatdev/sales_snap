@@ -166,25 +166,39 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.network(
-                          savedController.saveItemList[index].imgUrl,
-                          height: 100,
+                        Expanded(
+                          child: Image.network(
+                            savedController.saveItemList[index].imgUrl,
+                            width: 170,
+                            fit: BoxFit.fill,
+                          ),
                         ),
                         SizedBox(
                           height: 6,
                         ),
-                        Text(
-                          savedController.saveItemList[index].title,
-                          style: bodyStyle.copyWith(fontSize: 14),
-                          maxLines: 2,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8, right: 3),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                savedController.saveItemList[index].title,
+                                style: bodyStyle.copyWith(fontSize: 14),
+                                maxLines: 2,
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              Text(
+                                savedController.saveItemList[index].price,
+                                style: bodyStyle.copyWith(color: Colors.red),
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                            ],
+                          ),
                         ),
-                        SizedBox(
-                          height: 6,
-                        ),
-                        Text(
-                          savedController.saveItemList[index].price,
-                          style: bodyStyle.copyWith(color: Colors.red),
-                        )
                       ],
                     ),
                   ),

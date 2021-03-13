@@ -37,30 +37,30 @@ class AppTheme {
       unselectedLabelStyle: GoogleFonts.alegreya().copyWith(
           fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black),
     ),
-    inputDecorationTheme: InputDecorationTheme(
-      isDense: true,
-      contentPadding: EdgeInsets.only(left: 12.0, top: 8.0, bottom: 8.0),
-      border: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color(0xFF9F9F9F),
-        ),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      filled: true,
-      fillColor: Colors.white,
-      hintStyle: TextStyle(
-        fontSize: 12.0,
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color(0xFF9F9F9F),
-        ),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey),
-        borderRadius: BorderRadius.circular(4.0),
-      ),
-    ),
+    // inputDecorationTheme: InputDecorationTheme(
+    //   isDense: true,
+    //   contentPadding: EdgeInsets.only(left: 12.0, top: 8.0, bottom: 8.0),
+    //   border: OutlineInputBorder(
+    //     borderSide: BorderSide(
+    //       color: Color(0xFF9F9F9F),
+    //     ),
+    //     borderRadius: BorderRadius.circular(8.0),
+    //   ),
+    //   filled: true,
+    //   fillColor: Colors.white,
+    //   hintStyle: TextStyle(
+    //     fontSize: 12.0,
+    //   ),
+    //   focusedBorder: OutlineInputBorder(
+    //     borderSide: BorderSide(
+    //       color: Color(0xFF9F9F9F),
+    //     ),
+    //     borderRadius: BorderRadius.circular(8.0),
+    //   ),
+    //   enabledBorder: UnderlineInputBorder(
+    //     borderSide: BorderSide(color: Colors.grey),
+    //     borderRadius: BorderRadius.circular(4.0),
+    //   ),
+    // ),
   );
 }
