@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
+import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
-import 'package:sales_snap/views/pages/items_details_page.dart';
+import 'package:sales_snap/views/pages/product_page.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
-import 'package:sales_snap/views/widgets/snakbar.dart';
 
 class HomePage extends StatelessWidget {
   final Routes _routes = Routes();
@@ -16,182 +16,136 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bodyStyle = Theme.of(context).textTheme.bodyText2;
-
+    final forteenFont = Theme.of(context).textTheme.bodyText1;
     final lable = Theme.of(context).textTheme.headline1;
 
-    return GetBuilder<HomeController>(
-        init: HomeController(),
-        builder: (homecontroller) {
-          return Scaffold(
-            appBar: appBar(context, 'Sales Snap'),
-            body: SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.only(left: 12, right: 12, top: 12),
-                child: Stack(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+    return GetBuilder<SavedController>(
+        init: SavedController(),
+        builder: (saveController) {
+          return Stack(
+            children: [
+              Scaffold(
+                appBar: appBar(
+                  context: context,
+                  title: 'Sales Snap',
+                  height: 150,
+                  action: SizedBox(),
+                ),
+                body: SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.only(left: 12, right: 12, top: 12),
+                    child: Stack(
                       children: [
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Form(
-                              key: formKey,
-                              child: Expanded(
-                                flex: 5,
-                                child: Container(
-                                  height: 44,
-                                  child: TextFormField(
-                                    controller:
-                                        homecontroller.textEditingController,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Url is Empty';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText: 'Enter URL of Product',
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
                             SizedBox(
-                              width: 12,
+                              height: 60,
                             ),
-                            MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      color: Theme.of(context).primaryColor),
-                                  borderRadius: BorderRadius.circular(22)),
-                              height: 40,
-                              color: Colors.green,
-                              child: Text('Go'),
-                              onPressed: () async {
-                                FocusScope.of(context).unfocus();
-                                if (formKey.currentState.validate()) {
-                                  HomeController.to.fetch();
-                                }
-                              },
-                            )
+                            getRecentSave(saveController, bodyStyle),
+                            SizedBox(
+                              height: 12,
+                            ),
                           ],
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        homecontroller.enable
-                            ? productWidget(homecontroller, lable, context)
-                            : getRecentSave(bodyStyle),
-                        SizedBox(
-                          height: 12,
                         ),
                       ],
                     ),
-                    homecontroller.showProgress
-                        ? Positioned(
-                            top: 50,
-                            left: Get.width / 2 - 50,
-                            child: progressBar(),
-                          )
-                        : SizedBox()
-                  ],
+                  ),
                 ),
               ),
-            ),
-            floatingActionButton: homecontroller.enable
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton.icon(
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                              side: BorderSide(
-                                  color: Theme.of(context).primaryColor),
-                              borderRadius: BorderRadius.circular(22)),
-                        )),
-                        onPressed: () {
-                          homecontroller.saveProduct();
-                        },
-                        icon: Icon(Icons.save_alt),
-                        label: Text("Save"),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      ElevatedButton.icon(
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                              side: BorderSide(
-                                  color: Theme.of(context).primaryColor),
-                              borderRadius: BorderRadius.circular(22)),
-                        )),
-                        onPressed: () {
-                          if (formKey.currentState.validate())
-                            _routes.to(
-                                context,
-                                ItemDetailsPage(
-                                  url:
-                                      homecontroller.textEditingController.text,
-                                ));
-                        },
-                        icon: Icon(Icons.public),
-                        label: Text("WebSite"),
-                      ),
-                    ],
-                  )
-                : Container(),
+              Positioned(
+                top: 134,
+                left: 12,
+                right: 12,
+                child: searchField(context, forteenFont),
+              ),
+            ],
           );
         });
   }
 
-  Column productWidget(
-      HomeController homecontroller, TextStyle lable, BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          children: homecontroller.imageUrls
-              .map(
-                (image) => Image.network(image),
+  Widget searchField(BuildContext context, TextStyle forteenFont) {
+    return Form(
+      key: formKey,
+      child: Container(
+        height: 90,
+        width: Get.width,
+        margin: EdgeInsets.only(left: 6, right: 6),
+        padding: EdgeInsets.only(top: 22, bottom: 22, left: 20, right: 20),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 1,
+                spreadRadius: 1,
               )
-              .toList(),
-        ),
-        SizedBox(
-          height: 16,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              homecontroller.price.toString(),
-              style: TextStyle(
-                fontSize: 24,
+            ],
+            borderRadius: BorderRadius.circular(25)),
+        child: Center(
+          child: TextFormField(
+            controller: HomeController.to.textEditingController,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Url is Empty';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              fillColor: Color(0xffF6F7F8),
+              prefixIcon: Icon(
+                Icons.search,
+                size: 24,
+              ),
+              suffixIcon: buildMaterialButton(context, forteenFont),
+              hintText: 'Paste Link',
+              hintStyle: forteenFont.copyWith(color: Colors.black),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xff9F9F9F)),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 2),
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
-            SizedBox(
-              width: 20,
-            ),
-          ],
+          ),
         ),
-        SizedBox(
-          height: 16,
-        ),
-        Text(homecontroller.title?.trim(),
-            style:
-                lable.copyWith(height: 1.5, wordSpacing: 1, letterSpacing: 1)),
-        SizedBox(
-          height: homecontroller.title.length.toDouble() * 3,
-        )
-      ],
+      ),
     );
   }
 
-  Widget getRecentSave(TextStyle bodyStyle) {
+  Widget buildMaterialButton(BuildContext context, TextStyle forteenFont) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: MaterialButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        height: 35,
+        color: Colors.black,
+        child: Text(
+          'Go',
+          style: forteenFont,
+        ),
+        onPressed: () async {
+          FocusScope.of(context).unfocus();
+          if (formKey.currentState.validate()) {
+            Get.to(() => ProductPage());
+
+            HomeController.to.fetch();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget getRecentSave(SavedController savedController, TextStyle bodyStyle) {
     // print('------------------');
     //print(_homeController.saveList.length);
-    return _homeController.saveList.length == 0
+    return savedController.saveItemList.length == 0
         ? Container(
             padding: EdgeInsets.only(top: 30),
             child: Center(
@@ -213,14 +167,14 @@ class HomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Image.network(
-                          _homeController.saveList[index].imgUrl,
+                          savedController.saveItemList[index].imgUrl,
                           height: 100,
                         ),
                         SizedBox(
                           height: 6,
                         ),
                         Text(
-                          _homeController.saveList[index].title,
+                          savedController.saveItemList[index].title,
                           style: bodyStyle.copyWith(fontSize: 14),
                           maxLines: 2,
                         ),
@@ -228,7 +182,7 @@ class HomePage extends StatelessWidget {
                           height: 6,
                         ),
                         Text(
-                          _homeController.saveList[index].price,
+                          savedController.saveItemList[index].price,
                           style: bodyStyle.copyWith(color: Colors.red),
                         )
                       ],
@@ -236,7 +190,7 @@ class HomePage extends StatelessWidget {
                   ),
                 );
               },
-              itemCount: _homeController.saveList.length,
+              itemCount: savedController.saveItemList.length,
             ),
           );
   }

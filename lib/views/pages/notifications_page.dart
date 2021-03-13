@@ -2,29 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
-import 'package:sales_snap/views/widgets/snakbar.dart';
 
 class NotificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, 'Notification'),
+      appBar: appBar(
+          context: context,
+          title: 'Notifications',
+          height: 100,
+          action: SizedBox()),
       body: Container(
         child: GetBuilder<SavedController>(
             init: SavedController(),
             builder: (controller) {
-              return controller.notificationList.isEmpty
-                  ? Center(
-                      child: Text('No Notifications'),
-                    )
-                  : controller.isLoading
-                      ? progressBar()
-                      : ListView.builder(
-                          itemCount: controller.notificationList.length,
-                          itemBuilder: (context, index) {
-                            return SavedTileWidget();
-                          },
-                        );
+              // return controller.notificationList.isEmpty
+              //     ? Center(
+              //         child: Text('No Notifications'),
+              //       )
+              //     : controller.isLoading
+              //         ? progressBar()
+              //         :
+              return ListView.builder(
+                itemCount: 12,
+                itemBuilder: (context, index) {
+                  return SavedTileWidget();
+                },
+              );
             }),
       ),
     );

@@ -22,9 +22,14 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController confirmPassword = TextEditingController();
 
   final SignUpController controller = Get.put(SignUpController());
+
   final AuthRepo _repo = AuthRepo();
+
   final _formKey = GlobalKey<FormState>();
+
   final loginInfo = GetStorage();
+
+  bool show = false;
   @override
   void initState() {
     emailContoller.text = 'sa@gm.com';
@@ -45,9 +50,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final lablesStyle = Theme.of(context).textTheme.headline2;
     return SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.only(left: 12, right: 12),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 25),
         width: Get.width,
         height: Get.height,
         child: Form(
@@ -59,15 +65,18 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               Text(
                 'Sign Up ',
-                style: TextStyle(fontSize: 20),
+                style: lablesStyle.copyWith(color: Colors.black),
               ),
               SizedBox(
-                height: 12,
+                height: 18,
               ),
               TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 controller: emailContoller,
-                decoration: InputDecoration(hintText: 'Email'),
+                decoration: InputDecoration(
+                    hintText: 'Email',
+                    contentPadding:
+                        EdgeInsets.only(top: 14, bottom: 14, left: 8)),
                 validator: (value) {
                   return emailValid(value);
                 },
@@ -79,7 +88,19 @@ class _SignUpPageState extends State<SignUpPage> {
                 keyboardType: TextInputType.visiblePassword,
                 controller: passworController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(hintText: 'Password'),
+                obscureText: show,
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          show = !show;
+                        });
+                      },
+                      icon: show
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off)),
+                ),
                 validator: (value) {
                   return passwordValid(value);
                 },
@@ -90,14 +111,26 @@ class _SignUpPageState extends State<SignUpPage> {
               TextFormField(
                 keyboardType: TextInputType.visiblePassword,
                 controller: confirmPassword,
+                obscureText: show,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(hintText: 'Confirm Password'),
+                decoration: InputDecoration(
+                  hintText: 'Confirm Password',
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          show = !show;
+                        });
+                      },
+                      icon: show
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off)),
+                ),
                 validator: (value) {
                   return confiemPassword(value);
                 },
               ),
               SizedBox(
-                height: 12,
+                height: 24,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -107,11 +140,16 @@ class _SignUpPageState extends State<SignUpPage> {
                       return progressBar();
                     }
                     return MaterialButton(
+                      padding: EdgeInsets.only(
+                          top: 12, bottom: 12, left: 16, right: 16),
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.pink),
                           borderRadius: BorderRadius.circular(22)),
                       child: Center(
-                        child: Text('SignUp'),
+                        child: Text(
+                          'SignUp',
+                          style: lablesStyle.copyWith(color: Colors.black),
+                        ),
                       ),
                       onPressed: () {
                         bool emailValid = RegExp(
@@ -130,7 +168,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           }).catchError((error) {
                             controller.isLoding(false);
                             Get.showSnackbar(GetBar(
-                              message: error.toString(),
+                              message:
+                                  'The email address is already in use by another account',
                               duration: Duration(seconds: 3),
                             ));
                           });
@@ -150,28 +189,64 @@ class _SignUpPageState extends State<SignUpPage> {
               Text('or'),
               SizedBox(height: 14),
               MaterialButton(
+                elevation: 6,
+                padding: EdgeInsets.only(top: 18, bottom: 18),
                 shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.pink),
+                    side: BorderSide(color: Color(0xffEA4335)),
                     borderRadius: BorderRadius.circular(22)),
-                color: Colors.redAccent,
+                color: Color(0xffEA4335),
                 child: Center(
-                  child: Text('Google'),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/google.png',
+                        width: 24,
+                        height: 24,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text('Continue with Google', style: lablesStyle),
+                    ],
+                  ),
                 ),
                 onPressed: () {
-                  controller.googleLogin();
+                  // googleLogin();
                 },
               ),
-              SizedBox(height: 14),
+              SizedBox(
+                height: 24,
+              ),
               MaterialButton(
+                padding: EdgeInsets.only(top: 18, bottom: 18),
+                height: 50,
+                minWidth: 326,
                 shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.blue),
+                    side: BorderSide(color: Color(0xff1877F2)),
                     borderRadius: BorderRadius.circular(22)),
-                color: Colors.blue,
+                color: Color(0xff1877F2),
                 child: Center(
-                  child: Text('Facebook'),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/facebook.png',
+                        width: 24,
+                        height: 24,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        'Continue with Facebook',
+                        style: lablesStyle,
+                      ),
+                    ],
+                  ),
                 ),
                 onPressed: () {
-                  controller.googleLogin();
+                  // googleLogin();
                 },
               ),
             ],
@@ -179,6 +254,19 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  void googleLogin() {
+    controller.isLoding(true);
+    _repo.googleSignIn().catchError((err) {
+      Get.showSnackbar(GetBar(
+        message: err.toString(),
+        duration: Duration(seconds: 3),
+      ));
+    }).then((user) {
+      Navigator.pop(context);
+      controller.isLoding(true);
+    });
   }
 
   String userNameValid(String value) {

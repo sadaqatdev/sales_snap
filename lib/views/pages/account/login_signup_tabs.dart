@@ -16,6 +16,7 @@ class LoginSignUp extends StatelessWidget {
             leading: Container(),
             toolbarHeight: 60,
             bottom: TabBar(
+              indicatorColor: Theme.of(context).primaryColor,
               indicatorPadding: EdgeInsets.only(top: 12),
               labelPadding: EdgeInsets.only(bottom: 12, top: 12),
               tabs: [

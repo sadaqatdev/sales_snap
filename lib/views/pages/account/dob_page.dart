@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
 import 'package:sales_snap/views/pages/account/intrest_page.dart';
+import 'package:sales_snap/views/widgets/custom_button.dart';
+import 'package:sales_snap/views/widgets/custom_heading.dart';
 
 class DobPage extends StatefulWidget {
   @override
@@ -9,81 +11,138 @@ class DobPage extends StatefulWidget {
 }
 
 class _DobPageState extends State<DobPage> {
-  final userNameController = TextEditingController();
+  final date = TextEditingController();
+
+  final month = TextEditingController();
+
+  final year = TextEditingController();
 
   final fomKey = GlobalKey<FormState>();
-  final sacfoldKey = GlobalKey<FormState>();
+
+  final fromKey = GlobalKey<FormState>();
+
   DateTime selectedDate = DateTime.now();
 
   @override
+  void dispose() {
+    date.dispose();
+    month.dispose();
+    year.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final node = FocusScope.of(context);
     return SafeArea(
       child: Scaffold(
-        key: sacfoldKey,
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
+            padding: EdgeInsets.only(left: 24, right: 24, top: 16, bottom: 16),
             child: Column(
               children: [
+                CustomHeading(
+                    progressWidth: 243,
+                    steps: 'Step 3/4',
+                    lable: 'Your Birthday'),
                 SizedBox(
-                  height: 16,
+                  height: 20,
                 ),
-                Container(
-                    width: 130,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.white,
+                Form(
+                  key: fromKey,
+                  child: Row(children: [
+                    Expanded(
+                      child: Container(
+                        width: 100,
+                        height: 50,
+                        child: TextFormField(
+                          keyboardType: TextInputType.datetime,
+                          maxLength: 2,
+                          controller: date,
+                          decoration: InputDecoration(
+                            hintText: 'DD',
+                          ),
+                          onEditingComplete: () {
+                            node.nextFocus();
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Enter Day';
+                            }
+                            return null;
+                          },
                         ),
-                        color: Color(0xffBC31EA),
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                    child: Center(
-                        child: Text(
-                      'step 3 of 4',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2
-                          .copyWith(color: Colors.white),
-                    ))),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Expanded(
+                      child: Container(
+                        width: 100,
+                        height: 50,
+                        child: TextFormField(
+                          controller: month,
+                          keyboardType: TextInputType.datetime,
+                          decoration: InputDecoration(hintText: 'MM'),
+                          maxLength: 2,
+                          onEditingComplete: () {
+                            node.nextFocus();
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Enter Month';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Expanded(
+                      child: Container(
+                        width: 100,
+                        height: 50,
+                        child: TextFormField(
+                          controller: year,
+                          keyboardType: TextInputType.datetime,
+                          decoration: InputDecoration(hintText: 'YYYY'),
+                          maxLength: 4,
+                          onEditingComplete: () {
+                            node.unfocus();
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Enter Year';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                  ]),
+                ),
                 SizedBox(
-                  height: 20,
+                  height: 150,
                 ),
-                Text('Please tell us your date of birth'),
-                SizedBox(
-                  height: 20,
-                ),
-                CalendarDatePicker(
-                  firstDate: DateTime(1930, 9, 7, 17, 30),
-                  initialDate: selectedDate,
-                  lastDate: DateTime.now(),
-                  currentDate: selectedDate,
-                  onDateChanged: (DateTime value) {
-                    SignUpController.dob = value.toString().substring(0, 11);
-                    selectedDate = value;
-                    setState(() {});
-                  },
-                ),
-                SizedBox(
-                  height: 35,
-                ),
-                MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.pink),
-                      borderRadius: BorderRadius.circular(22)),
-                  child: Center(
-                    child: Text('Next'),
-                  ),
-                  onPressed: () {
-                    if (SignUpController.dob?.isEmpty ?? true) {
-                      Get.showSnackbar(GetBar(
-                        message: 'Please Select your Bate of Birth',
-                        duration: Duration(seconds: 2),
-                      ));
-                      return;
-                    }
-                    Get.to(() => IntrestPage());
-                  },
-                )
+                CustomButton(
+                    lable: 'Continue',
+                    color: Colors.black,
+                    radius: 22,
+                    onPress: () {
+                      if (fromKey.currentState.validate()) {
+                        SignUpController.dob =
+                            '${date.text}-${month.text}-${year.text}';
+                        Get.to(() => IntrestPage());
+                      } else {
+                        Get.showSnackbar(GetBar(
+                          message: 'Please Enter Your Data Of Birth',
+                          duration: Duration(seconds: 2),
+                        ));
+                      }
+                    })
               ],
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/account_controller.dart';
+import 'package:sales_snap/repositories/database_helper.dart';
 import 'package:sales_snap/views/pages/account/update_profile.dart';
 
 import 'package:sales_snap/views/widgets/appBar.dart';
@@ -14,7 +15,7 @@ class AccountPage extends StatelessWidget {
     final style = Theme.of(context).textTheme.bodyText2;
     final lableStyle = Theme.of(context).textTheme.bodyText1;
     return Scaffold(
-      appBar: appBar(context, 'Profile'),
+      appBar: appBar(context: context, title: title),
       body: SingleChildScrollView(
         child: Container(
           width: Get.width,
@@ -179,18 +180,13 @@ class AccountPage extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 12),
                     child: Text('Your Intrests'),
                   ),
-                  Row(
-                    children: [
-                      Wrap(
-                          children: controller.user.intersts
-                              .map((e) => Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 8, top: 8),
-                                    child: Text('$e ,'),
-                                  ))
-                              .toList()),
-                    ],
-                  ),
+                  Wrap(
+                      children: controller.user.intersts
+                          .map((e) => Padding(
+                                padding: const EdgeInsets.only(left: 8, top: 8),
+                                child: Text('$e ,'),
+                              ))
+                          .toList()),
                   SizedBox(
                     height: 16,
                   ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
+import 'package:sales_snap/utils/theme/app_theme.dart';
 import 'package:sales_snap/views/pages/account/dob_page.dart';
+import 'package:sales_snap/views/widgets/custom_button.dart';
+import 'package:sales_snap/views/widgets/custom_heading.dart';
 
 enum GenderValue { male, female, notToSay }
 
@@ -13,107 +16,165 @@ class GenderPage extends StatefulWidget {
 class _GenderPageState extends State<GenderPage> {
   GenderValue _character = GenderValue.male;
 
+  bool maleSelected = false;
+
+  bool femaleSelected = false;
+
+  bool notToSay = false;
+
   @override
   Widget build(BuildContext context) {
+    final lableStyel = Theme.of(context).textTheme.bodyText2;
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
+            padding: EdgeInsets.only(left: 24, right: 24, top: 16, bottom: 16),
             child: Column(
               children: [
-                SizedBox(
-                  height: 35,
-                ),
-                Container(
-                    width: 130,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.white,
+                CustomHeading(
+                    progressWidth: 168,
+                    steps: 'Step 2 of 4',
+                    lable: 'Which one are you?'),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          maleSelected = true;
+                          femaleSelected = false;
+                          SignUpController.gender = 'male';
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 1,
+                                spreadRadius: 1,
+                              )
+                            ],
+                            color: maleSelected ? Colors.black : Colors.white,
+                            borderRadius: BorderRadius.circular(20)),
+                        width: 130,
+                        height: 180,
+                        padding: EdgeInsets.only(top: 44, left: 23),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundColor:
+                                  maleSelected ? Colors.white : Colors.black,
+                              child: maleSelected
+                                  ? Image.asset('assets/maleblack.png')
+                                  : Image.asset('assets/male.png'),
+                            ),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Text(
+                              'Male',
+                              style: maleSelected
+                                  ? lableStyel.copyWith(color: Colors.white)
+                                  : lableStyel.copyWith(color: Colors.black),
+                            )
+                          ],
                         ),
-                        color: Color(0xffBC31EA),
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                    child: Center(
-                        child: Text(
-                      'step 2 of 4',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2
-                          .copyWith(color: Colors.white),
-                    ))),
+                      ),
+                    ),
+                    Spacer(),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          maleSelected = false;
+                          femaleSelected = true;
+                          SignUpController.gender = 'female';
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 1,
+                                spreadRadius: 1,
+                              )
+                            ],
+                            color: femaleSelected
+                                ? AppTheme.customColorThree
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(20)),
+                        width: 130,
+                        height: 180,
+                        padding: EdgeInsets.only(top: 44, left: 23),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundColor: femaleSelected
+                                  ? Colors.white
+                                  : AppTheme.customColorThree,
+                              child: femaleSelected
+                                  ? Image.asset('assets/female_color.png')
+                                  : Image.asset('assets/female.png'),
+                            ),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Text(
+                              'Female',
+                              style: femaleSelected
+                                  ? lableStyel.copyWith(color: Colors.white)
+                                  : lableStyel,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(
-                  height: 24,
+                  height: 150,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Text('Are You')],
-                ),
-                ListTile(
-                  title: const Text('Male'),
-                  leading: Radio(
-                    value: GenderValue.male,
-                    groupValue: _character,
-                    onChanged: (GenderValue value) {
-                      setState(() {
-                        SignUpController.gender =
-                            value.toString().split('.')[1];
-                        _character = value;
-                        print(value);
-                      });
-                    },
-                  ),
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          setState(() {
+                            SignUpController.gender = 'Not To Say';
+                            maleSelected = false;
+                            femaleSelected = false;
+                            notToSay = true;
+                          });
+                          print(SignUpController.gender);
+                        },
+                        child: const Text('Prefer not to say')),
+                  ],
                 ),
                 SizedBox(
-                  height: 24,
+                  height: 22,
                 ),
-                ListTile(
-                  title: const Text('Female'),
-                  leading: Radio(
-                    value: GenderValue.female,
-                    groupValue: _character,
-                    onChanged: (GenderValue value) {
-                      setState(() {
-                        SignUpController.gender =
-                            value.toString().split('.')[1];
-                        _character = value;
-                        print(value);
-                      });
-                    },
-                  ),
-                ),
+                CustomButton(
+                    lable: 'Continue',
+                    color: Colors.black,
+                    radius: 22,
+                    onPress: () {
+                      if (femaleSelected || maleSelected || notToSay) {
+                        Get.to(() => DobPage());
+                      } else {
+                        Get.showSnackbar(GetBar(
+                          message: 'Please Select At Least One Option',
+                          duration: Duration(seconds: 3),
+                        ));
+                      }
+                    }),
                 SizedBox(
-                  height: 24,
+                  height: 10,
                 ),
-                ListTile(
-                  title: const Text('Prefer not to say'),
-                  leading: Radio(
-                    value: GenderValue.notToSay,
-                    groupValue: _character,
-                    onChanged: (GenderValue value) {
-                      setState(() {
-                        SignUpController.gender =
-                            value.toString().split('.')[1];
-                        _character = value;
-                        print(value.toString().split('.')[1]);
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 35,
-                ),
-                MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.pink),
-                      borderRadius: BorderRadius.circular(22)),
-                  child: Center(
-                    child: Text('Next'),
-                  ),
-                  onPressed: () {
-                    Get.to(() => DobPage());
-                  },
-                )
               ],
             ),
           ),

@@ -61,7 +61,7 @@ class HomeController extends GetxController {
 
   Extractor extractor = Extractor();
 
-  List<String> imageUrls = [];
+  String imageUrls = '';
 
   String title = '';
 
@@ -138,7 +138,7 @@ class HomeController extends GetxController {
         });
 
         extractor.getImages(response.body, (List<String> images) {
-          imageUrls = images;
+          imageUrls = images[0];
           print("printing images at lin 141 $images");
         }, textEditingController.text);
         extractor.getPrices(response.body, (List<String> _prices) {
@@ -155,7 +155,6 @@ class HomeController extends GetxController {
               "amount": price,
             };
           }
-          ;
           print("printing prices at lin 143 $price");
         }, textEditingController.text);
 
@@ -187,8 +186,6 @@ class HomeController extends GetxController {
       var p =
           doubleRE.allMatches(price).map((m) => double.parse(m[0])).toList();
 
-      String id = storage.read('id');
-
       SavedProduct savedProduct = SavedProduct(
           title: title,
           imgUrl: imageUrls[0],
@@ -214,15 +211,16 @@ class HomeController extends GetxController {
   }
 
   deleteProduct(index) {
-    _helper.delete(index).then((value) {
-      print('----------delete');
-
-      print(value);
-
+    _fireStoreMethod.deleteItem(index).then((value) {
       _savedController.getSavedList();
     });
   }
 
+  // _helper.delete(index).then((value) {
+  //   print('----------delete');
+  //   print(value);
+  //   _savedController.getSavedList();
+  // });
   void snakBar(s) {
     Get.showSnackbar(GetBar(
       message: s.toString(),

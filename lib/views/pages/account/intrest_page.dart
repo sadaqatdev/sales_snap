@@ -4,6 +4,8 @@ import 'package:sales_snap/controllers/sign_up_controller.dart';
 import 'package:sales_snap/models/m_user.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/views/bottom_navigation.dart';
+import 'package:sales_snap/views/widgets/custom_button.dart';
+import 'package:sales_snap/views/widgets/custom_heading.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
 
 class IntrestPage extends StatefulWidget {
@@ -22,12 +24,15 @@ class _IntrestPageState extends State<IntrestPage> {
   @override
   void initState() {
     _list = [
-      'Fashion',
-      'Electrical & Tech',
-      'Home & Garden',
-      'Health & Wellness',
-      'Beauty',
-      'Travel & Accomodation',
+      'Sports',
+      'Organic',
+      'Coffee',
+      'Runing  ',
+      'Vegan',
+      'Sleep',
+      'Furity',
+      'Meditation',
+      'Eat Clean',
     ];
     _isChecked = List<bool>.filled(_list.length, false);
 
@@ -37,126 +42,134 @@ class _IntrestPageState extends State<IntrestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: Get.width,
-        height: Get.height,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 35,
-            ),
-            Container(
-                width: 130,
-                height: 40,
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
-                    color: Color(0xffBC31EA),
-                    borderRadius: BorderRadius.all(Radius.circular(30))),
-                child: Center(
-                    child: Text(
-                  'step 4 of 4',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText2
-                      .copyWith(color: Colors.white),
-                ))),
-            SizedBox(
-              height: 14,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text('Interests')],
-            ),
-            Expanded(
-              flex: 22,
-              child: ListView.builder(
-                itemCount: _list.length,
-                itemBuilder: (context, index) {
-                  return CheckboxListTile(
-                    onChanged: (bool value) {
-                      setState(() {
-                        _isChecked[index] = value;
-                      });
-                      if (value) {
-                        SignUpController.intersts.add(_list[index]);
-                      } else {
-                        SignUpController.intersts
-                            .remove(_list.elementAt(index));
-                      }
-                      print(SignUpController.intersts);
-                    },
-                    controlAffinity: ListTileControlAffinity.leading,
-                    title: Text(
-                      _list[index],
-                    ),
-                    value: _isChecked[index],
-                  );
-                },
+      extendBody: true,
+      body: SingleChildScrollView(
+        child: Container(
+          width: Get.width,
+          padding: EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 16),
+          child: Column(
+            children: [
+              CustomHeading(
+                progressWidth: Get.width - 50,
+                steps: 'Step 4/4',
+                lable: 'Time to customize your interest',
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text('Select all that apply')],
-            ),
-            Spacer(
-              flex: 1,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Obx(() {
-                  if (_controller.isLoding.value) {
-                    return progressBar();
-                  }
-                  return MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.pink),
-                        borderRadius: BorderRadius.circular(22)),
-                    child: Center(
-                      child: Text('Next'),
-                    ),
-                    onPressed: () {
-                      if (SignUpController.intersts.isEmpty) {
-                        print(SignUpController.intersts);
+              Container(
+                height: 800,
+                width: 350,
+                child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 200,
+                        childAspectRatio: 1,
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 5),
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: _list.length,
+                    itemBuilder: (BuildContext ctx, index) {
+                      return buildTile(index);
+                    }),
+              ),
+              SizedBox(
+                height: 24,
+              ),
+              InkWell(
+                  onTap: () {
+                    setState(() {
+                      _isChecked = List<bool>.filled(_list.length, true);
+                      SignUpController.intersts.addAll(_list);
+                    });
+                  },
+                  child: Text('Select all')),
+              SizedBox(
+                height: 24,
+              ),
+              Obx(() {
+                return _controller.isLoding.value
+                    ? progressBar()
+                    : CustomButton(
+                        lable: 'Continue',
+                        color: Colors.black,
+                        radius: 22,
+                        onPress: () {
+                          if (SignUpController.intersts.isEmpty) {
+                            print(SignUpController.intersts);
 
-                        Get.showSnackbar(GetBar(
-                          message: 'Please select at least one interest',
-                          duration: Duration(seconds: 2),
-                        ));
-
-                        return;
-                      }
-
-                      _method
-                          .setUser(
-                        MUser(
-                          dob: SignUpController.dob,
-                          email: SignUpController.email,
-                          gender: SignUpController.gender,
-                          intersts: SignUpController.intersts.toList(),
-                          name: SignUpController.name,
-                          token: token,
-                        ),
-                      )
-                          .then((s) {
-                        Get.offAll(() => BottomNavBar());
-                      });
-                    },
-                  );
-                }),
-                SizedBox(
-                  width: 24,
-                )
-              ],
-            ),
-            SizedBox(
-              height: 24,
-            )
-          ],
+                            Get.showSnackbar(GetBar(
+                              message: 'Please select at least one interest',
+                              duration: Duration(seconds: 2),
+                            ));
+                          } else {
+                            _controller.isLoding(true);
+                            _method
+                                .setUser(
+                              MUser(
+                                dob: SignUpController.dob,
+                                email: SignUpController.email,
+                                gender: SignUpController.gender,
+                                intersts: SignUpController.intersts.toList(),
+                                name: SignUpController.name,
+                                token: token,
+                              ),
+                            )
+                                .then((s) {
+                              _controller.isLoding(false);
+                              Get.offAll(() => BottomNavBar());
+                            });
+                          }
+                        });
+              }),
+              SizedBox(
+                height: 24,
+              )
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget buildTile(int index) {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 1,
+                spreadRadius: 1,
+              ),
+            ],
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(28),
+          ),
+          width: 80,
+          height: 80,
+          padding: EdgeInsets.all(8),
+          child: Center(child: Image.asset('assets/image$index.png')),
+        ),
+        Row(
+          children: [
+            SizedBox(
+              width: 12,
+            ),
+            Checkbox(
+              onChanged: (bool value) {
+                setState(() {
+                  _isChecked[index] = value;
+                });
+                if (value) {
+                  SignUpController.intersts.add(_list[index]);
+                } else {
+                  SignUpController.intersts.remove(_list.elementAt(index));
+                }
+              },
+              value: _isChecked[index],
+            ),
+            Text(_list[index])
+          ],
+        )
+      ],
     );
   }
 

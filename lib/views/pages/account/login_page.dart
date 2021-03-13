@@ -27,6 +27,8 @@ class _LoginPageState extends State<LoginPage> {
 
   AuthRepo _repo = AuthRepo();
 
+  bool show = false;
+
   @override
   void initState() {
     userNameController.text = 'sa@gm.com';
@@ -44,12 +46,12 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final lablesStyle = Theme.of(context).textTheme.headline1;
+    final lablesStyle = Theme.of(context).textTheme.headline2;
 
     return SingleChildScrollView(
       child: Container(
         height: Get.height,
-        padding: EdgeInsets.only(left: 16, right: 16, top: 25),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 25),
         child: Form(
           key: formKey,
           child: Obx(() {
@@ -63,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Text(
                       'Login To App',
-                      style: lablesStyle,
+                      style: lablesStyle.copyWith(color: Colors.black),
                     ),
                     SizedBox(
                       height: 32,
@@ -81,8 +83,20 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     TextFormField(
                       controller: passworController,
+                      obscureText: show,
                       keyboardType: TextInputType.visiblePassword,
-                      decoration: InputDecoration(hintText: 'Password'),
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                show = !show;
+                              });
+                            },
+                            icon: show
+                                ? Icon(Icons.visibility)
+                                : Icon(Icons.visibility_off)),
+                      ),
                       validator: (value) {
                         return passwordValidate(value);
                       },
@@ -96,7 +110,10 @@ class _LoginPageState extends State<LoginPage> {
                               side: BorderSide(color: Colors.pink),
                               borderRadius: BorderRadius.circular(22)),
                           child: Center(
-                            child: Text('Login'),
+                            child: Text(
+                              'Login',
+                              style: lablesStyle.copyWith(color: Colors.black),
+                            ),
                           ),
                           onPressed: () {
                             login();
@@ -105,31 +122,64 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                     SizedBox(
-                      height: 16,
+                      height: 24,
                     ),
                     MaterialButton(
                       elevation: 6,
+                      padding: EdgeInsets.only(top: 18, bottom: 18),
                       shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.pink),
+                          side: BorderSide(color: Color(0xffEA4335)),
                           borderRadius: BorderRadius.circular(22)),
-                      color: Colors.redAccent,
+                      color: Color(0xffEA4335),
                       child: Center(
-                        child: Text('Google'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/google.png',
+                              width: 24,
+                              height: 24,
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text('Continue with Google', style: lablesStyle),
+                          ],
+                        ),
                       ),
                       onPressed: () {
                         googleLogin();
                       },
                     ),
                     SizedBox(
-                      height: 15,
+                      height: 24,
                     ),
                     MaterialButton(
+                      padding: EdgeInsets.only(top: 18, bottom: 18),
+                      height: 50,
+                      minWidth: 326,
                       shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.blue),
+                          side: BorderSide(color: Color(0xff1877F2)),
                           borderRadius: BorderRadius.circular(22)),
-                      color: Colors.blue,
+                      color: Color(0xff1877F2),
                       child: Center(
-                        child: Text('Facebook'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/facebook.png',
+                              width: 24,
+                              height: 24,
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              'Continue with Facebook',
+                              style: lablesStyle,
+                            ),
+                          ],
+                        ),
                       ),
                       onPressed: () {
                         googleLogin();

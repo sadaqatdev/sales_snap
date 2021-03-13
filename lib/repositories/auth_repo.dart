@@ -32,7 +32,7 @@ class AuthRepo {
         .createUserWithEmailAndPassword(email: email, password: password)
         .catchError((err) {
       Get.showSnackbar(GetBar(
-        message: err.toString(),
+        message: 'The email address is already in use by another account',
         duration: Duration(seconds: 3),
       ));
     });

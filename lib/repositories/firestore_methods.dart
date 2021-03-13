@@ -42,6 +42,18 @@ class FireStoreMethod {
     return tempList;
   }
 
+  Future<String> deleteItem(index) async {
+    List<SavedProduct> tempList = [];
+
+    _collection
+        .doc(_currentUser.uid)
+        .collection('saved_products')
+        .doc(index)
+        .delete();
+
+    return 'ok';
+  }
+
   Future<void> buyItems(SavedProduct details) async {
     await _collection
         .doc(_currentUser.uid)
