@@ -14,13 +14,23 @@ class MyItemPage extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            flexibleSpace: TabBar(
-              tabs: [
-                Tab(
-                  child: Text('Saved Items'),
-                ),
-                Tab(child: Text('Buyed Items'))
-              ],
+            toolbarHeight: 90,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24))),
+            flexibleSpace: Padding(
+              padding: const EdgeInsets.only(top: 16, left: 12, right: 12),
+              child: TabBar(
+                indicatorColor: Colors.white,
+                indicatorSize: TabBarIndicatorSize.tab,
+                tabs: [
+                  Tab(
+                    child: Text('Saved Items'),
+                  ),
+                  Tab(child: Text('Buyed Items'))
+                ],
+              ),
             ),
           ),
           body: TabBarView(

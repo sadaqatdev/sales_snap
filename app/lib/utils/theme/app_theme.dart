@@ -11,6 +11,8 @@ class AppTheme {
   static final themeData = ThemeData(
     primaryColor: Color(0xff24B4D6),
     backgroundColor: Color(0xffE7E9EF),
+    scaffoldBackgroundColor: Color(0xffE5E5E5),
+
     textTheme: TextTheme(
       headline1: GoogleFonts.rubik().copyWith(
           fontSize: 28,

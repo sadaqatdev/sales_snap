@@ -10,8 +10,8 @@ class SaveListModel {
   String priceNumber;
   String price;
   int id;
-  String token;
-
+  String uid;
+  String msgToken;
   SaveListModel({
     this.webUrl,
     this.title,
@@ -21,32 +21,9 @@ class SaveListModel {
     this.priceNumber,
     this.price,
     this.id,
-    this.token,
+    this.uid,
+    this.msgToken,
   });
-
-  SaveListModel copyWith({
-    String webUrl,
-    String title,
-    String imgUrl,
-    String desc,
-    String priceHtmlTag,
-    String priceNumber,
-    String price,
-    int id,
-    String token,
-  }) {
-    return SaveListModel(
-      webUrl: webUrl ?? this.webUrl,
-      title: title ?? this.title,
-      imgUrl: imgUrl ?? this.imgUrl,
-      desc: desc ?? this.desc,
-      priceHtmlTag: priceHtmlTag ?? this.priceHtmlTag,
-      priceNumber: priceNumber ?? this.priceNumber,
-      price: price ?? this.price,
-      id: id ?? this.id,
-      token: token ?? this.token,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -58,13 +35,12 @@ class SaveListModel {
       'priceNumber': priceNumber,
       'price': price,
       'id': id,
-      'token': token,
+      'uid': uid,
+      'msgToken': msgToken,
     };
   }
 
   factory SaveListModel.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
     return SaveListModel(
       webUrl: map['webUrl'],
       title: map['title'],
@@ -74,7 +50,8 @@ class SaveListModel {
       priceNumber: map['priceNumber'],
       price: map['price'],
       id: map['id'],
-      token: map['token'],
+      uid: map['uid'],
+      msgToken: map['msgToken'],
     );
   }
 
@@ -85,23 +62,24 @@ class SaveListModel {
 
   @override
   String toString() {
-    return 'SaveListModel(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber, price: $price, id: $id, token: $token)';
+    return 'SaveListModel(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber, price: $price, id: $id, uid: $uid, msgToken: $msgToken)';
   }
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-    return o is SaveListModel &&
-        o.webUrl == webUrl &&
-        o.title == title &&
-        o.imgUrl == imgUrl &&
-        o.desc == desc &&
-        o.priceHtmlTag == priceHtmlTag &&
-        o.priceNumber == priceNumber &&
-        o.price == price &&
-        o.id == id &&
-        o.token == token;
+    return other is SaveListModel &&
+        other.webUrl == webUrl &&
+        other.title == title &&
+        other.imgUrl == imgUrl &&
+        other.desc == desc &&
+        other.priceHtmlTag == priceHtmlTag &&
+        other.priceNumber == priceNumber &&
+        other.price == price &&
+        other.id == id &&
+        other.uid == uid &&
+        other.msgToken == msgToken;
   }
 
   @override
@@ -114,6 +92,7 @@ class SaveListModel {
         priceNumber.hashCode ^
         price.hashCode ^
         id.hashCode ^
-        token.hashCode;
+        uid.hashCode ^
+        msgToken.hashCode;
   }
 }

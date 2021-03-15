@@ -70,8 +70,13 @@ class SavedTab extends StatelessWidget {
                                           print(
                                               bcontroller.selectedList.length);
                                           bcontroller.addToSelectList(
-                                              bcontroller.userSaveList[index],
-                                              value);
+                                              bcontroller
+                                                  .userSaveList[index].msgToken,
+                                              value,
+                                              bcontroller
+                                                  .userSaveList[index].webUrl,
+                                              bcontroller
+                                                  .userSaveList[index].uid);
                                         },
                                         key: Key(index.toString()),
                                       );

@@ -48,6 +48,7 @@ dependencies:
   universal_html: ^1.2.4
   onesignal_flutter: ^2.6.3
   flutter_native_splash: ^1.0.3
+  octo_image: ^0.3.0
 
 dev_dependencies:
   flutter_test:

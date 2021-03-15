@@ -13,19 +13,25 @@ class LoginSignUp extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            leading: Container(),
-            toolbarHeight: 60,
-            bottom: TabBar(
-              indicatorColor: Theme.of(context).primaryColor,
-              indicatorPadding: EdgeInsets.only(top: 12),
-              labelPadding: EdgeInsets.only(bottom: 12, top: 12),
-              tabs: [
-                Text(
-                  'Login',
-                  style: style,
-                ),
-                Text('SignUp', style: style)
-              ],
+            toolbarHeight: 90,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24))),
+            flexibleSpace: Padding(
+              padding: const EdgeInsets.only(top: 16, left: 12, right: 12),
+              child: TabBar(
+                indicatorColor: Theme.of(context).primaryColor,
+                indicatorPadding: EdgeInsets.only(top: 12),
+                labelPadding: EdgeInsets.only(bottom: 12, top: 12),
+                tabs: [
+                  Text(
+                    'Login',
+                    style: style,
+                  ),
+                  Text('SignUp', style: style)
+                ],
+              ),
             ),
           ),
           body: TabBarView(

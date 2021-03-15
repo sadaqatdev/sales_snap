@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/web_details.dart';
@@ -41,13 +42,13 @@ class SavedTileWidget extends StatelessWidget {
     this.saveItemList,
   }) : super(key: key);
 
-  final Routes _routes = Routes();
-
   final controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
-    final title = Theme.of(context).textTheme.headline2;
+    final title = Theme.of(context).textTheme.headline2.copyWith(
+          color: Colors.black,
+        );
 
     return Container(
       padding: EdgeInsets.only(left: 8, right: 8),
@@ -59,10 +60,17 @@ class SavedTileWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Image.network(
-                saveItemList[index].imgUrl,
-                width: 110,
-                height: 110,
+              OctoImage(
+                width: 100,
+                height: 100,
+                image: NetworkImage(saveItemList[index].imgUrl),
+                placeholderBuilder: OctoPlaceholder.blurHash(
+                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                ),
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.network('https://via.placeholder.com/150');
+                },
+                fit: BoxFit.cover,
               ),
               SizedBox(
                 width: 12,
@@ -77,7 +85,7 @@ class SavedTileWidget extends StatelessWidget {
                     Text(
                       saveItemList[index].title,
                       style: title,
-                      maxLines: 3,
+                      maxLines: 2,
                     ),
                     SizedBox(
                       height: 2,
@@ -102,7 +110,7 @@ class SavedTileWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(22)),
                           )),
                           onPressed: () {
-                            _routes.to(
+                            ToRoute.to(
                                 context,
                                 ItemDetailsPage(
                                   url: saveItemList[index].webUrl,

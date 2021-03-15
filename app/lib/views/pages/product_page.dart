@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
@@ -7,8 +8,6 @@ import 'package:sales_snap/views/widgets/custom_button.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
 
 class ProductPage extends StatelessWidget {
-  final Routes _routes = Routes();
-
   final formKey = GlobalKey<FormState>();
 
   final _homeController = Get.put(HomeController());
@@ -179,6 +178,10 @@ class ProductPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    Text('Price'),
+                    SizedBox(
+                      width: 12,
+                    ),
                     Text(
                       homecontroller.price.toString(),
                       style: TextStyle(
@@ -211,14 +214,17 @@ class ProductPage extends StatelessWidget {
             height: 198,
             width: 223,
             child: Card(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(60)),
-              child: Image.network(
-                homecontroller.imageUrls,
-                fit: BoxFit.fill,
-              ),
-            ),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(60)),
+                child: OctoImage(
+                  image: NetworkImage(homecontroller.imageUrls),
+                  placeholderBuilder: OctoPlaceholder.blurHash(
+                    'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                  ),
+                  errorBuilder: OctoError.icon(color: Colors.red),
+                  fit: BoxFit.cover,
+                )),
           ),
         )
       ],

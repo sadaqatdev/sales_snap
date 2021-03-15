@@ -45,7 +45,10 @@ class SavedPage extends StatelessWidget {
                                       onPressed: () {
                                         /// bcontroller.sendNotification();
                                         dialog(
-                                            context, bcontroller.selectedList);
+                                            context,
+                                            bcontroller.selectedList,
+                                            bcontroller.webUrl,
+                                            bcontroller.uidList);
                                       },
                                       child: Text('Send Notification Message'),
                                     ),
@@ -63,14 +66,19 @@ class SavedPage extends StatelessWidget {
                                   child: ListView.builder(
                                     itemCount: bcontroller.searchList.length,
                                     itemBuilder: (context, index) {
+                                      print(bcontroller
+                                          .searchList[index].msgToken);
                                       return SavedTileWidget(
                                         saveItemList:
                                             bcontroller.searchList[index],
                                         isSelectedFuntction: (value) {
                                           bcontroller.addToSelectList(
                                               bcontroller
-                                                  .searchList[index].token,
-                                              value);
+                                                  .searchList[index].msgToken,
+                                              value,
+                                              bcontroller.webUrl,
+                                              bcontroller
+                                                  .searchList[index].uid);
                                         },
                                         key: Key(index.toString()),
                                       );
@@ -86,7 +94,8 @@ class SavedPage extends StatelessWidget {
     );
   }
 
-  void dialog(BuildContext context, List<String> ids) {
+  void dialog(BuildContext context, List<String> ids, String url,
+      List<String> uidList) {
     var key = GlobalKey<FormState>();
     showDialog(
         useSafeArea: true,
@@ -95,9 +104,10 @@ class SavedPage extends StatelessWidget {
           return Builder(builder: (bcontext) {
             return Container(
               margin:
-                  EdgeInsets.only(left: 200, right: 200, top: 300, bottom: 300),
+                  EdgeInsets.only(left: 200, right: 200, top: 300, bottom: 280),
               child: GetBuilder<SendNotification>(
-                  init: SendNotification(usersId: ids),
+                  init: SendNotification(
+                      usersId: ids, webUrl: url, uidList: uidList),
                   builder: (snapshot) {
                     return Material(
                       child: Padding(

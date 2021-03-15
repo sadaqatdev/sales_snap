@@ -11,11 +11,14 @@ class BottomNavBar extends StatelessWidget {
     return GetBuilder<BottomNavController>(builder: (controller) {
       return Scaffold(
         body: _navController.currentPage,
+        backgroundColor: Color(0xffE5E5E5),
         bottomNavigationBar: Container(
+          color: Color(0xffE5E5E5),
           child: Card(
             elevation: 3,
             margin: EdgeInsets.only(left: 12, right: 12, bottom: 12),
             semanticContainer: true,
+            color: Color(0xffE5E5E5),
             clipBehavior: Clip.antiAliasWithSaveLayer,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/models/m_user.dart';
@@ -7,6 +9,11 @@ class AccountCntroller extends GetxController {
   MUser user;
   bool isLoding = false;
   FireStoreMethod _method = FireStoreMethod();
+  TextEditingController nameControler = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController dob = TextEditingController();
+  TextEditingController gender = TextEditingController();
+
   bool pushNotification;
   final pref = GetStorage();
 
@@ -32,6 +39,27 @@ class AccountCntroller extends GetxController {
     await _method.setUser(user);
     isLoding = false;
     update();
+  }
+
+  void updateUser() {
+    isLoding = true;
+    _method
+        .updateUser(
+            MUser(dob: dob.text, email: gender.text, name: nameControler.text))
+        .then((value) {
+      isLoding = true;
+      showBar('Sucessfully Updated');
+    }).catchError((e) {
+      showBar('Not Updated');
+      isLoding = true;
+    });
+  }
+
+  void showBar(err) {
+    Get.showSnackbar(GetBar(
+      message: err.toString(),
+      duration: Duration(seconds: 3),
+    ));
   }
 
   void updateNotification(bool value) {

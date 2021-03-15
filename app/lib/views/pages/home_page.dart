@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
+import 'package:sales_snap/views/pages/items_details_page.dart';
 import 'package:sales_snap/views/pages/product_page.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
 
 class HomePage extends StatelessWidget {
-  final Routes _routes = Routes();
-
   final formKey = GlobalKey<FormState>();
 
   final _homeController = Get.put(HomeController());
@@ -34,6 +34,7 @@ class HomePage extends StatelessWidget {
                 body: SingleChildScrollView(
                   child: Container(
                     padding: EdgeInsets.only(left: 12, right: 12, top: 12),
+                    color: Color(0xffE5E5E5),
                     child: Stack(
                       children: [
                         Column(
@@ -162,44 +163,59 @@ class HomePage extends StatelessWidget {
                   mainAxisSpacing: 5),
               itemBuilder: (BuildContext context, int index) {
                 return Container(
-                  child: Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Image.network(
-                            savedController.saveItemList[index].imgUrl,
-                            width: 170,
-                            fit: BoxFit.fill,
+                  child: InkWell(
+                    onTap: () {
+                      ToRoute.to(
+                          context,
+                          ItemDetailsPage(
+                            url: savedController.saveItemList[index].webUrl,
+                          ));
+                    },
+                    child: Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: OctoImage(
+                            image: NetworkImage(
+                                savedController.saveItemList[index].imgUrl),
+                            placeholderBuilder: OctoPlaceholder.blurHash(
+                              'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                            ),
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.network(
+                                  'https://via.placeholder.com/350x150');
+                            },
+                            fit: BoxFit.cover,
+                          )),
+                          SizedBox(
+                            height: 6,
                           ),
-                        ),
-                        SizedBox(
-                          height: 6,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8, right: 3),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                savedController.saveItemList[index].title,
-                                style: bodyStyle.copyWith(fontSize: 14),
-                                maxLines: 2,
-                              ),
-                              SizedBox(
-                                height: 6,
-                              ),
-                              Text(
-                                savedController.saveItemList[index].price,
-                                style: bodyStyle.copyWith(color: Colors.red),
-                              ),
-                              SizedBox(
-                                height: 6,
-                              ),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 3),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  savedController.saveItemList[index].title,
+                                  style: bodyStyle.copyWith(fontSize: 14),
+                                  maxLines: 2,
+                                ),
+                                SizedBox(
+                                  height: 6,
+                                ),
+                                Text(
+                                  savedController.saveItemList[index].price,
+                                  style: bodyStyle.copyWith(color: Colors.red),
+                                ),
+                                SizedBox(
+                                  height: 6,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

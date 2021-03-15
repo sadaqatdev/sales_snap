@@ -13,11 +13,12 @@ class SaveController extends GetxController {
   List<SaveListModel> searchList = [];
 
   List<String> selectedList = [];
+  List<String> uidList = [];
 
   List<SaveListModel> userSaveList = [];
 
   bool viseble = false;
-
+  String webUrl = '';
   var isLoading = true;
 
   final _method = FirestoreMethods();
@@ -62,9 +63,12 @@ class SaveController extends GetxController {
     }
   }
 
-  void addToSelectList(item, condition) {
+  void addToSelectList(item, condition, url, uid) {
+    webUrl = url;
     if (condition) {
+      print(item);
       selectedList.add(item);
+      uidList.add(uid);
       if (selectedList.length > 0) {
         viseble = true;
       } else {
@@ -74,6 +78,7 @@ class SaveController extends GetxController {
       update();
     } else {
       selectedList.remove(item);
+      uidList.remove(uid);
       if (selectedList.length > 0) {
         viseble = true;
       } else {
@@ -90,6 +95,9 @@ class SaveController extends GetxController {
       searchList = value;
       update();
       getSearchList();
+    });
+    Future.delayed(Duration(seconds: 2)).then((value) {
+      update();
     });
   }
 }

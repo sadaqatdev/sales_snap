@@ -40,21 +40,28 @@ class _SignUpNameState extends State<SignUpName> {
                     lable: 'Your Name'),
                 Form(
                   key: fomKey,
-                  child: TextFormField(
-                    keyboardType: TextInputType.name,
-                    controller: userNameController,
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person),
-                        border: InputBorder.none,
-                        hintText: 'What is your Name',
-                        contentPadding:
-                            EdgeInsets.only(top: 12, bottom: 12, left: 12)),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Enter Full Name';
-                      }
-                      return null;
-                    },
+                  child: Container(
+                    margin: EdgeInsets.only(top: 12, left: 4, right: 4),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white),
+                    child: TextFormField(
+                      keyboardType: TextInputType.name,
+                      controller: userNameController,
+                      decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.person),
+                          border: InputBorder.none,
+                          hintText: 'What is your Name',
+                          fillColor: Colors.transparent,
+                          contentPadding:
+                              EdgeInsets.only(top: 12, bottom: 12, left: 12)),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Enter Full Name';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                 ),
                 SizedBox(

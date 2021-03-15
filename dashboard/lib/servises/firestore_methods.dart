@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sales_snap_dashboard/models/m_user.dart';
-import 'package:sales_snap_dashboard/models/notification.dart';
+import 'package:sales_snap_dashboard/models/notification_model.dart';
 import 'package:sales_snap_dashboard/models/save_list_model.dart';
 
 class FirestoreMethods {
@@ -52,18 +52,33 @@ class FirestoreMethods {
     return tempList;
   }
 
-  Future<List<Notification>> getNotifications() async {
-    List<Notification> tempList = [];
-    QuerySnapshot _snap = await _collection
-        .doc(_currentUser.uid)
-        .collection('notifications')
-        .get();
+  Future<List<NotificationModel>> getNotifications() async {
+    List<NotificationModel> tempList = [];
+    QuerySnapshot _snap = await _firestore.collection('notifications').get();
     if (_snap?.docs?.isNotEmpty ?? false)
       _snap.docs.forEach((qSnap) {
-        if (qSnap.exists) tempList.add(Notification.fromMap(qSnap.data()));
+        if (qSnap.exists) tempList.add(NotificationModel.fromMap(qSnap.data()));
       });
 
     return tempList;
+  }
+
+  Future<void> setNotifications(NotificationModel data) async {
+    await _firestore.collection('notifications').doc().set(data.toMap());
+  }
+
+  Future<void> setUserNotification(
+      {NotificationModel data, List<String> uidList}) async {
+    uidList.forEach((element) {
+      Future.delayed(Duration(seconds: 2)).then((value) async {
+        await _firestore
+            .collection('user_notification')
+            .doc(element)
+            .collection(element)
+            .doc()
+            .set(data.toMap());
+      });
+    });
   }
 
   Future<List<SaveListModel>> getBuyedItems() async {

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:background_fetch/background_fetch.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +60,8 @@ class HomeController extends GetxController {
   DatabaseHelper _helper = DatabaseHelper();
 
   FireStoreMethod _fireStoreMethod = FireStoreMethod();
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   Extractor extractor = Extractor();
 
@@ -186,13 +190,14 @@ class HomeController extends GetxController {
       onesignalUserId = status.subscriptionStatus.userId;
       var p =
           doubleRE.allMatches(price).map((m) => double.parse(m[0])).toList();
-      print(onesignalUserId);
+      String uid = _auth.currentUser.uid;
       SavedProduct savedProduct = SavedProduct(
           title: title,
           imgUrl: imageUrls,
           priceHtmlTag: HomeController.priceHtmlTag,
           priceNumber: price,
           price: price,
+          uid: uid,
           webUrl: textEditingController.text,
           msgToken: onesignalUserId);
 
@@ -390,10 +395,14 @@ class HomeController extends GetxController {
     await OneSignal.shared.init('4cd671ff-1756-4e7a-8f03-f90a7bace30f');
     OneSignal.shared
         .setInFocusDisplayType(OSNotificationDisplayType.notification);
-    OneSignal.shared.setNotificationReceivedHandler((notification) {
+    OneSignal.shared
+        .setNotificationReceivedHandler((OSNotification notification) {
       print(notification.payload);
       print('------------------');
+      print(
+          "Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}");
     });
+    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.debug);
     OSPermissionSubscriptionState status =
         await OneSignal.shared.getPermissionSubscriptionState();
 

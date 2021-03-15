@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:sales_snap_dashboard/servises/firestore_methods.dart';
 import 'package:sales_snap_dashboard/views/pages/buyed_page.dart';
 import 'package:sales_snap_dashboard/views/pages/home_page.dart';
-import 'package:sales_snap_dashboard/views/pages/notification.dart';
+import 'package:sales_snap_dashboard/views/pages/notification_page.dart';
 import 'package:sales_snap_dashboard/views/pages/saved_page.dart';
 import 'package:sales_snap_dashboard/views/pages/users.dart';
 
@@ -12,7 +13,7 @@ class NavigationController extends GetxController {
   Widget currentPage = UsersPage();
 
   int currentIndex = 1;
-
+  FirestoreMethods methods = FirestoreMethods();
   @override
   void onInit() {
     super.onInit();

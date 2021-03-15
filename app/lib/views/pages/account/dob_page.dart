@@ -60,6 +60,8 @@ class _DobPageState extends State<DobPage> {
                           maxLength: 2,
                           controller: date,
                           decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
                             hintText: 'DD',
                           ),
                           onEditingComplete: () {
@@ -84,7 +86,11 @@ class _DobPageState extends State<DobPage> {
                         child: TextFormField(
                           controller: month,
                           keyboardType: TextInputType.datetime,
-                          decoration: InputDecoration(hintText: 'MM'),
+                          decoration: InputDecoration(
+                            hintText: 'MM',
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
                           maxLength: 2,
                           onEditingComplete: () {
                             node.nextFocus();
@@ -108,7 +114,11 @@ class _DobPageState extends State<DobPage> {
                         child: TextFormField(
                           controller: year,
                           keyboardType: TextInputType.datetime,
-                          decoration: InputDecoration(hintText: 'YYYY'),
+                          decoration: InputDecoration(
+                            hintText: 'YYYY',
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
                           maxLength: 4,
                           onEditingComplete: () {
                             node.unfocus();

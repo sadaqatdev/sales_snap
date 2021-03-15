@@ -10,6 +10,7 @@ class SavedProduct {
   String price;
   String id;
   String msgToken;
+  String uid;
   SavedProduct({
     this.webUrl,
     this.title,
@@ -20,31 +21,8 @@ class SavedProduct {
     this.price,
     this.id,
     this.msgToken,
+    this.uid,
   });
-
-  SavedProduct copyWith({
-    String webUrl,
-    String title,
-    String imgUrl,
-    String desc,
-    String priceHtmlTag,
-    String priceNumber,
-    String price,
-    int id,
-    String msgToken,
-  }) {
-    return SavedProduct(
-      webUrl: webUrl ?? this.webUrl,
-      title: title ?? this.title,
-      imgUrl: imgUrl ?? this.imgUrl,
-      desc: desc ?? this.desc,
-      priceHtmlTag: priceHtmlTag ?? this.priceHtmlTag,
-      priceNumber: priceNumber ?? this.priceNumber,
-      price: price ?? this.price,
-      id: id ?? this.id,
-      msgToken: msgToken ?? this.msgToken,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -57,6 +35,7 @@ class SavedProduct {
       'price': price,
       'id': id,
       'msgToken': msgToken,
+      'uid': uid,
     };
   }
 
@@ -78,23 +57,24 @@ class SavedProduct {
 
   @override
   String toString() {
-    return 'SavedProduct(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber, price: $price, id: $id, msgToken: $msgToken)';
+    return 'SavedProduct(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber, price: $price, id: $id, msgToken: $msgToken, uid: $uid)';
   }
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-    return o is SavedProduct &&
-        o.webUrl == webUrl &&
-        o.title == title &&
-        o.imgUrl == imgUrl &&
-        o.desc == desc &&
-        o.priceHtmlTag == priceHtmlTag &&
-        o.priceNumber == priceNumber &&
-        o.price == price &&
-        o.id == id &&
-        o.msgToken == msgToken;
+    return other is SavedProduct &&
+        other.webUrl == webUrl &&
+        other.title == title &&
+        other.imgUrl == imgUrl &&
+        other.desc == desc &&
+        other.priceHtmlTag == priceHtmlTag &&
+        other.priceNumber == priceNumber &&
+        other.price == price &&
+        other.id == id &&
+        other.msgToken == msgToken &&
+        other.uid == uid;
   }
 
   @override
@@ -107,6 +87,7 @@ class SavedProduct {
         priceNumber.hashCode ^
         price.hashCode ^
         id.hashCode ^
-        msgToken.hashCode;
+        msgToken.hashCode ^
+        uid.hashCode;
   }
 }

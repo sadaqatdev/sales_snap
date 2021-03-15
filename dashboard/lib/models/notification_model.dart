@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-class Notification {
+class NotificationModel {
   String title;
   String desc;
   String cuponCode;
   String price;
   String webUrl;
-  Notification({
+  NotificationModel({
     this.title,
     this.desc,
     this.cuponCode,
@@ -14,14 +14,14 @@ class Notification {
     this.webUrl,
   });
 
-  Notification copyWith({
+  NotificationModel copyWith({
     String title,
     String desc,
     String cuponCode,
     String price,
     String webUrl,
   }) {
-    return Notification(
+    return NotificationModel(
       title: title ?? this.title,
       desc: desc ?? this.desc,
       cuponCode: cuponCode ?? this.cuponCode,
@@ -40,10 +40,10 @@ class Notification {
     };
   }
 
-  factory Notification.fromMap(Map<String, dynamic> map) {
+  factory NotificationModel.fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
 
-    return Notification(
+    return NotificationModel(
       title: map['title'],
       desc: map['desc'],
       cuponCode: map['cuponCode'],
@@ -54,8 +54,8 @@ class Notification {
 
   String toJson() => json.encode(toMap());
 
-  factory Notification.fromJson(String source) =>
-      Notification.fromMap(json.decode(source));
+  factory NotificationModel.fromJson(String source) =>
+      NotificationModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -66,7 +66,7 @@ class Notification {
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is Notification &&
+    return o is NotificationModel &&
         o.title == title &&
         o.desc == desc &&
         o.cuponCode == cuponCode &&
