@@ -35,7 +35,7 @@ class NotificationPage extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Text('Notification Title'),
+                                    Text('Notification Title:-'),
                                     SizedBox(
                                       width: 16,
                                     ),
@@ -47,7 +47,7 @@ class NotificationPage extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Text('Notification Desc'),
+                                    Text('Notification Desc:-'),
                                     SizedBox(
                                       width: 16,
                                     ),
@@ -59,7 +59,7 @@ class NotificationPage extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Text('Notification Cupon Code'),
+                                    Text('Notification Cupon Code:-'),
                                     SizedBox(
                                       width: 16,
                                     ),
@@ -71,7 +71,7 @@ class NotificationPage extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Text('Notification WebUrl'),
+                                    Text('Notification WebUrl:-'),
                                     SizedBox(
                                       width: 16,
                                     ),

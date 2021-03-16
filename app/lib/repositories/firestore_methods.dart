@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sales_snap/models/m_user.dart';
-import 'package:sales_snap/models/notification.dart';
+
+import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/models/web_details.dart';
 import 'package:sales_snap/utils/login_info.dart';
 
@@ -77,18 +78,22 @@ class FireStoreMethod {
     return tempList;
   }
 
-  Future<List<Notification>> getNotifications() async {
-    List<Notification> tempList = [];
-    QuerySnapshot _snap = await _collection
+  Stream<List<NotificationModel>> getNotification() {
+    return _firestore
+        .collection("user_notification")
         .doc(_currentUser.uid)
-        .collection('notifications')
-        .get();
-    if (_snap?.docs?.isNotEmpty ?? false)
-      _snap.docs.forEach((qSnap) {
-        if (qSnap.exists) tempList.add(Notification.fromMap(qSnap.data()));
+        .collection(_currentUser.uid)
+        .orderBy("timestamp", descending: true)
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<NotificationModel> retVal = [];
+      query.docs.forEach((element) {
+        retVal.add(NotificationModel.fromMap(element.data()));
+        print('-------------------');
+        print(element.data());
       });
-
-    return tempList;
+      return retVal;
+    });
   }
 
   Future<String> setUser(MUser user) async {

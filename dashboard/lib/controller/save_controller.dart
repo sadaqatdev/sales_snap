@@ -19,6 +19,7 @@ class SaveController extends GetxController {
 
   bool viseble = false;
   String webUrl = '';
+  String avataUrl = '';
   var isLoading = true;
 
   final _method = FirestoreMethods();
@@ -45,10 +46,11 @@ class SaveController extends GetxController {
 
   void getSearchList() {
     searchList = [];
+    print(saveItemList.toString());
     print('------------out');
     if (controller.text.isEmpty) {
       print('iiiiiiiiiiiiiiiii');
-
+      print(searchList.toString());
       searchList.addAll(saveItemList);
       isLoading = false;
       update();
@@ -63,10 +65,12 @@ class SaveController extends GetxController {
     }
   }
 
-  void addToSelectList(item, condition, url, uid) {
+  void addToSelectList(item, condition, url, uid, avata) {
     webUrl = url;
+    avataUrl = avata;
+    print('--------varate--');
+    print(avataUrl);
     if (condition) {
-      print(item);
       selectedList.add(item);
       uidList.add(uid);
       if (selectedList.length > 0) {

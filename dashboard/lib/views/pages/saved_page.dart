@@ -48,7 +48,8 @@ class SavedPage extends StatelessWidget {
                                             context,
                                             bcontroller.selectedList,
                                             bcontroller.webUrl,
-                                            bcontroller.uidList);
+                                            bcontroller.uidList,
+                                            bcontroller.avataUrl);
                                       },
                                       child: Text('Send Notification Message'),
                                     ),
@@ -76,9 +77,11 @@ class SavedPage extends StatelessWidget {
                                               bcontroller
                                                   .searchList[index].msgToken,
                                               value,
-                                              bcontroller.webUrl,
                                               bcontroller
-                                                  .searchList[index].uid);
+                                                  .searchList[index].webUrl,
+                                              bcontroller.searchList[index].uid,
+                                              bcontroller
+                                                  .searchList[index].imgUrl);
                                         },
                                         key: Key(index.toString()),
                                       );
@@ -95,7 +98,7 @@ class SavedPage extends StatelessWidget {
   }
 
   void dialog(BuildContext context, List<String> ids, String url,
-      List<String> uidList) {
+      List<String> uidList, String avatarUrl) {
     var key = GlobalKey<FormState>();
     showDialog(
         useSafeArea: true,
@@ -107,7 +110,10 @@ class SavedPage extends StatelessWidget {
                   EdgeInsets.only(left: 200, right: 200, top: 300, bottom: 280),
               child: GetBuilder<SendNotification>(
                   init: SendNotification(
-                      usersId: ids, webUrl: url, uidList: uidList),
+                      usersId: ids,
+                      webUrl: url,
+                      uidList: uidList,
+                      avatarUrl: avatarUrl),
                   builder: (snapshot) {
                     return Material(
                       child: Padding(
@@ -291,6 +297,10 @@ class _SavedTileWidgetState extends State<SavedTileWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        Text('Price'),
+                        SizedBox(
+                          width: 12,
+                        ),
                         Text(
                           widget.saveItemList.price ?? 'Price is not avalibale',
                           maxLines: 1,

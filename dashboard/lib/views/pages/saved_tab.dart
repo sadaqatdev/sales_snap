@@ -76,7 +76,9 @@ class SavedTab extends StatelessWidget {
                                               bcontroller
                                                   .userSaveList[index].webUrl,
                                               bcontroller
-                                                  .userSaveList[index].uid);
+                                                  .userSaveList[index].uid,
+                                              bcontroller
+                                                  .userSaveList[index].imgUrl);
                                         },
                                         key: Key(index.toString()),
                                       );

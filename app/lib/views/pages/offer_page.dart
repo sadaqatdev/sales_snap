@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/utils/theme/app_theme.dart';
+import 'package:sales_snap/views/pages/items_details_page.dart';
 
 import 'package:sales_snap/views/widgets/appBar.dart';
 import 'package:sales_snap/views/widgets/custom_button.dart';
@@ -48,76 +50,76 @@ class OfferPage extends StatelessWidget {
                   SizedBox(
                     height: 22,
                   ),
-                  Container(
-                    width: Get.width,
-                    child: Card(
-                      color: AppTheme.customColorOne,
-                      elevation: 6,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)),
-                      margin: EdgeInsets.only(
-                        top: 22,
-                        left: 16,
-                        right: 20,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 12, top: 12),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.card_giftcard_outlined,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(
-                                  width: 23,
-                                ),
-                                Text(
-                                  'This offer will expire in...',
-                                  style: bodytext,
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 23,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                MaterialButton(
-                                  color: Colors.white,
-                                  padding: EdgeInsets.only(top: 16, bottom: 16),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(12),
-                                          bottomLeft: Radius.circular(12))),
-                                  onPressed: () {},
-                                  child: Text('23hrs'),
-                                ),
-                                SizedBox(
-                                  width: 1,
-                                ),
-                                MaterialButton(
-                                  color: Colors.white,
-                                  padding: EdgeInsets.only(top: 16, bottom: 16),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(12),
-                                          bottomRight: Radius.circular(12))),
-                                  onPressed: () {},
-                                  child: Text('23hrs'),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 22,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
+                  // Container(
+                  //   width: Get.width,
+                  //   child: Card(
+                  //     color: AppTheme.customColorOne,
+                  //     elevation: 6,
+                  //     shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(16)),
+                  //     margin: EdgeInsets.only(
+                  //       top: 22,
+                  //       left: 16,
+                  //       right: 20,
+                  //     ),
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.only(left: 12, top: 12),
+                  //       child: Column(
+                  //         children: [
+                  //           Row(
+                  //             children: [
+                  //               Icon(
+                  //                 Icons.card_giftcard_outlined,
+                  //                 color: Colors.white,
+                  //               ),
+                  //               SizedBox(
+                  //                 width: 23,
+                  //               ),
+                  //               Text(
+                  //                 'This offer will expire in...',
+                  //                 style: bodytext,
+                  //               )
+                  //             ],
+                  //           ),
+                  //           SizedBox(
+                  //             height: 23,
+                  //           ),
+                  //           Row(
+                  //             mainAxisAlignment: MainAxisAlignment.center,
+                  //             children: [
+                  //               MaterialButton(
+                  //                 color: Colors.white,
+                  //                 padding: EdgeInsets.only(top: 16, bottom: 16),
+                  //                 shape: RoundedRectangleBorder(
+                  //                     borderRadius: BorderRadius.only(
+                  //                         topLeft: Radius.circular(12),
+                  //                         bottomLeft: Radius.circular(12))),
+                  //                 onPressed: () {},
+                  //                 child: Text('23hrs'),
+                  //               ),
+                  //               SizedBox(
+                  //                 width: 1,
+                  //               ),
+                  //               MaterialButton(
+                  //                 color: Colors.white,
+                  //                 padding: EdgeInsets.only(top: 16, bottom: 16),
+                  //                 shape: RoundedRectangleBorder(
+                  //                     borderRadius: BorderRadius.only(
+                  //                         topRight: Radius.circular(12),
+                  //                         bottomRight: Radius.circular(12))),
+                  //                 onPressed: () {},
+                  //                 child: Text('23hrs'),
+                  //               )
+                  //             ],
+                  //           ),
+                  //           SizedBox(
+                  //             height: 22,
+                  //           )
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -186,7 +188,13 @@ class OfferPage extends StatelessWidget {
                       ),
                       CustomButton(
                           lable: 'Buy',
-                          onPress: () {},
+                          onPress: () {
+                            AppRoute.to(
+                                context,
+                                ItemDetailsPage(
+                                  url: webUrl,
+                                ));
+                          },
                           color: Colors.black,
                           radius: 8),
                       SizedBox(

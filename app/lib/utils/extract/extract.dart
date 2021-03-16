@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/utils/extract/extractor-contstants.dart';
 import 'package:universal_html/html.dart';
 import 'package:universal_html/parsing.dart';
@@ -84,8 +85,8 @@ class Extractor {
                 }
                 return;
               }
-              print(
-                  "elements at lin 73 extract.dart ${element.attributes.toString()}");
+              // print(
+              //     "elements at lin 73 extract.dart ${element.attributes.toString()}");
               if (!element.attributes['src'].contains(".svg")) {
                 images.add("${element.attributes['src']}");
               }
@@ -100,10 +101,13 @@ class Extractor {
   /// @callback (List<String> prices)
   getPrices(String dom, Function callback, String url) {
     List<String> prices = [];
+
     HtmlDocument document = parseHtmlDocument(dom);
+
     Selectors.pricesQueries.forEach((String query) {
       List<Element> elements =
           document.querySelectorAll(query.trimRight().trimLeft());
+
       if (query.contains("property=") ||
           query.contains("name=") ||
           query.contains("name*=") ||
@@ -112,6 +116,8 @@ class Extractor {
         elements.forEach((Element element) {
           if (element.attributes['content'] != null) {
             prices.add(element.attributes['content']);
+            print('-----upper elemnet-----------------');
+            HomeController.priceHtmlTag = element.toString();
             print(
                 "line 115 💎 element $element price ${element.attributes['content']}");
           }
@@ -122,10 +128,13 @@ class Extractor {
           if (prices.length > 0) {
             return;
           }
+          print('loweeeer -----------');
+          HomeController.priceHtmlTag = element.toString();
           prices.add(element.innerText);
         });
       }
     });
+
     callback(prices);
   }
 
@@ -144,8 +153,8 @@ class Extractor {
         elements.forEach((Element element) {
           if (element.attributes['content'] != null) {
             currency = element.attributes['content'];
-            print(
-                "line 115 💎 element $element price ${element.attributes['content']}");
+            // print(
+            //     "line 115 💎 element $element price ${element.attributes['content']}");
           }
         });
       }

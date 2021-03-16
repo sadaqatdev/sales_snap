@@ -129,6 +129,7 @@ class HomeController extends GetxController {
     enableValue(true);
     showProgrss(true);
     title = "";
+
     try {
       final response = await http.Client().get(textEditingController.text);
 
@@ -145,6 +146,7 @@ class HomeController extends GetxController {
           imageUrls = images[0];
           print("printing images at lin 141 $images");
         }, textEditingController.text);
+
         extractor.getPrices(response.body, (List<String> _prices) {
           String price = _prices[0].trim();
           int length = price.length;
@@ -184,18 +186,23 @@ class HomeController extends GetxController {
   saveProduct() async {
     if (true) {
       showProgrss(true);
+      print('--------price htl tag------');
+      print(HomeController.priceHtmlTag);
       OSPermissionSubscriptionState status =
           await OneSignal.shared.getPermissionSubscriptionState();
 
       onesignalUserId = status.subscriptionStatus.userId;
+
+      String uid = _auth.currentUser.uid;
+
       var p =
           doubleRE.allMatches(price).map((m) => double.parse(m[0])).toList();
-      String uid = _auth.currentUser.uid;
+
       SavedProduct savedProduct = SavedProduct(
           title: title,
           imgUrl: imageUrls,
           priceHtmlTag: HomeController.priceHtmlTag,
-          priceNumber: price,
+          priceNumber: p.toString(),
           price: price,
           uid: uid,
           webUrl: textEditingController.text,

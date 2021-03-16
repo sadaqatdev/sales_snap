@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sales_snap/controllers/saved_item_controller.dart';
+import 'package:sales_snap/controllers/notification_controller.dart';
+import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/utils/theme/app_theme.dart';
 import 'package:sales_snap/views/pages/offer_page.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
-import 'package:sales_snap/views/widgets/custom_button.dart';
 
 class NotificationPage extends StatelessWidget {
   @override
@@ -16,22 +16,25 @@ class NotificationPage extends StatelessWidget {
           height: 100,
           action: SizedBox()),
       body: Container(
-        child: GetBuilder<SavedController>(
-            init: SavedController(),
+        child: GetX<NotificationController>(
+            init: NotificationController(),
             builder: (controller) {
-              // return controller.notificationList.isEmpty
-              //     ? Center(
-              //         child: Text('No Notifications'),
-              //       )
-              //     : controller.isLoading
-              //         ? progressBar()
-              //         :
-              return ListView.builder(
-                itemCount: 12,
-                itemBuilder: (context, index) {
-                  return SavedTileWidget();
-                },
-              );
+              if (controller != null &&
+                  controller.notificationList.value != null) {
+                return ListView.builder(
+                  itemCount: controller.notificationList.value.length,
+                  itemBuilder: (context, index) {
+                    return SavedTileWidget(
+                      notificationModel:
+                          controller.notificationList.value[index],
+                    );
+                  },
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
             }),
       ),
     );
@@ -39,9 +42,8 @@ class NotificationPage extends StatelessWidget {
 }
 
 class SavedTileWidget extends StatelessWidget {
-  const SavedTileWidget({
-    Key key,
-  }) : super(key: key);
+  final NotificationModel notificationModel;
+  const SavedTileWidget({Key key, this.notificationModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +62,10 @@ class SavedTileWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Image.network(
-                'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351',
+                notificationModel.avatarUrl ??
+                    'https://artgalleryofballarat.com.au/wp-content/uploads/2020/06/placeholder-image.png',
                 width: 130,
+                fit: BoxFit.fitHeight,
               ),
               SizedBox(
                 width: 12,
@@ -71,13 +75,15 @@ class SavedTileWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    SizedBox(
-                      height: 12,
-                    ),
+                    Text(notificationModel.timestamp
+                        .toDate()
+                        .toString()
+                        .substring(0, 18)),
+                    SizedBox(width: 12),
                     Row(
                       children: [
                         Text(
-                          'AvaCado',
+                          notificationModel.title ?? 'No Tile',
                           style: title.copyWith(
                               color: Theme.of(context).primaryColor),
                         ),
@@ -89,7 +95,7 @@ class SavedTileWidget extends StatelessWidget {
                     Expanded(
                       child: Row(
                         children: [
-                          Text('SDD333332DSD23'),
+                          Text(notificationModel.cuponCode),
                         ],
                       ),
                     ),
@@ -108,7 +114,13 @@ class SavedTileWidget extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(22)),
                             onPressed: () {
-                              Get.to(() => OfferPage());
+                              Get.to(() => OfferPage(
+                                    avatarUrl: notificationModel.avatarUrl,
+                                    body: notificationModel.desc,
+                                    coupon: notificationModel.cuponCode,
+                                    title: notificationModel.title,
+                                    webUrl: notificationModel.webUrl,
+                                  ));
                             },
                             child: Text(
                               'View Offer',

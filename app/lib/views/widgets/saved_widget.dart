@@ -90,10 +90,18 @@ class SavedTileWidget extends StatelessWidget {
                     SizedBox(
                       height: 2,
                     ),
-                    Text(
-                      saveItemList[index].price,
-                      maxLines: 1,
-                      style: title.copyWith(color: Colors.red),
+                    Row(
+                      children: [
+                        Text('Price'),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          saveItemList[index].price,
+                          maxLines: 1,
+                          style: title.copyWith(color: Colors.red),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 2,
@@ -110,7 +118,7 @@ class SavedTileWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(22)),
                           )),
                           onPressed: () {
-                            ToRoute.to(
+                            AppRoute.to(
                                 context,
                                 ItemDetailsPage(
                                   url: saveItemList[index].webUrl,

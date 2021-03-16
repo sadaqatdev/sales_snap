@@ -165,7 +165,7 @@ class HomePage extends StatelessWidget {
                 return Container(
                   child: InkWell(
                     onTap: () {
-                      ToRoute.to(
+                      AppRoute.to(
                           context,
                           ItemDetailsPage(
                             url: savedController.saveItemList[index].webUrl,

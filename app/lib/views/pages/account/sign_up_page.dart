@@ -32,7 +32,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool show = false;
   @override
   void initState() {
-    emailContoller.text = 'sa@gm.com';
+    emailContoller.text = 'sadaqat@gm.com';
     passworController.text = '1234567';
     confirmPassword.text = '1234567';
     super.initState();
