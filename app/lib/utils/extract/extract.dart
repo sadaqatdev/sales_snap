@@ -102,6 +102,8 @@ class Extractor {
   getPrices(String dom, Function callback, String url) {
     List<String> prices = [];
 
+    List<Map<String, dynamic>> priceElements = [];
+
     HtmlDocument document = parseHtmlDocument(dom);
 
     Selectors.pricesQueries.forEach((String query) {
@@ -115,9 +117,10 @@ class Extractor {
           query.contains("itemprop*=")) {
         elements.forEach((Element element) {
           if (element.attributes['content'] != null) {
+            priceElements.add({"$query": element});
+
             prices.add(element.attributes['content']);
-            print('-----upper elemnet-----------------');
-            HomeController.priceHtmlTag = element.toString();
+
             print(
                 "line 115 💎 element $element price ${element.attributes['content']}");
           }
@@ -128,14 +131,13 @@ class Extractor {
           if (prices.length > 0) {
             return;
           }
-          print('loweeeer -----------');
-          HomeController.priceHtmlTag = element.toString();
+          priceElements.add({"$query": element});
           prices.add(element.innerText);
         });
       }
     });
 
-    callback(prices);
+    callback(prices, priceElements);
   }
 
   /// @callback (String currency)

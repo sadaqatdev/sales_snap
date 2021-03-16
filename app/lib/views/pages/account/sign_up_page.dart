@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
 import 'package:sales_snap/repositories/auth_repo.dart';
+import 'package:sales_snap/utils/login_info.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
 
 import 'sign_up_name.dart';
@@ -27,8 +28,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final loginInfo = GetStorage();
+  final storage = GetStorage();
 
+  LoginInfo _loginInfo = LoginInfo();
   bool show = false;
   @override
   void initState() {
@@ -212,7 +214,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
                 onPressed: () {
-                  // googleLogin();
+                  googleLogin();
                 },
               ),
               SizedBox(
@@ -264,8 +266,10 @@ class _SignUpPageState extends State<SignUpPage> {
         duration: Duration(seconds: 3),
       ));
     }).then((user) {
-      Navigator.pop(context);
-      controller.isLoding(true);
+      _loginInfo.setLoginInfo(user);
+      SignUpController.email = user.email;
+      Get.to(() => SignUpName());
+      controller.isLoding(false);
     });
   }
 

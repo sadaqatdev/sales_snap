@@ -47,6 +47,11 @@ class AccountPage extends StatelessWidget {
                   if (controller.isLoding) {
                     return progressBar();
                   }
+                  if (controller.user == null) {
+                    return Center(
+                      child: Text('Your Account is Deleted'),
+                    );
+                  }
                   MUser user = controller.user;
                   controller.nameControler.text = user.name;
                   controller.email.text = user.email;

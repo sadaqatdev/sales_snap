@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:sales_snap/repositories/database_helper.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/utils/theme/app_theme.dart';
 import 'package:sales_snap/views/pages/items_details_page.dart';
@@ -159,14 +160,25 @@ class OfferPage extends StatelessWidget {
                   SizedBox(
                     height: 12,
                   ),
-                  Text('Hey Farooq,'),
+                  Text('Hey ,'),
                   SizedBox(
                     height: 12,
                   ),
-                  Text(
-                      'Use the code ‘FAROOQ20’ at the checkout and save 20% now! '),
+                  Text(desc),
                   SizedBox(
                     height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Text('Code:'),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(coupon),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 12,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -174,6 +186,7 @@ class OfferPage extends StatelessWidget {
                       CustomButton(
                           lable: 'Copy Code',
                           onPress: () {
+                            print('---------------');
                             Clipboard.setData(
                                 new ClipboardData(text: coupon ?? "your text"));
                             Get.showSnackbar(GetBar(
@@ -218,7 +231,7 @@ class OfferPage extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(60)),
               child: Image.network(
-                'https://cdn.shopify.com/s/files/1/1083/6796/products/product-image-187878776_400x.jpg?v=1569388351',
+                avatarUrl,
                 fit: BoxFit.fill,
               ),
             ),

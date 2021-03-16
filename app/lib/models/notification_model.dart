@@ -10,6 +10,7 @@ class NotificationModel {
   String webUrl;
   String avatarUrl;
   Timestamp timestamp;
+  String docId;
   NotificationModel({
     this.title,
     this.desc,
@@ -18,6 +19,7 @@ class NotificationModel {
     this.webUrl,
     this.avatarUrl,
     this.timestamp,
+    this.docId,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,10 +31,11 @@ class NotificationModel {
       'webUrl': webUrl,
       'avatarUrl': avatarUrl,
       'timestamp': timestamp,
+      'docId': docId,
     };
   }
 
-  factory NotificationModel.fromMap(Map<String, dynamic> map) {
+  factory NotificationModel.fromMap(Map<String, dynamic> map, id) {
     return NotificationModel(
       title: map['title'],
       desc: map['desc'],
@@ -41,17 +44,15 @@ class NotificationModel {
       webUrl: map['webUrl'],
       avatarUrl: map['avatarUrl'],
       timestamp: map['timestamp'],
+      docId: id,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory NotificationModel.fromJson(String source) =>
-      NotificationModel.fromMap(json.decode(source));
-
   @override
   String toString() {
-    return 'NotificationModel(title: $title, desc: $desc, cuponCode: $cuponCode, price: $price, webUrl: $webUrl, avatarUrl: $avatarUrl, timestamp: $timestamp)';
+    return 'NotificationModel(title: $title, desc: $desc, cuponCode: $cuponCode, price: $price, webUrl: $webUrl, avatarUrl: $avatarUrl, timestamp: $timestamp, docId: $docId)';
   }
 
   @override
@@ -65,7 +66,8 @@ class NotificationModel {
         other.price == price &&
         other.webUrl == webUrl &&
         other.avatarUrl == avatarUrl &&
-        other.timestamp == timestamp;
+        other.timestamp == timestamp &&
+        other.docId == docId;
   }
 
   @override
@@ -76,6 +78,7 @@ class NotificationModel {
         price.hashCode ^
         webUrl.hashCode ^
         avatarUrl.hashCode ^
-        timestamp.hashCode;
+        timestamp.hashCode ^
+        docId.hashCode;
   }
 }

@@ -20,30 +20,7 @@ import 'package:sales_snap/repositories/database_helper.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/utils/extract/extract.dart';
 
-void backgroundFetchHeadlessTask(HeadlessTask task) async {
-  // var taskId = task.taskId;
-  final controller = Get.put(HomeController());
-
-  controller.comparePrice();
-
-  // var timeout = task.timeout;
-  // HomeController _controller = HomeController();
-  // if (timeout) {
-  //   BackgroundFetch.finish(taskId);
-  //   return;
-  // }
-
-  // if (taskId == 'flutter_background_fetch') {
-  //   BackgroundFetch.scheduleTask(TaskConfig(
-  //       taskId: "com.transistorsoft.customtask",
-  //       delay: 5000,
-  //       periodic: false,
-  //       forceAlarmManager: false,
-  //       stopOnTerminate: false,
-  //       enableHeadless: true));
-  // }
-  //BackgroundFetch.finish(taskId);
-}
+FlutterLocalNotificationsPlugin fltrNotification;
 
 ////////////CONTROLLER START/////////////////////////////////////////////////////////////
 class HomeController extends GetxController {
@@ -52,8 +29,6 @@ class HomeController extends GetxController {
   static HomeController get to => Get.find();
 
   TextEditingController textEditingController;
-
-  FlutterLocalNotificationsPlugin fltrNotification;
 
   SavedController _savedController = Get.put(SavedController());
 
@@ -89,11 +64,9 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    //initNotifications();
+    initNotifications();
 
-    //initPlatformState();
-
-    getSavedList();
+    initBackgroudTask();
 
     BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 
@@ -106,12 +79,6 @@ class HomeController extends GetxController {
   void onClose() {
     textEditingController.dispose();
     super.onClose();
-  }
-
-  void getSavedList() async {
-    saveList = await _helper.getWebDetails();
-
-    update();
   }
 
   void enableValue(bool val) {
@@ -147,8 +114,10 @@ class HomeController extends GetxController {
           print("printing images at lin 141 $images");
         }, textEditingController.text);
 
-        extractor.getPrices(response.body, (List<String> _prices) {
+        extractor.getPrices(response.body,
+            (List<String> _prices, List<Map<String, dynamic>> priceElements) {
           String price = _prices[0].trim();
+          HomeController.priceHtmlTag = priceElements[0].keys.first;
           int length = price.length;
           if (length > 10) {
             priceMap = {
@@ -229,11 +198,6 @@ class HomeController extends GetxController {
     });
   }
 
-  // _helper.delete(index).then((value) {
-  //   print('----------delete');
-  //   print(value);
-  //   _savedController.getSavedList();
-  // });
   void snakBar(s) {
     Get.showSnackbar(GetBar(
       message: s.toString(),
@@ -242,7 +206,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> comparePrice() async {
-    List<SavedProduct> _list = await _helper.getWebDetails();
+    List<SavedProduct> _list = await _fireStoreMethod.getSavedItems();
 
     _list.forEach((element) async {
       final response = await http.Client().get(Uri.parse(element.webUrl));
@@ -256,8 +220,7 @@ class HomeController extends GetxController {
         try {
           Document document = parse(response.body);
 
-          String newPrice =
-              document.querySelectorAll(element.priceHtmlTag)[0].toString();
+          String newPrice = document.querySelector(element.priceHtmlTag).text;
           try {
             if (oldPrice.isNum) {
               oldParseValue = double.parse(oldPrice);
@@ -281,7 +244,7 @@ class HomeController extends GetxController {
                   .toList();
             }
             if (newPricePareval < oldParseValue) {
-              _showNotification();
+              showNotification();
             }
           } catch (e) {
             snakBar(e);
@@ -294,31 +257,7 @@ class HomeController extends GetxController {
     });
   }
 
-  void initNotifications() {
-    var androidInitilize = AndroidInitializationSettings('ic_launcher');
-    var iOSinitilize = IOSInitializationSettings();
-    var initilizationsSettings =
-        InitializationSettings(android: androidInitilize, iOS: iOSinitilize);
-    fltrNotification = FlutterLocalNotificationsPlugin();
-    fltrNotification.initialize(
-      initilizationsSettings,
-    );
-  }
-
-  Future _showNotification() async {
-    var androidDetails = AndroidNotificationDetails(
-        "Channel ID", "Desi programmer", "This is my channel",
-        importance: Importance.max);
-    var iSODetails = IOSNotificationDetails();
-    var generalNotificationDetails =
-        NotificationDetails(android: androidDetails, iOS: iSODetails);
-
-    await fltrNotification.show(
-        0, "Task", "You created a Task", generalNotificationDetails,
-        payload: "Task");
-  }
-
-  Future<void> initPlatformState() async {
+  Future<void> initBackgroudTask() async {
     // Load persisted fetch events from SharedPreferences
 
     // Configure BackgroundFetch.
@@ -355,9 +294,9 @@ class HomeController extends GetxController {
 
   void _onBackgroundFetch(String taskId) async {
     print("111111111111111[BackgroundFetch] Event received: $taskId");
-    _showNotification();
+
     if (taskId == "flutter_background_fetch") {
-      _showNotification();
+      showNotification();
       print('-----------background fetch=-------');
       // Schedule a one-shot task when fetch event received (for testing).
       /*
@@ -403,60 +342,59 @@ class HomeController extends GetxController {
     OneSignal.shared
         .setInFocusDisplayType(OSNotificationDisplayType.notification);
     OneSignal.shared
-        .setNotificationReceivedHandler((OSNotification notification) {
-      print(notification.payload);
-      print('------------------');
-      print(
-          "Received notification: \n${notification.jsonRepresentation().replaceAll("\\n", "\n")}");
-    });
-    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.debug);
+        .setNotificationReceivedHandler((OSNotification notification) {});
+
     OSPermissionSubscriptionState status =
         await OneSignal.shared.getPermissionSubscriptionState();
 
     onesignalUserId = status.subscriptionStatus.userId;
-    print('-iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
-    print(onesignalUserId);
+
     storage.write('id', onesignalUserId);
   }
-
-  // saveToFirestore(WebDetails webDetails) {
-  //   _fireStoreMethod.saveItems(webDetails).then((e) {});
-  // }
-
 }
 
-// if (url.substring(8, index) == item.webUrl) {
-//   print(document.getElementsByClassName('price-1SDQy price')[0].text);
-//   String title =
-//       document.querySelector('.pdp-title div[itemprop="name"]').text;
-//   String price =
-//       document.getElementsByClassName('price-1SDQy price')[0].text;
+void backgroundFetchHeadlessTask(HeadlessTask task) async {
+  // var taskId = task.taskId;
 
-//   print('-------------------');
+  // var timeout = task.timeout;
+  // HomeController _controller = HomeController();
+  // if (timeout) {
+  //   BackgroundFetch.finish(taskId);
+  //   return;
+  // }
 
-//   print(price.replaceAll(RegExp('[^0-9]'), ''));
+  // if (taskId == 'flutter_background_fetch') {
+  //   BackgroundFetch.scheduleTask(TaskConfig(
+  //       taskId: "com.transistorsoft.customtask",
+  //       delay: 5000,
+  //       periodic: false,
+  //       forceAlarmManager: false,
+  //       stopOnTerminate: false,
+  //       enableHeadless: true));
+  // }
+  //BackgroundFetch.finish(taskId);
+}
 
-//   updatePage(price: price, title: title, desc: 'desc');
+void initNotifications() {
+  var androidInitilize = AndroidInitializationSettings('ic_launcher');
+  var iOSinitilize = IOSInitializationSettings();
+  var initilizationsSettings =
+      InitializationSettings(android: androidInitilize, iOS: iOSinitilize);
+  fltrNotification = FlutterLocalNotificationsPlugin();
+  fltrNotification.initialize(
+    initilizationsSettings,
+  );
+}
 
-//   int p = int.parse(price.replaceAll(RegExp('[^0-9]'), ''));
+Future showNotification() async {
+  var androidDetails = AndroidNotificationDetails(
+      "Channel ID", "Desi programmer", "This is my channel",
+      importance: Importance.max);
+  var iSODetails = IOSNotificationDetails();
+  var generalNotificationDetails =
+      NotificationDetails(android: androidDetails, iOS: iSODetails);
 
-//   savedProduct = WebDetails(
-//     title: title,
-//     priceHtmlTag: price,
-//     desc: descR,
-//     imgUrl: img,
-//     priceNumber: p.toString(),
-//     webUrl: url.substring(8, index),
-//   );
-// // }
-//         Document document = parse(response.body);
-
-//         String newPrice =
-//             document.querySelectorAll('*[class*="price"]')[0].text;
-
-//         print('-----------new price------------------');
-//         print(newPrice);
-//         int index = newPrice.indexOf('class="');
-//         int lasindex = newPrice.indexOf('\">');
-//         String s = newPrice.substring(index, lasindex);
-//         print(document.getElementsByClassName(s));
+  await fltrNotification.show(
+      0, "Task", "You created a Task", generalNotificationDetails,
+      payload: "Task");
+}

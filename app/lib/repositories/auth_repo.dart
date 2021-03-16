@@ -50,7 +50,9 @@ class AuthRepo {
 
   Future<String> resetPassword(String email) async {
     await FirebaseAuth.instance
-        .sendPasswordResetEmail(email: email)
+        .sendPasswordResetEmail(
+      email: email,
+    )
         .catchError((err) {
       Get.showSnackbar(GetBar(
         message: err.toString(),

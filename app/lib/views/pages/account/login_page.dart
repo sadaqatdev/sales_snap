@@ -7,6 +7,7 @@ import 'package:sales_snap/repositories/auth_repo.dart';
 
 import 'package:sales_snap/utils/login_info.dart';
 import 'package:sales_snap/views/bottom_navigation.dart';
+import 'package:sales_snap/views/pages/account/sign_up_name.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,10 +19,10 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passworController = TextEditingController();
 
   final TextEditingController userNameController = TextEditingController();
-  final SignUpController _controller = Get.put(SignUpController());
+
   final AuthRepo _authRepo = AuthRepo();
   final formKey = GlobalKey<FormState>();
-
+  final SignUpController _controller = Get.put(SignUpController());
   LoginInfo _loginInfo = LoginInfo();
   final loginInfo = GetStorage();
 
@@ -269,7 +270,8 @@ class _LoginPageState extends State<LoginPage> {
       ));
     }).then((user) {
       _loginInfo.setLoginInfo(user);
-      Navigator.pop(context);
+      SignUpController.email = user.email;
+      Get.to(() => SignUpName());
       _controller.isLoding(true);
     });
   }

@@ -88,12 +88,23 @@ class FireStoreMethod {
         .map((QuerySnapshot query) {
       List<NotificationModel> retVal = [];
       query.docs.forEach((element) {
-        retVal.add(NotificationModel.fromMap(element.data()));
+        retVal.add(NotificationModel.fromMap(element.data(), element.id));
         print('-------------------');
         print(element.data());
       });
       return retVal;
     });
+  }
+
+  Future<String> deleteNotifications(index) async {
+    _firestore
+        .collection("user_notification")
+        .doc(_currentUser.uid)
+        .collection(_currentUser.uid)
+        .doc(index)
+        .delete();
+
+    return 'ok';
   }
 
   Future<String> setUser(MUser user) async {
