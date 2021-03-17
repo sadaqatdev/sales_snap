@@ -12,6 +12,7 @@ class HomePage extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
 
   final _homeController = Get.put(HomeController());
+  double height = Get.height;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,7 @@ class HomePage extends StatelessWidget {
     return GetBuilder<SavedController>(
         init: SavedController(),
         builder: (saveController) {
+          print(height);
           return Stack(
             children: [
               Scaffold(
@@ -55,14 +57,44 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 134,
-                left: 12,
-                right: 12,
-                child: searchField(context, forteenFont),
-              ),
+                  top: (height / 4) - 15,
+                  left: 12,
+                  right: 12,
+                  child: searchField(context, forteenFont)),
             ],
           );
         });
+  }
+
+  Container customTextField(Icon suffixicon, Icon prefixIcon, String hintText2,
+      TextEditingController txtController) {
+    return Container(
+      height: 50,
+      width: Get.width,
+      margin: EdgeInsets.only(top: 12, left: 4, right: 4),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12), color: Colors.white),
+      child: Row(
+        children: [
+          Expanded(
+              child: TextFormField(
+            obscureText: false,
+            controller: txtController,
+            decoration: InputDecoration(
+              suffixIcon: suffixicon,
+              prefixIcon: prefixIcon,
+              hintText: hintText2,
+              hintStyle: TextStyle(color: Colors.black54),
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              border: InputBorder.none,
+              fillColor: Colors.transparent,
+              filled: true,
+            ),
+          )),
+        ],
+      ),
+    );
   }
 
   Widget searchField(BuildContext context, TextStyle forteenFont) {
@@ -101,18 +133,10 @@ class HomePage extends StatelessWidget {
               suffixIcon: buildMaterialButton(context, forteenFont),
               hintText: 'Paste Link',
               hintStyle: forteenFont.copyWith(color: Colors.black),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xff9F9F9F)),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey, width: 2),
-                borderRadius: BorderRadius.circular(12),
-              ),
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              border: InputBorder.none,
+              filled: true,
             ),
           ),
         ),

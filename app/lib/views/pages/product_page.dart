@@ -119,18 +119,10 @@ class ProductPage extends StatelessWidget {
               suffixIcon: buildMaterialButton(context, forteenFont),
               hintText: 'Paste Link',
               hintStyle: forteenFont.copyWith(color: Colors.black),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xff9F9F9F)),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey, width: 2),
-                borderRadius: BorderRadius.circular(12),
-              ),
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              border: InputBorder.none,
+              filled: true,
             ),
           ),
         ),

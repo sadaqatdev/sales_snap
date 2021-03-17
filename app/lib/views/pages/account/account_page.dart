@@ -6,8 +6,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/controllers/account_controller.dart';
 import 'package:sales_snap/models/m_user.dart';
 import 'package:sales_snap/utils/theme/app_theme.dart';
-import 'package:sales_snap/views/pages/account/update_profile.dart';
-
 import 'package:sales_snap/views/widgets/appBar.dart';
 import 'package:sales_snap/views/widgets/custom_button.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
@@ -41,123 +39,121 @@ class AccountPage extends StatelessWidget {
               right: 24,
               top: 10,
             ),
-            child: GetBuilder<AccountCntroller>(
-                init: AccountCntroller(),
-                builder: (controller) {
-                  if (controller.isLoding) {
-                    return progressBar();
-                  }
-                  if (controller.user == null) {
-                    return Center(
-                      child: Text('Your Account is Deleted'),
-                    );
-                  }
-                  MUser user = controller.user;
-                  controller.nameControler.text = user.name;
-                  controller.email.text = user.email;
-                  controller.dob.text = user.dob;
-                  controller.gender.text = user.gender;
-                  return Form(
-                    key: formKey,
-                    child: ListView(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      children: [
-                        avatatWidget(controller, lableStyle, style),
-                        SizedBox(
-                          height: 25,
-                        ),
-                        customTextField(suffixicon, prefixIcon, user.name,
-                            controller.nameControler),
-                        customTextField(suffixicon, Icon(Icons.email),
-                            user.email, controller.email),
-                        customTextField(suffixicon, Icon(Icons.date_range),
-                            user.dob, controller.dob),
-                        customTextField(suffixicon, Icon(Icons.person),
-                            user.gender, controller.gender),
-                        Container(
-                          height: 50,
-                          width: Get.width,
-                          margin: EdgeInsets.only(top: 12, left: 4, right: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.white),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 6,
-                              ),
-                              CircleAvatar(
-                                  backgroundColor: AppTheme.customColorThree,
-                                  child: Icon(
-                                    Icons.notifications,
-                                    color: Colors.white,
-                                  )),
-                              SizedBox(
-                                width: 6,
-                              ),
-                              Expanded(
-                                child: Text('Notifications'),
-                              ),
-                              Switch(
-                                onChanged: (bool value) {
-                                  controller.updateNotification(value);
-                                  FocusScope.of(context).unfocus();
-                                },
-                                value: controller.pushNotification,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12),
-                          child: Text('Your Intrests'),
-                        ),
-                        Wrap(
-                            children: controller.user.intersts
-                                .map((e) => Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8, top: 8),
-                                      child: Text('$e ,'),
-                                    ))
-                                .toList()),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Spacer(
-                          flex: 2,
-                        ),
-                        CustomButton(
-                            lable: 'Save',
-                            onPress: () {
-                              controller.updateUser();
-                            },
-                            color: Colors.black,
-                            radius: 12),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        CustomButton(
-                            lable: 'LogOut',
-                            onPress: () {
-                              storageINfo.remove('isLogin');
-                              final auth = FirebaseAuth.instance;
-                              auth.signOut();
-                              Get.offAll(() => LoginSignUp());
-                            },
-                            color: AppTheme.customColorThree,
-                            radius: 12),
-                        SizedBox(
-                          height: 12,
-                        )
-                      ],
+            child: GetBuilder<AccountCntroller>(builder: (controller) {
+              if (controller.isLoding) {
+                return progressBar();
+              }
+              if (controller.user == null) {
+                return Center(
+                  child: Text('Your Account is Deleted'),
+                );
+              }
+              MUser user = controller.user;
+              controller.nameControler.text = user.name;
+              controller.email.text = user.email;
+              controller.dob.text = user.dob;
+              controller.gender.text = user.gender;
+              return Form(
+                key: formKey,
+                child: ListView(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    avatatWidget(controller, lableStyle, style),
+                    SizedBox(
+                      height: 25,
                     ),
-                  );
-                })),
+                    customTextField(suffixicon, prefixIcon, user.name,
+                        controller.nameControler),
+                    customTextField(suffixicon, Icon(Icons.email), user.email,
+                        controller.email),
+                    customTextField(suffixicon, Icon(Icons.date_range),
+                        user.dob, controller.dob),
+                    customTextField(suffixicon, Icon(Icons.person), user.gender,
+                        controller.gender),
+                    Container(
+                      height: 50,
+                      width: Get.width,
+                      margin: EdgeInsets.only(top: 12, left: 4, right: 4),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 6,
+                          ),
+                          CircleAvatar(
+                              backgroundColor: AppTheme.customColorThree,
+                              child: Icon(
+                                Icons.notifications,
+                                color: Colors.white,
+                              )),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Expanded(
+                            child: Text('Notifications'),
+                          ),
+                          Switch(
+                            onChanged: (bool value) {
+                              controller.updateNotification(value);
+                              FocusScope.of(context).unfocus();
+                            },
+                            value: controller.pushNotification,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12),
+                      child: Text('Your Intrests'),
+                    ),
+                    Wrap(
+                        children: controller.user.intersts
+                            .map((e) => Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 8, top: 8),
+                                  child: Text('$e ,'),
+                                ))
+                            .toList()),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Spacer(
+                      flex: 2,
+                    ),
+                    CustomButton(
+                        lable: 'Save',
+                        onPress: () {
+                          controller.updateUser();
+                        },
+                        color: Colors.black,
+                        radius: 12),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    CustomButton(
+                        lable: 'LogOut',
+                        onPress: () {
+                          storageINfo.remove('isLogin');
+                          final auth = FirebaseAuth.instance;
+                          auth.signOut();
+                          Get.offAll(() => LoginSignUp());
+                        },
+                        color: AppTheme.customColorThree,
+                        radius: 12),
+                    SizedBox(
+                      height: 12,
+                    )
+                  ],
+                ),
+              );
+            })),
       ),
     );
   }

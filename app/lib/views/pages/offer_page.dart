@@ -164,7 +164,7 @@ class OfferPage extends StatelessWidget {
                   SizedBox(
                     height: 12,
                   ),
-                  Text(desc),
+                  Text(body),
                   SizedBox(
                     height: 20,
                   ),

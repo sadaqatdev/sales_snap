@@ -182,9 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                       ),
-                      onPressed: () {
-                        googleLogin();
-                      },
+                      onPressed: () {},
                     ),
                     SizedBox(height: 14),
                     Text('or'),
@@ -272,7 +270,22 @@ class _LoginPageState extends State<LoginPage> {
       _loginInfo.setLoginInfo(user);
       SignUpController.email = user.email;
       Get.to(() => SignUpName());
-      _controller.isLoding(true);
+      _controller.isLoding(false);
+    });
+  }
+
+  void facebookLogin() {
+    _controller.isLoding(true);
+    _repo.signUpWithFacebook().catchError((err) {
+      Get.showSnackbar(GetBar(
+        message: err.toString(),
+        duration: Duration(seconds: 3),
+      ));
+    }).then((user) {
+      _loginInfo.setLoginInfo(user);
+      SignUpController.email = user.email;
+      Get.to(() => SignUpName());
+      _controller.isLoding(false);
     });
   }
 
