@@ -317,8 +317,8 @@ Future showNotification(String title, String desc) async {
 
 Future<void> comparePrice() async {
   print('-------in Compare Price---------------');
-  await Firebase.initializeApp();
-  await GetStorage().initStorage;
+  // await Firebase.initializeApp();
+  // await GetStorage().initStorage;
   List<SavedProduct> _list = await getSavedItemsBg();
 
   _list.forEach((element) async {
@@ -334,28 +334,43 @@ Future<void> comparePrice() async {
         Document document = parse(response.body);
 
         String newPrice = document.querySelector(element.priceHtmlTag).text;
+        print('---------price----');
+        print(newPrice);
+        print('---------Old Price----');
+        print(element.price);
         try {
           if (oldPrice.isNum) {
+            print('---in old num $oldPrice');
             oldParseValue = double.parse(oldPrice);
           } else {
             oldParseValue = doubleRE
                 .allMatches(oldPrice)
                 .map((m) => double.parse(m[0]))
                 .toList();
+            //           list.forEach((item){
+            // concatenate.write(item);
+
+            // });
+            oldParseValue = double.parse(oldParseValue);
           }
         } catch (e) {
-          print('ERrror occur in background');
+          print('1----ERrror occur in background');
           print(e.toString());
         }
 
         try {
           if (newPrice.isNum) {
+            print('---in new num $newPricePareval');
             newPricePareval = double.parse(newPrice);
           } else {
             newPricePareval = doubleRE
                 .allMatches(newPrice)
                 .map((m) => double.parse(m[0]))
-                .toList();
+                .toList()
+                .toString();
+            print('-----new pares value---------');
+            print(newPricePareval);
+            newPricePareval = double.parse(newPricePareval);
           }
           if (newPricePareval < oldParseValue) {
             NotificationModel(
@@ -375,7 +390,7 @@ Future<void> comparePrice() async {
                 'The Product You Saveed, Now Its Price is Down');
           }
         } catch (e) {
-          print('ERrror occur in background');
+          print('2---ERrror occur in background');
           print(e.toString());
         }
       } catch (e) {
@@ -404,7 +419,8 @@ Future<List<SavedProduct>> getSavedItemsBg() async {
   final storage = GetStorage();
 
   String uid = storage.read('uid');
-
+  print('--------uid---------');
+  print(uid);
   List<SavedProduct> tempList = [];
 
   final _firestore = FirebaseFirestore.instance;
