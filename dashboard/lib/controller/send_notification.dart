@@ -15,6 +15,8 @@ class SendNotification extends GetxController {
 
   TextEditingController copunController = TextEditingController();
 
+  TextEditingController validatinMessage = TextEditingController();
+
   List<String> usersId = [];
 
   List<String> uidList = [];
@@ -23,9 +25,19 @@ class SendNotification extends GetxController {
 
   String avatarUrl = '';
 
+  String priceHtmlTag = '';
+
+  String price;
+
   FirestoreMethods _methods = FirestoreMethods();
 
-  SendNotification({this.usersId, this.webUrl, this.uidList, this.avatarUrl});
+  SendNotification(
+      {this.usersId,
+      this.webUrl,
+      this.uidList,
+      this.avatarUrl,
+      this.priceHtmlTag,
+      this.price});
 
   onInit() {
     super.onInit();
@@ -48,12 +60,18 @@ class SendNotification extends GetxController {
             webUrl: webUrl,
             avatarUrl: avatarUrl,
             timestamp: Timestamp.now(),
+            price: price,
+            priceHtmlTag: priceHtmlTag,
+            validDate: validatinMessage.text,
             title: titleControlller.text),
         uidList: uidList);
     await _methods.setNotifications(NotificationModel(
         cuponCode: copunController.text,
         desc: bodyController.text,
         webUrl: webUrl,
+        price: price,
+        priceHtmlTag: priceHtmlTag,
+        validDate: validatinMessage.text,
         timestamp: Timestamp.now(),
         avatarUrl: avatarUrl,
         title: titleControlller.text));

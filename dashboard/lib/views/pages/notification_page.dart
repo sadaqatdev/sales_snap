@@ -80,7 +80,16 @@ class NotificationPage extends StatelessWidget {
                                 ),
                                 SizedBox(
                                   height: 12,
-                                )
+                                ),
+                                Row(
+                                  children: [
+                                    Text('Vaildation date and Message'),
+                                    SizedBox(
+                                      width: 16,
+                                    ),
+                                    Text(snapshot.data[index].webUrl ?? '')
+                                  ],
+                                ),
                               ],
                             ),
                           ),

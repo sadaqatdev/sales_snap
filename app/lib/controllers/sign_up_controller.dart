@@ -5,7 +5,7 @@ import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/utils/login_info.dart';
 
 class SignUpController extends GetxController {
-  static String email, password, name, gender = 'male', dob;
+  static String email = '', password = '', name = '', gender = 'male', dob = '';
   static Set<String> intersts = {};
 
   final FireStoreMethod _fireStoreMethod = FireStoreMethod();

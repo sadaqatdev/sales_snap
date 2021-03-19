@@ -10,6 +10,9 @@ class NotificationModel {
   String webUrl;
   String avatarUrl;
   Timestamp timestamp;
+  String docId;
+  String validDate;
+  String priceHtmlTag;
   NotificationModel({
     this.title,
     this.desc,
@@ -18,6 +21,9 @@ class NotificationModel {
     this.webUrl,
     this.avatarUrl,
     this.timestamp,
+    this.docId,
+    this.validDate,
+    this.priceHtmlTag,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +35,9 @@ class NotificationModel {
       'webUrl': webUrl,
       'avatarUrl': avatarUrl,
       'timestamp': timestamp,
+      'docId': docId,
+      'validDate': validDate,
+      'priceHtmlTag': priceHtmlTag,
     };
   }
 
@@ -41,6 +50,9 @@ class NotificationModel {
       webUrl: map['webUrl'],
       avatarUrl: map['avatarUrl'],
       timestamp: map['timestamp'],
+      docId: map['docId'],
+      validDate: map['validDate'],
+      priceHtmlTag: map['priceHtmlTag'],
     );
   }
 
@@ -51,7 +63,7 @@ class NotificationModel {
 
   @override
   String toString() {
-    return 'NotificationModel(title: $title, desc: $desc, cuponCode: $cuponCode, price: $price, webUrl: $webUrl, avatarUrl: $avatarUrl, timestamp: $timestamp)';
+    return 'NotificationModel(title: $title, desc: $desc, cuponCode: $cuponCode, price: $price, webUrl: $webUrl, avatarUrl: $avatarUrl, timestamp: $timestamp, docId: $docId, validDate: $validDate, priceHtmlTag: $priceHtmlTag)';
   }
 
   @override
@@ -65,7 +77,10 @@ class NotificationModel {
         other.price == price &&
         other.webUrl == webUrl &&
         other.avatarUrl == avatarUrl &&
-        other.timestamp == timestamp;
+        other.timestamp == timestamp &&
+        other.docId == docId &&
+        other.validDate == validDate &&
+        other.priceHtmlTag == priceHtmlTag;
   }
 
   @override
@@ -76,6 +91,9 @@ class NotificationModel {
         price.hashCode ^
         webUrl.hashCode ^
         avatarUrl.hashCode ^
-        timestamp.hashCode;
+        timestamp.hashCode ^
+        docId.hashCode ^
+        validDate.hashCode ^
+        priceHtmlTag.hashCode;
   }
 }

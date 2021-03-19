@@ -32,7 +32,7 @@ class AccountPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
             width: Get.width,
-            //height: 850,
+            // height: Get.height + 141,
             color: Color(0xffE5E5E5),
             padding: EdgeInsets.only(
               left: 24,
@@ -55,10 +55,9 @@ class AccountPage extends StatelessWidget {
               controller.gender.text = user.gender;
               return Form(
                 key: formKey,
-                child: ListView(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
+                child: Wrap(
+                  spacing: 20,
+                  crossAxisAlignment: WrapCrossAlignment.start,
                   children: [
                     avatatWidget(controller, lableStyle, style),
                     SizedBox(
@@ -106,11 +105,8 @@ class AccountPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 12,
-                    ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 12),
+                      padding: const EdgeInsets.only(top: 12, left: 6),
                       child: Text('Your Intrests'),
                     ),
                     Wrap(
@@ -122,31 +118,31 @@ class AccountPage extends StatelessWidget {
                                 ))
                             .toList()),
                     SizedBox(
-                      height: 16,
+                      height: 18,
                     ),
-                    Spacer(
-                      flex: 2,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: CustomButton(
+                          lable: 'Save',
+                          onPress: () {
+                            controller.updateUser();
+                          },
+                          color: Colors.black,
+                          radius: 12),
                     ),
-                    CustomButton(
-                        lable: 'Save',
-                        onPress: () {
-                          controller.updateUser();
-                        },
-                        color: Colors.black,
-                        radius: 12),
-                    SizedBox(
-                      height: 12,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12, bottom: 12),
+                      child: CustomButton(
+                          lable: 'LogOut',
+                          onPress: () {
+                            storageINfo.remove('isLogin');
+                            FirebaseAuth.instance.signOut();
+
+                            Get.offAll(() => LoginSignUp());
+                          },
+                          color: AppTheme.customColorThree,
+                          radius: 12),
                     ),
-                    CustomButton(
-                        lable: 'LogOut',
-                        onPress: () {
-                          storageINfo.remove('isLogin');
-                          final auth = FirebaseAuth.instance;
-                          auth.signOut();
-                          Get.offAll(() => LoginSignUp());
-                        },
-                        color: AppTheme.customColorThree,
-                        radius: 12),
                     SizedBox(
                       height: 12,
                     )

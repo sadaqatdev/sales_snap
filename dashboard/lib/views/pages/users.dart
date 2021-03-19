@@ -104,7 +104,7 @@ class UserTile extends StatelessWidget {
                           SizedBox(
                             width: 12,
                           ),
-                          Text('Male'),
+                          Text(user.gender),
                         ],
                       ),
                       SizedBox(
@@ -117,7 +117,20 @@ class UserTile extends StatelessWidget {
                           SizedBox(
                             width: 12,
                           ),
-                          Text('02-01-03'),
+                          Text(user.dob),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('Time Of Download'),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text(user.createdDate ?? ''),
                         ],
                       ),
                     ],

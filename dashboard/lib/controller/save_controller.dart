@@ -18,24 +18,31 @@ class SaveController extends GetxController {
   List<SaveListModel> userSaveList = [];
 
   bool viseble = false;
+
   String webUrl = '';
+
   String avataUrl = '';
+
+  String priceHtmlTag = '';
+
+  String price = '';
+
   var isLoading = true;
 
   final _method = FirestoreMethods();
 
-  TextEditingController controller = TextEditingController();
+  TextEditingController searchcontroller = TextEditingController();
 
   onInit() {
     super.onInit();
     getSaveItems();
     getUserSaveList();
-    controller.addListener(getSearchList);
+    searchcontroller.addListener(getSearchList);
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    searchcontroller.dispose();
     super.dispose();
   }
 
@@ -48,7 +55,7 @@ class SaveController extends GetxController {
     searchList = [];
     print(saveItemList.toString());
     print('------------out');
-    if (controller.text.isEmpty) {
+    if (searchcontroller.text.isEmpty) {
       print('iiiiiiiiiiiiiiiii');
       print(searchList.toString());
       searchList.addAll(saveItemList);
@@ -59,15 +66,17 @@ class SaveController extends GetxController {
       searchList = saveItemList
           .where((element) => element.title
               .toLowerCase()
-              .contains(controller.text.toLowerCase()))
+              .contains(searchcontroller.text.toLowerCase()))
           .toList();
       update();
     }
   }
 
-  void addToSelectList(item, condition, url, uid, avata) {
+  void addToSelectList(item, condition, url, uid, avata, priceHtmlTag, price) {
     webUrl = url;
     avataUrl = avata;
+    this.price = price;
+    this.priceHtmlTag = priceHtmlTag;
     print('--------varate--');
     print(avataUrl);
     if (condition) {

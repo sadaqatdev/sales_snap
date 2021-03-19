@@ -188,7 +188,7 @@ class ProductPage extends StatelessWidget {
                 SizedBox(
                   height: 16,
                 ),
-                Text(homecontroller.title?.trim(),
+                Text(homecontroller.title.trim(),
                     style: lable.copyWith(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,

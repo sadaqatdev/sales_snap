@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sales_snap_dashboard/controller/navigation_controller.dart';
 import 'package:sales_snap_dashboard/views/pages/main_screen_page.dart';
 import 'package:sales_snap_dashboard/views/pages/mobile_screen.dart';
 import 'package:sales_snap_dashboard/views/widgets/responsive.dart';
@@ -6,6 +8,7 @@ import 'package:sales_snap_dashboard/views/widgets/responsive.dart';
 import 'side_menu.dart';
 
 class MainScreen extends StatelessWidget {
+  final l = Get.put(NavigationController());
   @override
   Widget build(BuildContext context) {
     print('-------------snaps=========');

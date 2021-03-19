@@ -126,11 +126,7 @@ class SavedTileWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(22)),
                             onPressed: () {
                               Get.to(() => OfferPage(
-                                    avatarUrl: notificationModel.avatarUrl,
-                                    body: notificationModel.desc,
-                                    coupon: notificationModel.cuponCode,
-                                    title: notificationModel.title,
-                                    webUrl: notificationModel.webUrl,
+                                    notificationModel: notificationModel,
                                   ));
                             },
                             child: Text(

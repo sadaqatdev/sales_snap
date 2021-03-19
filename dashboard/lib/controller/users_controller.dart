@@ -17,7 +17,7 @@ class UserController extends GetxController {
   onInit() {
     super.onInit();
     controller.addListener(getSearchList);
-    _methods.getSavedItems();
+    //_methods.getSavedItems();
     getUser();
   }
 

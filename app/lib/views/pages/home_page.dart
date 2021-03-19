@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
+import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/pages/items_details_page.dart';
 import 'package:sales_snap/views/pages/product_page.dart';
@@ -192,7 +193,18 @@ class HomePage extends StatelessWidget {
                       AppRoute.to(
                           context,
                           ItemDetailsPage(
-                            url: savedController.saveItemList[index].webUrl,
+                            product: NotificationModel(
+                              avatarUrl:
+                                  savedController.saveItemList[index].imgUrl,
+                              desc: savedController.saveItemList[index].desc,
+                              docId: savedController.saveItemList[index].id,
+                              price: savedController.saveItemList[index].price,
+                              priceHtmlTag: savedController
+                                  .saveItemList[index].priceHtmlTag,
+                              title: savedController.saveItemList[index].title,
+                              webUrl:
+                                  savedController.saveItemList[index].webUrl,
+                            ),
                           ));
                     },
                     child: Card(

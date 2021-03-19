@@ -45,7 +45,14 @@ class SavedTab extends StatelessWidget {
                                       color: Colors.green,
                                       onPressed: () {
                                         /// bcontroller.sendNotification();
-                                        dialog(context);
+                                        dialog(
+                                            context,
+                                            bcontroller.selectedList,
+                                            bcontroller.webUrl,
+                                            bcontroller.uidList,
+                                            bcontroller.avataUrl,
+                                            bcontroller.priceHtmlTag,
+                                            bcontroller.price);
                                       },
                                       child: Text('Send Notification Message'),
                                     ),
@@ -78,7 +85,11 @@ class SavedTab extends StatelessWidget {
                                               bcontroller
                                                   .userSaveList[index].uid,
                                               bcontroller
-                                                  .userSaveList[index].imgUrl);
+                                                  .userSaveList[index].imgUrl,
+                                              bcontroller.userSaveList[index]
+                                                  .priceHtmlTag,
+                                              bcontroller
+                                                  .userSaveList[index].price);
                                         },
                                         key: Key(index.toString()),
                                       );
@@ -94,7 +105,8 @@ class SavedTab extends StatelessWidget {
     );
   }
 
-  void dialog(BuildContext context) {
+  void dialog(BuildContext context, List<String> ids, String url,
+      List<String> uidList, String avatarUrl, String priceHtmlTag, price) {
     var key = GlobalKey<FormState>();
     showDialog(
         useSafeArea: true,
@@ -103,9 +115,15 @@ class SavedTab extends StatelessWidget {
           return Builder(builder: (bcontext) {
             return Container(
               margin:
-                  EdgeInsets.only(left: 200, right: 200, top: 300, bottom: 300),
+                  EdgeInsets.only(left: 200, right: 200, top: 300, bottom: 280),
               child: GetBuilder<SendNotification>(
-                  init: SendNotification(),
+                  init: SendNotification(
+                      usersId: ids,
+                      webUrl: url,
+                      uidList: uidList,
+                      avatarUrl: avatarUrl,
+                      priceHtmlTag: priceHtmlTag,
+                      price: price),
                   builder: (snapshot) {
                     return Material(
                       child: Padding(
@@ -115,6 +133,7 @@ class SavedTab extends StatelessWidget {
                           child: Column(
                             children: [
                               TextFormField(
+                                controller: snapshot.titleControlller,
                                 decoration: InputDecoration(
                                   hintText: 'Notification Title',
                                 ),
@@ -129,12 +148,40 @@ class SavedTab extends StatelessWidget {
                                 height: 16,
                               ),
                               TextFormField(
+                                controller: snapshot.bodyController,
                                 decoration: InputDecoration(
                                     hintText: 'Notification Body'),
                                 maxLines: 3,
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Enter Notification Body';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                controller: snapshot.copunController,
+                                decoration: InputDecoration(hintText: 'Code'),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter code';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                controller: snapshot.validatinMessage,
+                                decoration: InputDecoration(
+                                    hintText: 'Validation Date and Message'),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter code';
                                   }
                                   return null;
                                 },

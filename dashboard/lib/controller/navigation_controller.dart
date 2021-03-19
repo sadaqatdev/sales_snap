@@ -10,7 +10,7 @@ import 'package:sales_snap_dashboard/views/pages/users.dart';
 class NavigationController extends GetxController {
   static NavigationController get to => Get.find<NavigationController>();
 
-  Widget currentPage = UsersPage();
+  Widget currentPage = HomePage();
 
   int currentIndex = 1;
   FirestoreMethods methods = FirestoreMethods();

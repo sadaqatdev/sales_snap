@@ -31,7 +31,7 @@ class SavedPage extends StatelessWidget {
                     : Column(
                         children: [
                           SearchWidget(
-                            controller: bcontroller.controller,
+                            controller: bcontroller.searchcontroller,
                           ),
                           SizedBox(
                             height: 12,
@@ -49,7 +49,9 @@ class SavedPage extends StatelessWidget {
                                             bcontroller.selectedList,
                                             bcontroller.webUrl,
                                             bcontroller.uidList,
-                                            bcontroller.avataUrl);
+                                            bcontroller.avataUrl,
+                                            bcontroller.priceHtmlTag,
+                                            bcontroller.price);
                                       },
                                       child: Text('Send Notification Message'),
                                     ),
@@ -62,35 +64,29 @@ class SavedPage extends StatelessWidget {
                           SizedBox(
                             height: 16,
                           ),
-                          bcontroller.searchList.isNotEmpty
-                              ? Expanded(
-                                  child: ListView.builder(
-                                    itemCount: bcontroller.searchList.length,
-                                    itemBuilder: (context, index) {
-                                      print(bcontroller
-                                          .searchList[index].msgToken);
-                                      return SavedTileWidget(
-                                        saveItemList:
-                                            bcontroller.searchList[index],
-                                        isSelectedFuntction: (value) {
-                                          bcontroller.addToSelectList(
-                                              bcontroller
-                                                  .searchList[index].msgToken,
-                                              value,
-                                              bcontroller
-                                                  .searchList[index].webUrl,
-                                              bcontroller.searchList[index].uid,
-                                              bcontroller
-                                                  .searchList[index].imgUrl);
-                                        },
-                                        key: Key(index.toString()),
-                                      );
-                                    },
-                                  ),
-                                )
-                              : Center(
-                                  child: Text('No Saved Items'),
-                                ),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: bcontroller.searchList.length,
+                              itemBuilder: (context, index) {
+                                print(bcontroller.searchList[index].msgToken);
+                                return SavedTileWidget(
+                                  saveItemList: bcontroller.searchList[index],
+                                  isSelectedFuntction: (value) {
+                                    bcontroller.addToSelectList(
+                                        bcontroller.searchList[index].msgToken,
+                                        value,
+                                        bcontroller.searchList[index].webUrl,
+                                        bcontroller.searchList[index].uid,
+                                        bcontroller.searchList[index].imgUrl,
+                                        bcontroller
+                                            .searchList[index].priceHtmlTag,
+                                        bcontroller.searchList[index].price);
+                                  },
+                                  key: Key(index.toString()),
+                                );
+                              },
+                            ),
+                          )
                         ],
                       );
               })),
@@ -98,7 +94,7 @@ class SavedPage extends StatelessWidget {
   }
 
   void dialog(BuildContext context, List<String> ids, String url,
-      List<String> uidList, String avatarUrl) {
+      List<String> uidList, String avatarUrl, String priceHtmlTag, price) {
     var key = GlobalKey<FormState>();
     showDialog(
         useSafeArea: true,
@@ -107,13 +103,15 @@ class SavedPage extends StatelessWidget {
           return Builder(builder: (bcontext) {
             return Container(
               margin:
-                  EdgeInsets.only(left: 200, right: 200, top: 300, bottom: 280),
+                  EdgeInsets.only(left: 200, right: 200, top: 250, bottom: 250),
               child: GetBuilder<SendNotification>(
                   init: SendNotification(
                       usersId: ids,
                       webUrl: url,
                       uidList: uidList,
-                      avatarUrl: avatarUrl),
+                      avatarUrl: avatarUrl,
+                      priceHtmlTag: priceHtmlTag,
+                      price: price),
                   builder: (snapshot) {
                     return Material(
                       child: Padding(
@@ -155,6 +153,20 @@ class SavedPage extends StatelessWidget {
                               TextFormField(
                                 controller: snapshot.copunController,
                                 decoration: InputDecoration(hintText: 'Code'),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter code';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                controller: snapshot.validatinMessage,
+                                decoration: InputDecoration(
+                                    hintText: 'Validation Date and Message'),
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Enter code';

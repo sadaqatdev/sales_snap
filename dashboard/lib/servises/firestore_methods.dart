@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sales_snap_dashboard/models/m_user.dart';
@@ -117,5 +119,80 @@ class FirestoreMethods {
     });
 
     return _list;
+  }
+
+  Future<int> getNumberOfUser() async {
+    List tempList = [];
+    QuerySnapshot snapshot = await _firestore.collection('user').get();
+    snapshot.docs.forEach((element) {
+      tempList.add(element.id);
+    });
+
+    return tempList.length;
+  }
+
+  Future<int> getNumberOfMale() async {
+    QuerySnapshot snap = await _firestore
+        .collection('user')
+        .where("gender", isEqualTo: 'male')
+        .get();
+
+    return snap.docs.length;
+  }
+
+  Future<int> getNumberOfFemale() async {
+    QuerySnapshot snap = await _firestore
+        .collection('user')
+        .where("gender", isEqualTo: 'female')
+        .get();
+
+    return snap.docs.length;
+  }
+
+  Future<List<String>> getAges() async {
+    List<String> tempList = [];
+
+    List<String> tempAge = [];
+
+    QuerySnapshot snap = await _firestore.collection('user').get();
+
+    snap.docs.forEach((element) {
+      tempList.add(element.data()['dob']);
+    });
+
+    tempList.forEach((element) {
+      tempAge.add(calculateAge(DateTime.parse(element)));
+    });
+
+    return tempAge;
+  }
+
+  String calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age.toString();
+  }
+
+  Future<List<DateTime>> getCreatedDate() async {
+    List<DateTime> tempList = [];
+
+    QuerySnapshot snap = await _firestore.collection('user').get();
+
+    snap.docs.forEach((element) {
+      tempList.add(element.data()['dateOfjoin'].toDate());
+    });
+
+    return tempList;
   }
 }

@@ -1,4 +1,6 @@
-class SavedProduct {
+import 'dart:convert';
+
+class BuyModel {
   String webUrl;
   String title;
   String imgUrl;
@@ -6,10 +8,11 @@ class SavedProduct {
   String priceHtmlTag;
   String priceNumber;
   String price;
-  String id;
+  String docId;
   String msgToken;
   String uid;
-  SavedProduct({
+  String newPrice;
+  BuyModel({
     this.webUrl,
     this.title,
     this.imgUrl,
@@ -17,9 +20,10 @@ class SavedProduct {
     this.priceHtmlTag,
     this.priceNumber,
     this.price,
-    this.id,
+    this.docId,
     this.msgToken,
     this.uid,
+    this.newPrice,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,16 +35,15 @@ class SavedProduct {
       'priceHtmlTag': priceHtmlTag,
       'priceNumber': priceNumber,
       'price': price,
-      'id': id,
+      'docId': docId,
       'msgToken': msgToken,
       'uid': uid,
+      'newPrice': newPrice,
     };
   }
 
-  factory SavedProduct.fromMap(Map<String, dynamic> map, id) {
-    if (map == null) return null;
-
-    return SavedProduct(
+  factory BuyModel.fromMap(Map<String, dynamic> map) {
+    return BuyModel(
       webUrl: map['webUrl'],
       title: map['title'],
       imgUrl: map['imgUrl'],
@@ -48,21 +51,28 @@ class SavedProduct {
       priceHtmlTag: map['priceHtmlTag'],
       priceNumber: map['priceNumber'],
       price: map['price'],
-      id: id,
+      docId: map['docId'],
       msgToken: map['msgToken'],
+      uid: map['uid'],
+      newPrice: map['newPrice'],
     );
   }
 
+  String toJson() => json.encode(toMap());
+
+  factory BuyModel.fromJson(String source) =>
+      BuyModel.fromMap(json.decode(source));
+
   @override
   String toString() {
-    return 'SavedProduct(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber, price: $price, id: $id, msgToken: $msgToken, uid: $uid)';
+    return 'BuyModel(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber, price: $price, docId: $docId, msgToken: $msgToken, uid: $uid, newPrice: $newPrice)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is SavedProduct &&
+    return other is BuyModel &&
         other.webUrl == webUrl &&
         other.title == title &&
         other.imgUrl == imgUrl &&
@@ -70,9 +80,10 @@ class SavedProduct {
         other.priceHtmlTag == priceHtmlTag &&
         other.priceNumber == priceNumber &&
         other.price == price &&
-        other.id == id &&
+        other.docId == docId &&
         other.msgToken == msgToken &&
-        other.uid == uid;
+        other.uid == uid &&
+        other.newPrice == newPrice;
   }
 
   @override
@@ -84,8 +95,9 @@ class SavedProduct {
         priceHtmlTag.hashCode ^
         priceNumber.hashCode ^
         price.hashCode ^
-        id.hashCode ^
+        docId.hashCode ^
         msgToken.hashCode ^
-        uid.hashCode;
+        uid.hashCode ^
+        newPrice.hashCode;
   }
 }

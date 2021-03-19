@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -12,6 +10,7 @@ class MUser {
   List<String> intersts;
   String token;
   String uid;
+  Timestamp createdDate;
   MUser({
     this.name,
     this.email,
@@ -21,29 +20,8 @@ class MUser {
     this.intersts,
     this.token,
     this.uid,
+    this.createdDate,
   });
-
-  MUser copyWith({
-    String name,
-    String email,
-    String imageUrl,
-    String dob,
-    String gender,
-    List<String> intersts,
-    String token,
-    String uid,
-  }) {
-    return MUser(
-      name: name ?? this.name,
-      email: email ?? this.email,
-      imageUrl: imageUrl ?? this.imageUrl,
-      dob: dob ?? this.dob,
-      gender: gender ?? this.gender,
-      intersts: intersts ?? this.intersts,
-      token: token ?? this.token,
-      uid: uid ?? this.uid,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -55,13 +33,12 @@ class MUser {
       'intersts': intersts,
       'token': token,
       'uid': uid,
+      'createdDate': createdDate,
     };
   }
 
   factory MUser.fromMap(
       Map<String, dynamic> map, QueryDocumentSnapshot elemnent) {
-    if (map == null) return null;
-
     return MUser(
       name: map['name'],
       email: map['email'],
@@ -71,22 +48,29 @@ class MUser {
       intersts: List<String>.from(map['intersts']),
       token: map['token'],
       uid: elemnent.id,
+      createdDate: map['createdDate'],
     );
   }
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
+  String toString() {
+    return 'MUser(name: $name, email: $email, imageUrl: $imageUrl, dob: $dob, gender: $gender, intersts: $intersts, token: $token, uid: $uid, createdDate: $createdDate)';
+  }
 
-    return o is MUser &&
-        o.name == name &&
-        o.email == email &&
-        o.imageUrl == imageUrl &&
-        o.dob == dob &&
-        o.gender == gender &&
-        listEquals(o.intersts, intersts) &&
-        o.token == token &&
-        o.uid == uid;
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is MUser &&
+        other.name == name &&
+        other.email == email &&
+        other.imageUrl == imageUrl &&
+        other.dob == dob &&
+        other.gender == gender &&
+        listEquals(other.intersts, intersts) &&
+        other.token == token &&
+        other.uid == uid &&
+        other.createdDate == createdDate;
   }
 
   @override
@@ -98,6 +82,7 @@ class MUser {
         gender.hashCode ^
         intersts.hashCode ^
         token.hashCode ^
-        uid.hashCode;
+        uid.hashCode ^
+        createdDate.hashCode;
   }
 }

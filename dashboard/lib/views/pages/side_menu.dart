@@ -39,14 +39,14 @@ class SideMenu extends StatelessWidget {
                 SizedBox(
                   height: 22,
                 ),
-                // SideMenuItem(
-                //   press: () {
-                //     controller.updateCurrent(1);
-                //   },
-                //   title: "Home",
-                //   iconSrc: Icon(Icons.home),
-                //   isActive: controller.currentIndex == 1 ? true : false,
-                // ),
+                SideMenuItem(
+                  press: () {
+                    controller.updateCurrent(1);
+                  },
+                  title: "Home",
+                  iconSrc: Icon(Icons.home),
+                  isActive: controller.currentIndex == 1 ? true : false,
+                ),
                 SizedBox(
                   height: 18,
                 ),

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/models/m_user.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
+import 'home_controller.dart';
 
 class AccountCntroller extends GetxController {
   MUser user;
@@ -64,6 +65,8 @@ class AccountCntroller extends GetxController {
 
   void updateNotification(bool value) {
     pushNotification = value;
+    onClickEnable(value);
+
     if (value) {
       pref.write('notificationEnable', 'yes');
       print('---------');

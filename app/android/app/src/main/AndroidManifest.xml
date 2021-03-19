@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
-    package="com.app.sales_snap">
+    package="com.salesnap.app">
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE " />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -9,9 +9,9 @@ xmlns:tools="http://schemas.android.com/tools"
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
    <application
-        android:label="sales_snap"
+        android:label="Sales Snap"
         tools:replace="android:label"
-         
+         android:name=".Application"
         android:icon="@mipmap/ic_launcher">
        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
            <intent-filter>

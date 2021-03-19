@@ -11,6 +11,9 @@ class NotificationModel {
   String avatarUrl;
   Timestamp timestamp;
   String docId;
+  String validDate;
+  String priceHtmlTag;
+  String newPrice;
   NotificationModel({
     this.title,
     this.desc,
@@ -20,6 +23,9 @@ class NotificationModel {
     this.avatarUrl,
     this.timestamp,
     this.docId,
+    this.validDate,
+    this.priceHtmlTag,
+    this.newPrice,
   });
 
   Map<String, dynamic> toMap() {
@@ -32,6 +38,9 @@ class NotificationModel {
       'avatarUrl': avatarUrl,
       'timestamp': timestamp,
       'docId': docId,
+      'validDate': validDate,
+      'priceHtmlTag': priceHtmlTag,
+      'newPrice': newPrice,
     };
   }
 
@@ -45,15 +54,13 @@ class NotificationModel {
       avatarUrl: map['avatarUrl'],
       timestamp: map['timestamp'],
       docId: id,
+      validDate: map['validDate'],
+      priceHtmlTag: map['priceHtmlTag'],
+      newPrice: map['newPrice'],
     );
   }
 
   String toJson() => json.encode(toMap());
-
-  @override
-  String toString() {
-    return 'NotificationModel(title: $title, desc: $desc, cuponCode: $cuponCode, price: $price, webUrl: $webUrl, avatarUrl: $avatarUrl, timestamp: $timestamp, docId: $docId)';
-  }
 
   @override
   bool operator ==(Object other) {
@@ -67,7 +74,10 @@ class NotificationModel {
         other.webUrl == webUrl &&
         other.avatarUrl == avatarUrl &&
         other.timestamp == timestamp &&
-        other.docId == docId;
+        other.docId == docId &&
+        other.validDate == validDate &&
+        other.priceHtmlTag == priceHtmlTag &&
+        other.newPrice == newPrice;
   }
 
   @override
@@ -79,6 +89,9 @@ class NotificationModel {
         webUrl.hashCode ^
         avatarUrl.hashCode ^
         timestamp.hashCode ^
-        docId.hashCode;
+        docId.hashCode ^
+        validDate.hashCode ^
+        priceHtmlTag.hashCode ^
+        newPrice.hashCode;
   }
 }

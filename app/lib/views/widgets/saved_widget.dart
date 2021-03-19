@@ -3,9 +3,11 @@ import 'package:get/get.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
+import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/models/web_details.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/pages/items_details_page.dart';
+import 'package:sales_snap/views/pages/notifications_page.dart';
 
 class SavedTab extends StatelessWidget {
   SavedTab({
@@ -121,7 +123,16 @@ class SavedTileWidget extends StatelessWidget {
                             AppRoute.to(
                                 context,
                                 ItemDetailsPage(
-                                  url: saveItemList[index].webUrl,
+                                  product: NotificationModel(
+                                    avatarUrl: saveItemList[index].imgUrl,
+                                    desc: saveItemList[index].desc,
+                                    docId: saveItemList[index].id,
+                                    price: saveItemList[index].price,
+                                    priceHtmlTag:
+                                        saveItemList[index].priceHtmlTag,
+                                    title: saveItemList[index].title,
+                                    webUrl: saveItemList[index].webUrl,
+                                  ),
                                 ));
                           },
                           icon: Icon(Icons.badge),

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
-import 'package:sales_snap/utils/theme/app_theme.dart';
 import 'package:sales_snap/views/pages/account/gender_page.dart';
 import 'package:sales_snap/views/widgets/custom_button.dart';
 import 'package:sales_snap/views/widgets/custom_heading.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class SignUpName extends StatefulWidget {
   @override

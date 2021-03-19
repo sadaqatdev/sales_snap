@@ -1,4 +1,4 @@
-package com.app.sales_snap;
+package com.salesnap.app;
 
 import io.flutter.embedding.android.FlutterActivity;
 

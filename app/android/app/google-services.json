@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:781234395144:android:86cbccdefdc53e7acd59bd",
+        "mobilesdk_app_id": "1:781234395144:android:8d10b0af02ee0e4fcd59bd",
         "android_client_info": {
-          "package_name": "com.app.sales_snap"
+          "package_name": "com.salesnap.app"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "781234395144-57a48nd6bo508gktk85jmevjulmk6m0h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.salesnap.app",
+            "certificate_hash": "539b8bb6f78c15475321861450f93b37ec0712b5"
+          }
+        },
         {
           "client_id": "781234395144-miu8hihv83k6cadrepfnafpprtvr9ju0.apps.googleusercontent.com",
           "client_type": 3
@@ -29,6 +37,13 @@
             {
               "client_id": "781234395144-miu8hihv83k6cadrepfnafpprtvr9ju0.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "781234395144-f9dlrqf8q708abr4nb4veept987jddjm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.salesnap.app"
+              }
             }
           ]
         }

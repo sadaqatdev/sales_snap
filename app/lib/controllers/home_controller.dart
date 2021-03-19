@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:background_fetch/background_fetch.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -14,6 +15,7 @@ import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
+import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/models/web_details.dart';
 import 'package:http/http.dart' as http;
 import 'package:sales_snap/repositories/database_helper.dart';
@@ -21,6 +23,7 @@ import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/utils/extract/extract.dart';
 
 FlutterLocalNotificationsPlugin fltrNotification;
+var doubleRE = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
 
 ////////////CONTROLLER START/////////////////////////////////////////////////////////////
 class HomeController extends GetxController {
@@ -58,18 +61,24 @@ class HomeController extends GetxController {
 
   var doubleRE = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
 
-  final storage = GetStorage();
+  GetStorage storage;
 
-  static String onesignalUserId;
-
+  String onesignalUserId;
+  bool notifcationEnabled = false;
   @override
   void onInit() {
-    initNotifications();
+    storage = GetStorage();
 
+    String notifcations = storage.read('notificationEnable');
+
+    // notifcationEnabled = notifcations?.contains('yes') ?? false ? true : false;
+    // if (notifcationEnabled) {
     initBackgroudTask();
 
     BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+    // }
 
+    initNotifications();
     textEditingController = TextEditingController();
     initOnSignal();
     super.onInit();
@@ -205,58 +214,6 @@ class HomeController extends GetxController {
     ));
   }
 
-  Future<void> comparePrice() async {
-    List<SavedProduct> _list = await _fireStoreMethod.getSavedItems();
-
-    _list.forEach((element) async {
-      final response = await http.Client().get(Uri.parse(element.webUrl));
-
-      var newPricePareval;
-      var oldParseValue;
-
-      String oldPrice = element.priceNumber;
-
-      if (response.statusCode == 200) {
-        try {
-          Document document = parse(response.body);
-
-          String newPrice = document.querySelector(element.priceHtmlTag).text;
-          try {
-            if (oldPrice.isNum) {
-              oldParseValue = double.parse(oldPrice);
-            } else {
-              oldParseValue = doubleRE
-                  .allMatches(oldPrice)
-                  .map((m) => double.parse(m[0]))
-                  .toList();
-            }
-          } catch (e) {
-            snakBar(e);
-          }
-
-          try {
-            if (newPrice.isNum) {
-              newPricePareval = double.parse(newPrice);
-            } else {
-              newPricePareval = doubleRE
-                  .allMatches(newPrice)
-                  .map((m) => double.parse(m[0]))
-                  .toList();
-            }
-            if (newPricePareval < oldParseValue) {
-              showNotification();
-            }
-          } catch (e) {
-            snakBar(e);
-          }
-        } catch (e) {
-          print('----Error-----');
-          print(e.toString());
-        }
-      }
-    });
-  }
-
   Future<void> initBackgroudTask() async {
     // Load persisted fetch events from SharedPreferences
 
@@ -293,24 +250,12 @@ class HomeController extends GetxController {
   }
 
   void _onBackgroundFetch(String taskId) async {
-    print("111111111111111[BackgroundFetch] Event received: $taskId");
+    print("_onBackgroundFetch(String taskId): $taskId");
 
     if (taskId == "flutter_background_fetch") {
-      showNotification();
-      print('-----------background fetch=-------');
-      // Schedule a one-shot task when fetch event received (for testing).
-      /*
-      BackgroundFetch.scheduleTask(TaskConfig(
-          taskId: "com.transistorsoft.customtask",
-          delay: 5000,
-          periodic: false,
-          forceAlarmManager: true,
-          stopOnTerminate: false,
-          enableHeadless: true,
-          requiresNetworkConnectivity: true,
-          requiresCharging: true
-      ));
-       */
+      comparePrice();
+
+      print('-----------Compare Price is Called--- -------');
     }
     // IMPORTANT:  You must signal completion of your fetch task or the OS can punish your app
     // for taking too long in the background.
@@ -319,22 +264,8 @@ class HomeController extends GetxController {
 
   /// This event fires shortly before your task is about to timeout.  You must finish any outstanding work and call BackgroundFetch.finish(taskId).
   void _onBackgroundFetchTimeout(String taskId) {
-    print("2222222222222[BackgroundFetch] TIMEOUT: $taskId");
+    print("_onBackgroundFetchTimeout(String taskId): $taskId");
     BackgroundFetch.finish(taskId);
-  }
-
-  void _onClickEnable(enabled) {
-    if (enabled) {
-      BackgroundFetch.start().then((int status) {
-        print('bbbbb[BackgroundFetch] start success: $status');
-      }).catchError((e) {
-        print('bbbbb[BackgroundFetch] start FAILURE: $e');
-      });
-    } else {
-      BackgroundFetch.stop().then((int status) {
-        print('bbbbb[BackgroundFetch] stop success: $status');
-      });
-    }
   }
 
   void initOnSignal() async {
@@ -353,31 +284,17 @@ class HomeController extends GetxController {
   }
 }
 
-void backgroundFetchHeadlessTask(HeadlessTask task) async {
-  // var taskId = task.taskId;
-
-  // var timeout = task.timeout;
-  // HomeController _controller = HomeController();
-  // if (timeout) {
-  //   BackgroundFetch.finish(taskId);
-  //   return;
-  // }
-
-  // if (taskId == 'flutter_background_fetch') {
-  //   BackgroundFetch.scheduleTask(TaskConfig(
-  //       taskId: "com.transistorsoft.customtask",
-  //       delay: 5000,
-  //       periodic: false,
-  //       forceAlarmManager: false,
-  //       stopOnTerminate: false,
-  //       enableHeadless: true));
-  // }
-  //BackgroundFetch.finish(taskId);
-}
+void backgroundFetchHeadlessTask(HeadlessTask task) async {}
 
 void initNotifications() {
   var androidInitilize = AndroidInitializationSettings('ic_launcher');
-  var iOSinitilize = IOSInitializationSettings();
+  var iOSinitilize = IOSInitializationSettings(
+    defaultPresentAlert: true,
+    requestAlertPermission: true,
+    defaultPresentSound: true,
+    requestSoundPermission: true,
+    requestBadgePermission: true,
+  );
   var initilizationsSettings =
       InitializationSettings(android: androidInitilize, iOS: iOSinitilize);
   fltrNotification = FlutterLocalNotificationsPlugin();
@@ -386,15 +303,122 @@ void initNotifications() {
   );
 }
 
-Future showNotification() async {
+Future showNotification(String title, String desc) async {
   var androidDetails = AndroidNotificationDetails(
-      "Channel ID", "Desi programmer", "This is my channel",
+      "Channel ID", "programmer", "This is my channel",
       importance: Importance.max);
   var iSODetails = IOSNotificationDetails();
   var generalNotificationDetails =
       NotificationDetails(android: androidDetails, iOS: iSODetails);
 
-  await fltrNotification.show(
-      0, "Task", "You created a Task", generalNotificationDetails,
+  await fltrNotification.show(0, title, desc, generalNotificationDetails,
       payload: "Task");
+}
+
+Future<void> comparePrice() async {
+  print('-------in Compare Price---------------');
+  await Firebase.initializeApp();
+  await GetStorage().initStorage;
+  List<SavedProduct> _list = await getSavedItemsBg();
+
+  _list.forEach((element) async {
+    final response = await http.Client().get(Uri.parse(element.webUrl));
+
+    var newPricePareval;
+    var oldParseValue;
+
+    String oldPrice = element.priceNumber;
+
+    if (response.statusCode == 200) {
+      try {
+        Document document = parse(response.body);
+
+        String newPrice = document.querySelector(element.priceHtmlTag).text;
+        try {
+          if (oldPrice.isNum) {
+            oldParseValue = double.parse(oldPrice);
+          } else {
+            oldParseValue = doubleRE
+                .allMatches(oldPrice)
+                .map((m) => double.parse(m[0]))
+                .toList();
+          }
+        } catch (e) {
+          print('ERrror occur in background');
+          print(e.toString());
+        }
+
+        try {
+          if (newPrice.isNum) {
+            newPricePareval = double.parse(newPrice);
+          } else {
+            newPricePareval = doubleRE
+                .allMatches(newPrice)
+                .map((m) => double.parse(m[0]))
+                .toList();
+          }
+          if (newPricePareval < oldParseValue) {
+            NotificationModel(
+              avatarUrl: element.imgUrl,
+              cuponCode: 'No Copun',
+              desc: 'The Product You Saveed, Now Its Price is Down',
+              price: oldParseValue.toString(),
+              timestamp: Timestamp.now(),
+              title: 'Hey ',
+              validDate: '------',
+              docId: element.id,
+              priceHtmlTag: element.priceHtmlTag,
+              newPrice: newPricePareval.toString(),
+              webUrl: element.webUrl,
+            );
+            showNotification('Hey, Buy Now',
+                'The Product You Saveed, Now Its Price is Down');
+          }
+        } catch (e) {
+          print('ERrror occur in background');
+          print(e.toString());
+        }
+      } catch (e) {
+        print('----Error-----');
+        print(e.toString());
+      }
+    }
+  });
+}
+
+void onClickEnable(enabled) {
+  if (enabled) {
+    BackgroundFetch.start().then((int status) {
+      print('Background Fetchn is  start success: $status');
+    }).catchError((e) {
+      print('Background Fetchn  [BackgroundFetch] start FAILURE: $e');
+    });
+  } else {
+    BackgroundFetch.stop().then((int status) {
+      print('Background Fetchn  [BackgroundFetch] stop success: $status');
+    });
+  }
+}
+
+Future<List<SavedProduct>> getSavedItemsBg() async {
+  final storage = GetStorage();
+
+  String uid = storage.read('uid');
+
+  List<SavedProduct> tempList = [];
+
+  final _firestore = FirebaseFirestore.instance;
+
+  CollectionReference _collection = _firestore.collection('user_products');
+
+  QuerySnapshot _snap =
+      await _collection.doc(uid).collection('saved_products').get();
+
+  if (_snap?.docs?.isNotEmpty ?? false)
+    _snap.docs.forEach((qSnap) {
+      if (qSnap.exists)
+        tempList.add(SavedProduct.fromMap(qSnap.data(), qSnap.id));
+    });
+
+  return tempList;
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
@@ -103,13 +104,13 @@ class _IntrestPageState extends State<IntrestPage> {
                             _method
                                 .setUser(
                               MUser(
-                                dob: SignUpController.dob,
-                                email: SignUpController.email,
-                                gender: SignUpController.gender,
-                                intersts: SignUpController.intersts.toList(),
-                                name: SignUpController.name,
-                                token: token,
-                              ),
+                                  dob: SignUpController.dob,
+                                  email: SignUpController.email,
+                                  gender: SignUpController.gender,
+                                  intersts: SignUpController.intersts.toList(),
+                                  name: SignUpController.name,
+                                  token: token,
+                                  createdDate: Timestamp.now()),
                             )
                                 .then((s) {
                               _controller.isLoding(false);
