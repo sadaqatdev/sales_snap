@@ -29,6 +29,8 @@ class SendNotification extends GetxController {
 
   String price;
 
+  String productTitle;
+
   FirestoreMethods _methods = FirestoreMethods();
 
   SendNotification(
@@ -37,6 +39,7 @@ class SendNotification extends GetxController {
       this.uidList,
       this.avatarUrl,
       this.priceHtmlTag,
+      this.productTitle,
       this.price});
 
   onInit() {
@@ -62,6 +65,7 @@ class SendNotification extends GetxController {
             timestamp: Timestamp.now(),
             price: price,
             priceHtmlTag: priceHtmlTag,
+            productTitle: productTitle,
             validDate: validatinMessage.text,
             title: titleControlller.text),
         uidList: uidList);
@@ -70,6 +74,7 @@ class SendNotification extends GetxController {
         desc: bodyController.text,
         webUrl: webUrl,
         price: price,
+        productTitle: productTitle,
         priceHtmlTag: priceHtmlTag,
         validDate: validatinMessage.text,
         timestamp: Timestamp.now(),

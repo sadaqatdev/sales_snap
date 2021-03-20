@@ -207,6 +207,12 @@ class HomeController extends GetxController {
     });
   }
 
+  deleteBuyProduc(index) {
+    _fireStoreMethod.deleteBuyItem(index).then((value) {
+      _savedController.getBuyList();
+    });
+  }
+
   void snakBar(s) {
     Get.showSnackbar(GetBar(
       message: s.toString(),
@@ -315,43 +321,60 @@ Future showNotification(String title, String desc) async {
       payload: "Task");
 }
 
+/* compare price in background */
 Future<void> comparePrice() async {
+  final storage = GetStorage();
+
+  String uid = storage.read('uid');
+
   print('-------in Compare Price---------------');
-  // await Firebase.initializeApp();
-  // await GetStorage().initStorage;
-  List<SavedProduct> _list = await getSavedItemsBg();
+  /* compare price in background */
+
+  List<SavedProduct> _list = await getSavedItemsBg(uid);
+
+  double newPricedoubleVal;
+  double oldPricedoubleVal;
+  List newPricePareval;
+  List oldParseValue;
+
+  FireStoreMethod method = FireStoreMethod();
+
+  StringBuffer concatenewPriceVal = StringBuffer();
+  StringBuffer concateoldPriceVal = StringBuffer();
 
   _list.forEach((element) async {
     final response = await http.Client().get(Uri.parse(element.webUrl));
-
-    var newPricePareval;
-    var oldParseValue;
 
     String oldPrice = element.priceNumber;
 
     if (response.statusCode == 200) {
       try {
+        /*  extrcat dom */
         Document document = parse(response.body);
-
+        /*  extrcat price from dom*/
         String newPrice = document.querySelector(element.priceHtmlTag).text;
+
         print('---------price----');
         print(newPrice);
         print('---------Old Price----');
         print(element.price);
+        /*  convert price to double*/
         try {
           if (oldPrice.isNum) {
             print('---in old num $oldPrice');
-            oldParseValue = double.parse(oldPrice);
+            oldPricedoubleVal = double.parse(oldPrice);
           } else {
+            /*  extrcat and convert old price using regx*/
             oldParseValue = doubleRE
                 .allMatches(oldPrice)
                 .map((m) => double.parse(m[0]))
                 .toList();
-            //           list.forEach((item){
-            // concatenate.write(item);
 
-            // });
-            oldParseValue = double.parse(oldParseValue);
+            oldParseValue.forEach((item) {
+              concateoldPriceVal.write(item);
+            });
+
+            oldPricedoubleVal = double.parse(concateoldPriceVal.toString());
           }
         } catch (e) {
           print('1----ERrror occur in background');
@@ -361,31 +384,39 @@ Future<void> comparePrice() async {
         try {
           if (newPrice.isNum) {
             print('---in new num $newPricePareval');
-            newPricePareval = double.parse(newPrice);
+            newPricedoubleVal = double.parse(newPrice);
           } else {
+            /*  extrcat and convert old price using regx*/
             newPricePareval = doubleRE
                 .allMatches(newPrice)
                 .map((m) => double.parse(m[0]))
-                .toList()
-                .toString();
-            print('-----new pares value---------');
-            print(newPricePareval);
-            newPricePareval = double.parse(newPricePareval);
+                .toList();
+
+            newPricePareval.forEach((element) {
+              concatenewPriceVal.write(element);
+            });
+
+            newPricedoubleVal = double.parse(concatenewPriceVal.toString());
           }
-          if (newPricePareval < oldParseValue) {
-            NotificationModel(
-              avatarUrl: element.imgUrl,
-              cuponCode: 'No Copun',
-              desc: 'The Product You Saveed, Now Its Price is Down',
-              price: oldParseValue.toString(),
-              timestamp: Timestamp.now(),
-              title: 'Hey ',
-              validDate: '------',
-              docId: element.id,
-              priceHtmlTag: element.priceHtmlTag,
-              newPrice: newPricePareval.toString(),
-              webUrl: element.webUrl,
-            );
+          /*  compare price and show notifcatinon*/
+          if (newPricedoubleVal < oldPricedoubleVal) {
+            method.setUserNotification(
+                data: NotificationModel(
+                  avatarUrl: element.imgUrl,
+                  cuponCode: 'No Copun',
+                  desc: 'The Product You Saved, Now Its Price is Down',
+                  price: oldPricedoubleVal.toString(),
+                  timestamp: Timestamp.now(),
+                  title: 'Hey ',
+                  validDate: '------',
+                  docId: element.id,
+                  productTitle: element.title,
+                  priceHtmlTag: element.priceHtmlTag,
+                  newPrice: newPricedoubleVal.toString(),
+                  webUrl: element.webUrl,
+                ),
+                uid: uid);
+
             showNotification('Hey, Buy Now',
                 'The Product You Saveed, Now Its Price is Down');
           }
@@ -415,10 +446,7 @@ void onClickEnable(enabled) {
   }
 }
 
-Future<List<SavedProduct>> getSavedItemsBg() async {
-  final storage = GetStorage();
-
-  String uid = storage.read('uid');
+Future<List<SavedProduct>> getSavedItemsBg(uid) async {
   print('--------uid---------');
   print(uid);
   List<SavedProduct> tempList = [];

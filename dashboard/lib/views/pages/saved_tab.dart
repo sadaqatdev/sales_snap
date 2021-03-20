@@ -52,7 +52,8 @@ class SavedTab extends StatelessWidget {
                                             bcontroller.uidList,
                                             bcontroller.avataUrl,
                                             bcontroller.priceHtmlTag,
-                                            bcontroller.price);
+                                            bcontroller.price,
+                                            bcontroller.productTitle);
                                       },
                                       child: Text('Send Notification Message'),
                                     ),
@@ -89,7 +90,9 @@ class SavedTab extends StatelessWidget {
                                               bcontroller.userSaveList[index]
                                                   .priceHtmlTag,
                                               bcontroller
-                                                  .userSaveList[index].price);
+                                                  .userSaveList[index].price,
+                                              bcontroller
+                                                  .searchList[index].title);
                                         },
                                         key: Key(index.toString()),
                                       );
@@ -105,8 +108,15 @@ class SavedTab extends StatelessWidget {
     );
   }
 
-  void dialog(BuildContext context, List<String> ids, String url,
-      List<String> uidList, String avatarUrl, String priceHtmlTag, price) {
+  void dialog(
+      BuildContext context,
+      List<String> ids,
+      String url,
+      List<String> uidList,
+      String avatarUrl,
+      String priceHtmlTag,
+      price,
+      String productTitle) {
     var key = GlobalKey<FormState>();
     showDialog(
         useSafeArea: true,
@@ -123,7 +133,8 @@ class SavedTab extends StatelessWidget {
                       uidList: uidList,
                       avatarUrl: avatarUrl,
                       priceHtmlTag: priceHtmlTag,
-                      price: price),
+                      price: price,
+                      productTitle: productTitle),
                   builder: (snapshot) {
                     return Material(
                       child: Padding(

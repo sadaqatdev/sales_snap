@@ -87,7 +87,7 @@ class SavedTileWidget extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          notificationModel.title ?? 'No Tile',
+                          notificationModel.productTitle ?? 'No Tile',
                           style: title.copyWith(
                               color: Theme.of(context).primaryColor),
                         ),

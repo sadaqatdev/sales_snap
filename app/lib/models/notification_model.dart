@@ -9,6 +9,7 @@ class NotificationModel {
   String price;
   String webUrl;
   String avatarUrl;
+  String productTitle;
   Timestamp timestamp;
   String docId;
   String validDate;
@@ -21,6 +22,7 @@ class NotificationModel {
     this.price,
     this.webUrl,
     this.avatarUrl,
+    this.productTitle,
     this.timestamp,
     this.docId,
     this.validDate,
@@ -36,6 +38,7 @@ class NotificationModel {
       'price': price,
       'webUrl': webUrl,
       'avatarUrl': avatarUrl,
+      'productTitle': productTitle,
       'timestamp': timestamp,
       'docId': docId,
       'validDate': validDate,
@@ -52,6 +55,7 @@ class NotificationModel {
       price: map['price'],
       webUrl: map['webUrl'],
       avatarUrl: map['avatarUrl'],
+      productTitle: map['productTitle'],
       timestamp: map['timestamp'],
       docId: id,
       validDate: map['validDate'],
@@ -73,6 +77,7 @@ class NotificationModel {
         other.price == price &&
         other.webUrl == webUrl &&
         other.avatarUrl == avatarUrl &&
+        other.productTitle == productTitle &&
         other.timestamp == timestamp &&
         other.docId == docId &&
         other.validDate == validDate &&
@@ -88,6 +93,7 @@ class NotificationModel {
         price.hashCode ^
         webUrl.hashCode ^
         avatarUrl.hashCode ^
+        productTitle.hashCode ^
         timestamp.hashCode ^
         docId.hashCode ^
         validDate.hashCode ^

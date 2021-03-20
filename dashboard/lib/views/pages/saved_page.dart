@@ -51,7 +51,8 @@ class SavedPage extends StatelessWidget {
                                             bcontroller.uidList,
                                             bcontroller.avataUrl,
                                             bcontroller.priceHtmlTag,
-                                            bcontroller.price);
+                                            bcontroller.price,
+                                            bcontroller.productTitle);
                                       },
                                       child: Text('Send Notification Message'),
                                     ),
@@ -80,7 +81,8 @@ class SavedPage extends StatelessWidget {
                                         bcontroller.searchList[index].imgUrl,
                                         bcontroller
                                             .searchList[index].priceHtmlTag,
-                                        bcontroller.searchList[index].price);
+                                        bcontroller.searchList[index].price,
+                                        bcontroller.searchList[index].title);
                                   },
                                   key: Key(index.toString()),
                                 );
@@ -93,8 +95,15 @@ class SavedPage extends StatelessWidget {
     );
   }
 
-  void dialog(BuildContext context, List<String> ids, String url,
-      List<String> uidList, String avatarUrl, String priceHtmlTag, price) {
+  void dialog(
+      BuildContext context,
+      List<String> ids,
+      String url,
+      List<String> uidList,
+      String avatarUrl,
+      String priceHtmlTag,
+      price,
+      productTitle) {
     var key = GlobalKey<FormState>();
     showDialog(
         useSafeArea: true,
@@ -111,7 +120,8 @@ class SavedPage extends StatelessWidget {
                       uidList: uidList,
                       avatarUrl: avatarUrl,
                       priceHtmlTag: priceHtmlTag,
-                      price: price),
+                      price: price,
+                      productTitle: productTitle),
                   builder: (snapshot) {
                     return Material(
                       child: Padding(

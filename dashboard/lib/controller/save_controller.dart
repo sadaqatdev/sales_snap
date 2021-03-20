@@ -7,6 +7,8 @@ import 'package:sales_snap_dashboard/servises/firestore_methods.dart';
 
 class SaveController extends GetxController {
   String uid;
+
+  String productTitle;
   SaveController({this.uid});
   List<SaveListModel> saveItemList = [];
 
@@ -72,11 +74,13 @@ class SaveController extends GetxController {
     }
   }
 
-  void addToSelectList(item, condition, url, uid, avata, priceHtmlTag, price) {
+  void addToSelectList(
+      item, condition, url, uid, avata, priceHtmlTag, price, productTitle) {
     webUrl = url;
     avataUrl = avata;
     this.price = price;
     this.priceHtmlTag = priceHtmlTag;
+    this.productTitle = productTitle;
     print('--------varate--');
     print(avataUrl);
     if (condition) {

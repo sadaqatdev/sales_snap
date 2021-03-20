@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/buy_model.dart';
 import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/models/web_details.dart';
+import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ItemDetailsPage extends StatefulWidget {
@@ -20,6 +23,9 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
 
   bool isLoading = true;
 
+  FireStoreMethod method = FireStoreMethod();
+  final storage = GetStorage();
+
   @override
   void initState() {
     // SystemChrome.setEnabledSystemUIOverlays([]);
@@ -30,6 +36,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    String uid = storage.read('uid');
     return SafeArea(
       child: Scaffold(
         key: scafoldKey,
@@ -50,9 +57,21 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
                           request.url.contains('order')) {
                         print('--------------sucess-------------');
 
-                        Navigator.of(context).pop();
-                      } else if (request.url.contains('cancel') ||
-                          request.url.contains('order-received')) {
+                        method
+                            .setbuyItems(BuyModel(
+                                desc: widget.product.desc,
+                                imgUrl: widget.product.avatarUrl,
+                                newPrice: widget.product.newPrice,
+                                price: widget.product.price,
+                                priceHtmlTag: widget.product.priceHtmlTag,
+                                title: widget.product.title,
+                                priceNumber: widget.product.price,
+                                uid: uid,
+                                webUrl: widget.product.webUrl))
+                            .then((value) {
+                          SavedController.to.getBuyList();
+                        });
+                      } else if (request.url.contains('cancel')) {
                         print('-------------fail------------');
                       }
                       return NavigationDecision.navigate;

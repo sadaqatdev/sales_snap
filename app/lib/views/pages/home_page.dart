@@ -201,7 +201,8 @@ class HomePage extends StatelessWidget {
                               price: savedController.saveItemList[index].price,
                               priceHtmlTag: savedController
                                   .saveItemList[index].priceHtmlTag,
-                              title: savedController.saveItemList[index].title,
+                              productTitle:
+                                  savedController.saveItemList[index].title,
                               webUrl:
                                   savedController.saveItemList[index].webUrl,
                             ),

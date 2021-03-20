@@ -42,7 +42,7 @@ class BuyModel {
     };
   }
 
-  factory BuyModel.fromMap(Map<String, dynamic> map) {
+  factory BuyModel.fromMap(Map<String, dynamic> map, id) {
     return BuyModel(
       webUrl: map['webUrl'],
       title: map['title'],
@@ -51,21 +51,11 @@ class BuyModel {
       priceHtmlTag: map['priceHtmlTag'],
       priceNumber: map['priceNumber'],
       price: map['price'],
-      docId: map['docId'],
+      docId: id,
       msgToken: map['msgToken'],
       uid: map['uid'],
       newPrice: map['newPrice'],
     );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory BuyModel.fromJson(String source) =>
-      BuyModel.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'BuyModel(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber, price: $price, docId: $docId, msgToken: $msgToken, uid: $uid, newPrice: $newPrice)';
   }
 
   @override

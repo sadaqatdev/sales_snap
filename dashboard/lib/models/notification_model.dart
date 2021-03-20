@@ -12,6 +12,7 @@ class NotificationModel {
   Timestamp timestamp;
   String docId;
   String validDate;
+  String productTitle;
   String priceHtmlTag;
   NotificationModel({
     this.title,
@@ -23,6 +24,7 @@ class NotificationModel {
     this.timestamp,
     this.docId,
     this.validDate,
+    this.productTitle,
     this.priceHtmlTag,
   });
 
@@ -37,6 +39,7 @@ class NotificationModel {
       'timestamp': timestamp,
       'docId': docId,
       'validDate': validDate,
+      'productTitle': productTitle,
       'priceHtmlTag': priceHtmlTag,
     };
   }
@@ -52,6 +55,7 @@ class NotificationModel {
       timestamp: map['timestamp'],
       docId: map['docId'],
       validDate: map['validDate'],
+      productTitle: map['productTitle'],
       priceHtmlTag: map['priceHtmlTag'],
     );
   }
@@ -63,7 +67,7 @@ class NotificationModel {
 
   @override
   String toString() {
-    return 'NotificationModel(title: $title, desc: $desc, cuponCode: $cuponCode, price: $price, webUrl: $webUrl, avatarUrl: $avatarUrl, timestamp: $timestamp, docId: $docId, validDate: $validDate, priceHtmlTag: $priceHtmlTag)';
+    return 'NotificationModel(title: $title, desc: $desc, cuponCode: $cuponCode, price: $price, webUrl: $webUrl, avatarUrl: $avatarUrl, timestamp: $timestamp, docId: $docId, validDate: $validDate, productTitle: $productTitle, priceHtmlTag: $priceHtmlTag)';
   }
 
   @override
@@ -80,6 +84,7 @@ class NotificationModel {
         other.timestamp == timestamp &&
         other.docId == docId &&
         other.validDate == validDate &&
+        other.productTitle == productTitle &&
         other.priceHtmlTag == priceHtmlTag;
   }
 
@@ -94,6 +99,7 @@ class NotificationModel {
         timestamp.hashCode ^
         docId.hashCode ^
         validDate.hashCode ^
+        productTitle.hashCode ^
         priceHtmlTag.hashCode;
   }
 }
