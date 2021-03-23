@@ -21,6 +21,7 @@ import 'package:http/http.dart' as http;
 import 'package:sales_snap/repositories/database_helper.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/utils/extract/extract.dart';
+import 'package:sales_snap/views/pages/notifications_page.dart';
 
 FlutterLocalNotificationsPlugin fltrNotification;
 var doubleRE = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
@@ -293,9 +294,19 @@ class HomeController extends GetxController {
   }
 }
 
+Future onDidReceiveLocalNotification(
+    int id, String title, String body, String payload) async {
+  // display a dialog with the notification details, tap ok to go to another page
+  Get.defaultDialog(
+      title: title,
+      onConfirm: () {
+        Get.to(NotificationPage());
+      });
+}
+
 void backgroundFetchHeadlessTask(HeadlessTask task) async {}
 
-void initNotifications() {
+Future<void> initNotifications() async {
   var androidInitilize = AndroidInitializationSettings('ic_launcher');
   var iOSinitilize = IOSInitializationSettings(
     defaultPresentAlert: true,
@@ -303,7 +314,16 @@ void initNotifications() {
     defaultPresentSound: true,
     requestSoundPermission: true,
     requestBadgePermission: true,
+    onDidReceiveLocalNotification: onDidReceiveLocalNotification,
   );
+  final bool result = await fltrNotification
+      .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>()
+      ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
   var initilizationsSettings =
       InitializationSettings(android: androidInitilize, iOS: iOSinitilize);
   fltrNotification = FlutterLocalNotificationsPlugin();
@@ -374,6 +394,7 @@ Future<void> comparePrice() async {
                 .toList();
 
             concateoldPriceVal = oldParseValue.join('');
+            concateoldPriceVal = oldParseValue.join('');
 
             oldPricedoubleVal = double.parse(concateoldPriceVal.toString());
           }
@@ -393,6 +414,7 @@ Future<void> comparePrice() async {
                 .map((m) => double.parse(m[0]))
                 .toList();
 
+            concatenewPriceVal = newPricePareval.join('');
             concatenewPriceVal = newPricePareval.join('');
 
             newPricedoubleVal = double.parse(concatenewPriceVal.toString());
