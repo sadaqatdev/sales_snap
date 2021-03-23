@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class BuyModel {
+class SavedProductModel {
   String webUrl;
   String title;
   String imgUrl;
@@ -10,12 +8,11 @@ class BuyModel {
   String priceHtmlTag;
   String priceNumber;
   String price;
-  String docId;
+  String id;
   String msgToken;
   String uid;
-  String newPrice;
   Timestamp timestamp;
-  BuyModel({
+  SavedProductModel({
     this.webUrl,
     this.title,
     this.imgUrl,
@@ -23,10 +20,9 @@ class BuyModel {
     this.priceHtmlTag,
     this.priceNumber,
     this.price,
-    this.docId,
+    this.id,
     this.msgToken,
     this.uid,
-    this.newPrice,
     this.timestamp,
   });
 
@@ -39,16 +35,17 @@ class BuyModel {
       'priceHtmlTag': priceHtmlTag,
       'priceNumber': priceNumber,
       'price': price,
-      'docId': docId,
+      'id': id,
       'msgToken': msgToken,
       'uid': uid,
-      'newPrice': newPrice,
       'timestamp': timestamp,
     };
   }
 
-  factory BuyModel.fromMap(Map<String, dynamic> map, id) {
-    return BuyModel(
+  factory SavedProductModel.fromMap(Map<String, dynamic> map, id) {
+    if (map == null) return null;
+
+    return SavedProductModel(
       webUrl: map['webUrl'],
       title: map['title'],
       imgUrl: map['imgUrl'],
@@ -56,19 +53,22 @@ class BuyModel {
       priceHtmlTag: map['priceHtmlTag'],
       priceNumber: map['priceNumber'],
       price: map['price'],
-      docId: id,
+      id: id,
       msgToken: map['msgToken'],
-      uid: map['uid'],
-      newPrice: map['newPrice'],
       timestamp: map['timestamp'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'SavedProductModel(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber, price: $price, id: $id, msgToken: $msgToken, uid: $uid, timestamp: $timestamp)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is BuyModel &&
+    return other is SavedProductModel &&
         other.webUrl == webUrl &&
         other.title == title &&
         other.imgUrl == imgUrl &&
@@ -76,10 +76,9 @@ class BuyModel {
         other.priceHtmlTag == priceHtmlTag &&
         other.priceNumber == priceNumber &&
         other.price == price &&
-        other.docId == docId &&
+        other.id == id &&
         other.msgToken == msgToken &&
         other.uid == uid &&
-        other.newPrice == newPrice &&
         other.timestamp == timestamp;
   }
 
@@ -92,15 +91,9 @@ class BuyModel {
         priceHtmlTag.hashCode ^
         priceNumber.hashCode ^
         price.hashCode ^
-        docId.hashCode ^
+        id.hashCode ^
         msgToken.hashCode ^
         uid.hashCode ^
-        newPrice.hashCode ^
         timestamp.hashCode;
-  }
-
-  @override
-  String toString() {
-    return 'BuyModel(webUrl: $webUrl, title: $title, imgUrl: $imgUrl, desc: $desc, priceHtmlTag: $priceHtmlTag, priceNumber: $priceNumber, price: $price, docId: $docId, msgToken: $msgToken, uid: $uid, newPrice: $newPrice, timestamp: $timestamp)';
   }
 }

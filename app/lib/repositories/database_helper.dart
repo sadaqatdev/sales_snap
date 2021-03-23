@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:sales_snap/models/web_details.dart';
+import 'package:sales_snap/models/save_product_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
@@ -61,7 +61,7 @@ class DatabaseHelper {
     return database;
   }
 
-  Future<int> setWebDetails(SavedProduct alarmInfo) async {
+  Future<int> setWebDetails(SavedProductModel alarmInfo) async {
     var db = await instance.database;
     if (db != null) {
       var result = await db.insert(tableWebDtails, alarmInfo.toMap());
@@ -75,14 +75,14 @@ class DatabaseHelper {
     return 0;
   }
 
-  Future<List<SavedProduct>> getWebDetails() async {
-    List<SavedProduct> _alarms = [];
+  Future<List<SavedProductModel>> getWebDetails() async {
+    List<SavedProductModel> _alarms = [];
 
     var db = await this.database;
     var result = await db.query(tableWebDtails);
     result.forEach((element) {
       print(element.toString());
-      var alarmInfo = SavedProduct.fromMap(element, '1');
+      var alarmInfo = SavedProductModel.fromMap(element, '1');
       _alarms.add(alarmInfo);
     });
 

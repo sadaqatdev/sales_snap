@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
 import 'package:sales_snap/views/pages/account/intrest_page.dart';
+import 'package:sales_snap/views/pages/account/location.dart';
 import 'package:sales_snap/views/widgets/custom_button.dart';
 import 'package:sales_snap/views/widgets/custom_heading.dart';
 
@@ -43,7 +44,7 @@ class _DobPageState extends State<DobPage> {
               children: [
                 CustomHeading(
                     progressWidth: 243,
-                    steps: 'Step 3/4',
+                    steps: 'Step 3/5',
                     lable: 'Your Birthday'),
                 SizedBox(
                   height: 20,
@@ -145,7 +146,7 @@ class _DobPageState extends State<DobPage> {
                       if (fromKey.currentState.validate()) {
                         SignUpController.dob =
                             '${date.text}-${month.text}-${year.text}';
-                        Get.to(() => IntrestPage());
+                        Get.to(() => SignUpLocation());
                       } else {
                         Get.showSnackbar(GetBar(
                           message: 'Please Enter Your Data Of Birth',

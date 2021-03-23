@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:sales_snap/models/buy_button_click.dart';
 import 'package:sales_snap/models/buy_model.dart';
 import 'package:sales_snap/models/m_user.dart';
 
 import 'package:sales_snap/models/notification_model.dart';
-import 'package:sales_snap/models/web_details.dart';
+import 'package:sales_snap/models/save_product_model.dart';
 import 'package:sales_snap/utils/login_info.dart';
 
 class FireStoreMethod {
@@ -13,12 +15,14 @@ class FireStoreMethod {
   CollectionReference _collection;
   User _currentUser;
   LoginInfo _info = LoginInfo();
+  GetStorage strageTemp;
   FireStoreMethod() {
     _currentUser = _auth.currentUser;
     _collection = _firestore.collection('user_products');
+    strageTemp = GetStorage();
   }
 
-  Future<String> saveItems(SavedProduct details) async {
+  Future<String> saveItems(SavedProductModel details) async {
     await _collection
         .doc(_currentUser.uid)
         .collection('saved_products')
@@ -27,8 +31,8 @@ class FireStoreMethod {
     return 'ok';
   }
 
-  Future<List<SavedProduct>> getSavedItems() async {
-    List<SavedProduct> tempList = [];
+  Future<List<SavedProductModel>> getSavedItems() async {
+    List<SavedProductModel> tempList = [];
 
     QuerySnapshot _snap = await _collection
         .doc(_currentUser.uid)
@@ -38,7 +42,7 @@ class FireStoreMethod {
     if (_snap?.docs?.isNotEmpty ?? false)
       _snap.docs.forEach((qSnap) {
         if (qSnap.exists)
-          tempList.add(SavedProduct.fromMap(qSnap.data(), qSnap.id));
+          tempList.add(SavedProductModel.fromMap(qSnap.data(), qSnap.id));
       });
 
     return tempList;
@@ -55,6 +59,16 @@ class FireStoreMethod {
   }
 
   Future<String> deleteBuyItem(index) async {
+    _collection
+        .doc(_currentUser.uid)
+        .collection('buy_products')
+        .doc(index)
+        .delete();
+
+    return 'ok';
+  }
+
+  Future<String> deletePriceSaving(index) async {
     _collection
         .doc(_currentUser.uid)
         .collection('buy_products')
@@ -87,6 +101,15 @@ class FireStoreMethod {
     return tempList;
   }
 
+  Future<void> buyButtonClick() async {
+    String location = strageTemp.read('location');
+
+    BuyButtonClick buyButtonClick = BuyButtonClick(
+        location: location, timestamp: Timestamp.now(), uid: _currentUser.uid);
+
+    _firestore.collection('buyButtonClick').doc().set(buyButtonClick.toMap());
+  }
+
   Stream<List<NotificationModel>> getNotification() {
     return _firestore
         .collection("user_notification")
@@ -102,6 +125,60 @@ class FireStoreMethod {
         print(element.data());
       });
       return retVal;
+    });
+  }
+
+  Stream<List<BuyModel>> getMonthlys() {
+    var date = DateTime.now();
+
+    return _collection
+        .doc(_currentUser.uid)
+        .collection('buy_products')
+        .where('timestamp',
+            isGreaterThanOrEqualTo:
+                new Timestamp.fromDate(DateTime(date.year, date.month, 1)))
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((query) {
+      return query.docs.map((doc) {
+        return BuyModel.fromMap(doc.data(), doc.id);
+      }).toList();
+    });
+  }
+
+  Stream<List<BuyModel>> getWeekly() {
+    var date = DateTime.now();
+
+    return _collection
+        .doc(_currentUser.uid)
+        .collection('buy_products')
+        .where('timestamp',
+            isGreaterThanOrEqualTo:
+                new Timestamp.fromDate(DateTime(date.year, date.weekday)))
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((query) {
+      return query.docs.map((doc) {
+        return BuyModel.fromMap(doc.data(), doc.id);
+      }).toList();
+    });
+  }
+
+  Stream<List<BuyModel>> getQuaterly() {
+    var date = DateTime.now();
+
+    return _collection
+        .doc(_currentUser.uid)
+        .collection('buy_products')
+        .where('timestamp',
+            isGreaterThanOrEqualTo:
+                new Timestamp.fromDate(DateTime(date.year, date.month, 1)))
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((query) {
+      return query.docs.map((doc) {
+        return BuyModel.fromMap(doc.data(), doc.id);
+      }).toList();
     });
   }
 

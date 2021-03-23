@@ -16,7 +16,7 @@ import 'package:html/parser.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/notification_model.dart';
-import 'package:sales_snap/models/web_details.dart';
+import 'package:sales_snap/models/save_product_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:sales_snap/repositories/database_helper.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
@@ -55,9 +55,9 @@ class HomeController extends GetxController {
 
   bool showProgress = false;
 
-  List<SavedProduct> list = [];
+  List<SavedProductModel> list = [];
 
-  List<SavedProduct> saveList = [];
+  List<SavedProductModel> saveList = [];
 
   var doubleRE = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
 
@@ -126,6 +126,9 @@ class HomeController extends GetxController {
         extractor.getPrices(response.body,
             (List<String> _prices, List<Map<String, dynamic>> priceElements) {
           String price = _prices[0].trim();
+          if (price.isEmpty) {
+            price = _prices[1].trim();
+          }
           HomeController.priceHtmlTag = priceElements[0].keys.first;
           int length = price.length;
           if (length > 10) {
@@ -147,12 +150,12 @@ class HomeController extends GetxController {
 
         update();
       } else {
-        snakBar(response.statusCode);
+        snakBar('Invalid Url or Url Cant featch Data Try Again');
         enableValue(false);
         showProgrss(false);
       }
     } catch (e) {
-      snakBar(e);
+      snakBar('Invalid Url Try Again');
       enableValue(false);
       showProgrss(false);
 
@@ -176,7 +179,7 @@ class HomeController extends GetxController {
       var p =
           doubleRE.allMatches(price).map((m) => double.parse(m[0])).toList();
 
-      SavedProduct savedProduct = SavedProduct(
+      SavedProductModel savedProduct = SavedProductModel(
           title: title,
           imgUrl: imageUrls,
           priceHtmlTag: HomeController.priceHtmlTag,
@@ -330,7 +333,7 @@ Future<void> comparePrice() async {
   print('-------in Compare Price---------------');
   /* compare price in background */
 
-  List<SavedProduct> _list = await getSavedItemsBg(uid);
+  List<SavedProductModel> _list = await getSavedItemsBg(uid);
 
   double newPricedoubleVal;
   double oldPricedoubleVal;
@@ -339,8 +342,8 @@ Future<void> comparePrice() async {
 
   FireStoreMethod method = FireStoreMethod();
 
-  StringBuffer concatenewPriceVal = StringBuffer();
-  StringBuffer concateoldPriceVal = StringBuffer();
+  String concatenewPriceVal;
+  String concateoldPriceVal;
 
   _list.forEach((element) async {
     final response = await http.Client().get(Uri.parse(element.webUrl));
@@ -370,9 +373,7 @@ Future<void> comparePrice() async {
                 .map((m) => double.parse(m[0]))
                 .toList();
 
-            oldParseValue.forEach((item) {
-              concateoldPriceVal.write(item);
-            });
+            concateoldPriceVal = oldParseValue.join('');
 
             oldPricedoubleVal = double.parse(concateoldPriceVal.toString());
           }
@@ -392,9 +393,7 @@ Future<void> comparePrice() async {
                 .map((m) => double.parse(m[0]))
                 .toList();
 
-            newPricePareval.forEach((element) {
-              concatenewPriceVal.write(element);
-            });
+            concatenewPriceVal = newPricePareval.join('');
 
             newPricedoubleVal = double.parse(concatenewPriceVal.toString());
           }
@@ -446,10 +445,10 @@ void onClickEnable(enabled) {
   }
 }
 
-Future<List<SavedProduct>> getSavedItemsBg(uid) async {
+Future<List<SavedProductModel>> getSavedItemsBg(uid) async {
   print('--------uid---------');
   print(uid);
-  List<SavedProduct> tempList = [];
+  List<SavedProductModel> tempList = [];
 
   final _firestore = FirebaseFirestore.instance;
 
@@ -461,7 +460,7 @@ Future<List<SavedProduct>> getSavedItemsBg(uid) async {
   if (_snap?.docs?.isNotEmpty ?? false)
     _snap.docs.forEach((qSnap) {
       if (qSnap.exists)
-        tempList.add(SavedProduct.fromMap(qSnap.data(), qSnap.id));
+        tempList.add(SavedProductModel.fromMap(qSnap.data(), qSnap.id));
     });
 
   return tempList;

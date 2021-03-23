@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class AgeModel {
   String age;
-  String number;
+  int number;
   AgeModel({
     this.age,
     this.number,

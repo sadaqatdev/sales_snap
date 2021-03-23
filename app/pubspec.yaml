@@ -51,6 +51,7 @@ dependencies:
   flutter_native_splash: ^1.0.3
   octo_image: ^0.3.0
   flutter_facebook_login: ^3.0.0
+  flutter_speed_dial: ^2.1.0
 
 dev_dependencies:
   flutter_test:

@@ -66,18 +66,18 @@ class NotificationPage extends StatelessWidget {
                                     Text(snapshot.data[index].cuponCode ?? '')
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 12,
-                                ),
-                                Row(
-                                  children: [
-                                    Text('Notification WebUrl:-'),
-                                    SizedBox(
-                                      width: 16,
-                                    ),
-                                    Text(snapshot.data[index].webUrl ?? '')
-                                  ],
-                                ),
+                                // SizedBox(
+                                //   height: 12,
+                                // ),
+                                // Row(
+                                //   children: [
+                                //     Text('Notification WebUrl:-'),
+                                //     SizedBox(
+                                //       width: 16,
+                                //     ),
+                                //     Text(snapshot.data[index].webUrl ?? '')
+                                //   ],
+                                // ),
                                 SizedBox(
                                   height: 12,
                                 ),
@@ -87,7 +87,7 @@ class NotificationPage extends StatelessWidget {
                                     SizedBox(
                                       width: 16,
                                     ),
-                                    Text(snapshot.data[index].webUrl ?? '')
+                                    Text(snapshot.data[index].validDate ?? '')
                                   ],
                                 ),
                               ],

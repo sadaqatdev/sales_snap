@@ -58,13 +58,10 @@ class SaveController extends GetxController {
     print(saveItemList.toString());
     print('------------out');
     if (searchcontroller.text.isEmpty) {
-      print('iiiiiiiiiiiiiiiii');
-      print(searchList.toString());
       searchList.addAll(saveItemList);
       isLoading = false;
       update();
     } else {
-      print('eeeeeeeeee');
       searchList = saveItemList
           .where((element) => element.title
               .toLowerCase()

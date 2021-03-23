@@ -52,11 +52,11 @@ class _IntrestPageState extends State<IntrestPage> {
             children: [
               CustomHeading(
                 progressWidth: Get.width - 50,
-                steps: 'Step 4/4',
+                steps: 'Step 5/5',
                 lable: 'Time to customize your interest',
               ),
               Container(
-                height: 800,
+                height: (180 * _list.length) / 2,
                 width: 350,
                 child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -110,6 +110,7 @@ class _IntrestPageState extends State<IntrestPage> {
                                   intersts: SignUpController.intersts.toList(),
                                   name: SignUpController.name,
                                   token: token,
+                                  location: SignUpController.userLocation,
                                   createdDate: Timestamp.now()),
                             )
                                 .then((s) {

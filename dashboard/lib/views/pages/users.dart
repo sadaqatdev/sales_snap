@@ -130,7 +130,7 @@ class UserTile extends StatelessWidget {
                           SizedBox(
                             width: 12,
                           ),
-                          Text(user.createdDate ?? ''),
+                          Text(user.createdDate?.toDate().toString() ?? ''),
                         ],
                       ),
                     ],

@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:sales_snap/models/buy_model.dart';
 import 'package:sales_snap/models/notification_model.dart';
-import 'package:sales_snap/models/web_details.dart';
+import 'package:sales_snap/models/save_product_model.dart';
 import 'package:sales_snap/repositories/database_helper.dart';
+import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/utils/theme/app_theme.dart';
 import 'package:sales_snap/views/pages/items_details_page.dart';
@@ -17,7 +20,7 @@ class OfferPage extends StatelessWidget {
   OfferPage({Key key, this.notificationModel}) : super(key: key);
 
   final formKey = GlobalKey<FormState>();
-
+  FireStoreMethod method = FireStoreMethod();
   @override
   Widget build(BuildContext context) {
     final lable = Theme.of(context).textTheme.headline1;
@@ -199,6 +202,21 @@ class OfferPage extends StatelessWidget {
                       CustomButton(
                           lable: 'Buy',
                           onPress: () {
+                            // method.setbuyItems(BuyModel(
+                            //     desc: 'widget.product.desc',
+                            //     imgUrl:
+                            //         'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                            //     newPrice: '78',
+                            //     price: '100',
+                            //     priceHtmlTag: 'widget.product.priceHtmlTag',
+                            //     title:
+                            //         'Buy Smoby Tractor and Trailor Ride On | Ride-ons | Argos',
+                            //     priceNumber: '100',
+                            //     timestamp: Timestamp.now(),
+                            //     uid: FirebaseAuth.instance.currentUser.uid,
+                            //     webUrl: 'sdsfds'));
+
+                            method.buyButtonClick();
                             AppRoute.to(
                                 context,
                                 ItemDetailsPage(

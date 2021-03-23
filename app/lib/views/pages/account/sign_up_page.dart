@@ -248,7 +248,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
                 onPressed: () {
-                  // googleLogin();
+                  facebookLogin();
                 },
               ),
             ],
@@ -258,18 +258,51 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  void googleLogin() {
+  void facebookLogin() {
     controller.isLoding(true);
-    _repo.googleSignIn().catchError((err) {
+    _repo.signUpWithFacebook().catchError((err) {
+      controller.isLoding(false);
       Get.showSnackbar(GetBar(
-        message: err.toString(),
+        message: 'Error Please Try Again',
         duration: Duration(seconds: 3),
       ));
     }).then((user) {
-      _loginInfo.setLoginInfo(user);
-      SignUpController.email = user.email;
-      Get.to(() => SignUpName());
+      if (user != null) {
+        _loginInfo.setLoginInfo(user);
+        SignUpController.email = user.email;
+        Get.to(() => SignUpName());
+        controller.isLoding(false);
+      } else {
+        controller.isLoding(false);
+        Get.showSnackbar(GetBar(
+          message: 'Error Try Again',
+          duration: Duration(seconds: 3),
+        ));
+      }
+    });
+  }
+
+  void googleLogin() {
+    controller.isLoding(true);
+    _repo.googleSignIn().catchError((err) {
       controller.isLoding(false);
+      Get.showSnackbar(GetBar(
+        message: 'Error Please Try Again',
+        duration: Duration(seconds: 3),
+      ));
+    }).then((user) {
+      if (user != null) {
+        _loginInfo.setLoginInfo(user);
+        SignUpController.email = user.email;
+        Get.to(() => SignUpName());
+        controller.isLoding(false);
+      } else {
+        controller.isLoding(false);
+        Get.showSnackbar(GetBar(
+          message: 'Error Try Again',
+          duration: Duration(seconds: 3),
+        ));
+      }
     });
   }
 

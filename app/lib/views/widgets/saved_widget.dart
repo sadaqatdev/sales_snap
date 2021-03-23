@@ -4,7 +4,7 @@ import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/notification_model.dart';
-import 'package:sales_snap/models/web_details.dart';
+import 'package:sales_snap/models/save_product_model.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/pages/items_details_page.dart';
 
@@ -35,7 +35,7 @@ class SavedTab extends StatelessWidget {
 }
 
 class SavedTileWidget extends StatelessWidget {
-  final List<SavedProduct> saveItemList;
+  final List<SavedProductModel> saveItemList;
   final index;
   SavedTileWidget({
     Key key,

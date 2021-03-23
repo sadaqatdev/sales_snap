@@ -12,6 +12,8 @@ class MUser {
   List<String> intersts;
   String token;
   Timestamp createdDate;
+  String location;
+
   MUser({
     this.name,
     this.email,
@@ -21,6 +23,7 @@ class MUser {
     this.intersts,
     this.token,
     this.createdDate,
+    this.location,
   });
 
   Map<String, dynamic> toMap() {
@@ -33,6 +36,7 @@ class MUser {
       'intersts': intersts,
       'token': token,
       'createdDate': createdDate,
+      'location': location,
     };
   }
 
@@ -46,6 +50,7 @@ class MUser {
       intersts: List<String>.from(map['intersts']),
       token: map['token'],
       createdDate: map['createdDate'],
+      location: map['location'],
     );
   }
 
@@ -55,7 +60,7 @@ class MUser {
 
   @override
   String toString() {
-    return 'MUser(name: $name, email: $email, imageUrl: $imageUrl, dob: $dob, gender: $gender, intersts: $intersts, token: $token, createdDate: $createdDate)';
+    return 'MUser(name: $name, email: $email, imageUrl: $imageUrl, dob: $dob, gender: $gender, intersts: $intersts, token: $token, createdDate: $createdDate, location: $location)';
   }
 
   @override
@@ -70,7 +75,8 @@ class MUser {
         other.gender == gender &&
         listEquals(other.intersts, intersts) &&
         other.token == token &&
-        other.createdDate == createdDate;
+        other.createdDate == createdDate &&
+        other.location == location;
   }
 
   @override
@@ -82,6 +88,7 @@ class MUser {
         gender.hashCode ^
         intersts.hashCode ^
         token.hashCode ^
-        createdDate.hashCode;
+        createdDate.hashCode ^
+        location.hashCode;
   }
 }

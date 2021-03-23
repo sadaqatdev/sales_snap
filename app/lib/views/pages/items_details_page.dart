@@ -3,7 +3,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/buy_model.dart';
 import 'package:sales_snap/models/notification_model.dart';
-import 'package:sales_snap/models/web_details.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

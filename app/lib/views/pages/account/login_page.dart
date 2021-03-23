@@ -182,7 +182,9 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        facebookLogin();
+                      },
                     ),
                     SizedBox(height: 14),
                     Text('or'),
@@ -263,29 +265,46 @@ class _LoginPageState extends State<LoginPage> {
     _controller.isLoding(true);
     _repo.googleSignIn().catchError((err) {
       Get.showSnackbar(GetBar(
-        message: err.toString(),
+        message: 'Error Please Try Again',
         duration: Duration(seconds: 3),
       ));
     }).then((user) {
-      _loginInfo.setLoginInfo(user);
-      SignUpController.email = user.email;
-      Get.to(() => SignUpName());
-      _controller.isLoding(false);
+      if (user != null) {
+        _loginInfo.setLoginInfo(user);
+        SignUpController.email = user.email;
+        Get.to(() => SignUpName());
+        _controller.isLoding(false);
+      } else {
+        _controller.isLoding(false);
+        Get.showSnackbar(GetBar(
+          message: 'Error Try Again',
+          duration: Duration(seconds: 3),
+        ));
+      }
     });
   }
 
   void facebookLogin() {
     _controller.isLoding(true);
     _repo.signUpWithFacebook().catchError((err) {
+      _controller.isLoding(false);
       Get.showSnackbar(GetBar(
-        message: err.toString(),
+        message: 'Error Please Try Again',
         duration: Duration(seconds: 3),
       ));
     }).then((user) {
-      _loginInfo.setLoginInfo(user);
-      SignUpController.email = user.email;
-      Get.to(() => SignUpName());
-      _controller.isLoding(false);
+      if (user != null) {
+        _loginInfo.setLoginInfo(user);
+        SignUpController.email = user.email;
+        Get.to(() => SignUpName());
+        _controller.isLoding(false);
+      } else {
+        _controller.isLoding(false);
+        Get.showSnackbar(GetBar(
+          message: 'Error Try Again',
+          duration: Duration(seconds: 3),
+        ));
+      }
     });
   }
 
@@ -298,14 +317,22 @@ class _LoginPageState extends State<LoginPage> {
           .catchError((err) {
         _controller.isLoding(false);
         Get.showSnackbar(GetBar(
-          message: err.toString(),
+          message: 'Error Please Try Again',
           duration: Duration(seconds: 3),
         ));
       }).then((user) {
-        _loginInfo.setLoginInfo(user);
-        _controller.isLoding(false);
-        Get.offAll(() => BottomNavBar());
-        print('in then');
+        if (user != null) {
+          _loginInfo.setLoginInfo(user);
+          _controller.isLoding(false);
+          Get.offAll(() => BottomNavBar());
+          print('in then');
+        } else {
+          _controller.isLoding(false);
+          Get.showSnackbar(GetBar(
+            message: 'Error Please Try Again',
+            duration: Duration(seconds: 3),
+          ));
+        }
       });
     } else {
       Get.showSnackbar(GetBar(

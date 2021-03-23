@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:sales_snap_dashboard/models/buy_model.dart';
 import 'package:sales_snap_dashboard/models/save_list_model.dart';
 
 import 'package:sales_snap_dashboard/servises/firestore_methods.dart';
@@ -9,17 +10,20 @@ class BuyController extends GetxController {
 
   BuyController({this.uid});
 
-  List<SaveListModel> buyItemList = [];
+  List<BuyModel> buyItemList = [];
 
-  List<SaveListModel> buySearchList = [];
+  List<BuyModel> buySearchList = [];
 
-  List<SaveListModel> buyUserList = [];
+  List<BuyModel> buyUserList = [];
 
   var isLoading = true;
 
   final _method = FirestoreMethods();
-  TextEditingController controller = TextEditingController();
 
+  TextEditingController controller = TextEditingController();
+  var startDate = DateTime(2020, 1, 1, 1, 1);
+
+  var endDate = DateTime.now();
   onInit() {
     controller.addListener(getSearchList);
     getBuyList();
@@ -56,7 +60,7 @@ class BuyController extends GetxController {
   }
 
   getBuyList() async {
-    buyItemList = await _method.getBuyedItems();
+    buyItemList = await _method.getBuyedItems(startDate, endDate);
 
     isLoading = false;
     getSearchList();

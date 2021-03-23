@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
 import 'package:sales_snap/views/pages/account/gender_page.dart';
 import 'package:sales_snap/views/widgets/custom_button.dart';
 import 'package:sales_snap/views/widgets/custom_heading.dart';
 
-class SignUpName extends StatefulWidget {
+import 'intrest_page.dart';
+
+class SignUpLocation extends StatefulWidget {
   @override
   _SignUpNameState createState() => _SignUpNameState();
 }
 
-class _SignUpNameState extends State<SignUpName> {
-  final userNameController = TextEditingController();
+class _SignUpNameState extends State<SignUpLocation> {
+  final locationController = TextEditingController();
 
   final fomKey = GlobalKey<FormState>();
+  final GetStorage storage = GetStorage();
   @override
   void dispose() {
-    userNameController.dispose();
+    locationController.dispose();
     super.dispose();
   }
 
@@ -34,8 +38,8 @@ class _SignUpNameState extends State<SignUpName> {
               children: [
                 CustomHeading(
                     progressWidth: 33,
-                    steps: 'step 1 of 5',
-                    lable: 'Your Name'),
+                    steps: 'step 4 of 5',
+                    lable: 'Your City Name'),
                 Form(
                   key: fomKey,
                   child: Container(
@@ -45,17 +49,17 @@ class _SignUpNameState extends State<SignUpName> {
                         color: Colors.white),
                     child: TextFormField(
                       keyboardType: TextInputType.name,
-                      controller: userNameController,
+                      controller: locationController,
                       decoration: InputDecoration(
                           prefixIcon: Icon(Icons.person),
                           border: InputBorder.none,
-                          hintText: 'What is your Name',
+                          hintText: 'City Name and Post Code',
                           fillColor: Colors.transparent,
                           contentPadding:
                               EdgeInsets.only(top: 12, bottom: 12, left: 12)),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Enter Full Name';
+                          return 'City Name and Post Code';
                         }
                         return null;
                       },
@@ -70,10 +74,10 @@ class _SignUpNameState extends State<SignUpName> {
                   color: Colors.black,
                   radius: 22,
                   onPress: () {
-                    print('------');
                     if (fomKey.currentState.validate()) {
-                      SignUpController.name = userNameController.text;
-                      Get.to(() => GenderPage());
+                      SignUpController.userLocation = locationController.text;
+                      storage.write('location', locationController.text);
+                      Get.to(() => IntrestPage());
                     }
                   },
                 ),

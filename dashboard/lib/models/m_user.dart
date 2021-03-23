@@ -11,6 +11,7 @@ class MUser {
   String token;
   String uid;
   Timestamp createdDate;
+  String location;
   MUser({
     this.name,
     this.email,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
+import 'package:sales_snap/views/pages/price_saving_tabs.dart';
 import 'package:sales_snap/views/widgets/buyed_widget.dart';
 import 'package:sales_snap/views/widgets/saved_widget.dart';
 
@@ -11,7 +12,7 @@ class MyItemPage extends StatelessWidget {
 
     return SafeArea(
       child: DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
             toolbarHeight: 90,
@@ -25,16 +26,15 @@ class MyItemPage extends StatelessWidget {
                 indicatorColor: Colors.white,
                 indicatorSize: TabBarIndicatorSize.tab,
                 tabs: [
-                  Tab(
-                    child: Text('Saved Items'),
-                  ),
-                  Tab(child: Text('Buyed Items'))
+                  Tab(child: Text('Saved Items')),
+                  Tab(child: Text('Buyed Items')),
+                  Tab(child: Text('Savings'))
                 ],
               ),
             ),
           ),
           body: TabBarView(
-            children: [SavedTab(), BuyedTab()],
+            children: [SavedTab(), BuyedTab(), PriceSavingTab()],
           ),
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:sales_snap_dashboard/controller/buy_controller.dart';
+import 'package:sales_snap_dashboard/models/buy_model.dart';
 import 'package:sales_snap_dashboard/models/save_list_model.dart';
 
 import 'package:sales_snap_dashboard/views/widgets/search_widget.dart';
@@ -57,7 +58,7 @@ class BuyPage extends StatelessWidget {
 }
 
 class BuyTile extends StatefulWidget {
-  final SaveListModel saveItemList;
+  final BuyModel saveItemList;
 
   final Key key;
   final ValueChanged<bool> isSelectedFuntction;

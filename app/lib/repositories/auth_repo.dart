@@ -119,7 +119,7 @@ class AuthRepo {
 
         final token = result.accessToken.token;
         final graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${token}');
+            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
         final profile = json.decode(graphResponse.body);
 
         break;

@@ -79,6 +79,7 @@ class Selectors {
     '[data-product-price="price"]',
     '[property="og:price:amount]',
     '[name="image"]',
+    '[data-id="current-price"]',
     '[itemprop="price"]',
     '[itemprop*="price"]',
     '[aria-label="Product price"]',
