@@ -17,6 +17,8 @@ class SendNotification extends GetxController {
 
   TextEditingController validatinMessage = TextEditingController();
 
+  TextEditingController weburlController = TextEditingController();
+
   List<String> usersId = [];
 
   List<String> uidList = [];
@@ -56,6 +58,9 @@ class SendNotification extends GetxController {
   sendNotification() async {
     isLoading = true;
     update();
+    if(weburlController.text.isNotEmpty){
+      webUrl=weburlController.text;
+    }
     await _methods.setUserNotification(
         data: NotificationModel(
             cuponCode: copunController.text,

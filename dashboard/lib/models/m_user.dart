@@ -21,6 +21,7 @@ class MUser {
     this.intersts,
     this.token,
     this.uid,
+    this.location,
     this.createdDate,
   });
 
@@ -50,6 +51,7 @@ class MUser {
       token: map['token'],
       uid: elemnent.id,
       createdDate: map['createdDate'],
+      location: map['location']
     );
   }
 

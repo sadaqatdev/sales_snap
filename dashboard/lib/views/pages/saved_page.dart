@@ -52,7 +52,7 @@ class SavedPage extends StatelessWidget {
                                             bcontroller.avataUrl,
                                             bcontroller.priceHtmlTag,
                                             bcontroller.price,
-                                            bcontroller.productTitle);
+                                            bcontroller.productTitle,);
                                       },
                                       child: Text('Send Notification Message'),
                                     ),
@@ -103,7 +103,7 @@ class SavedPage extends StatelessWidget {
       String avatarUrl,
       String priceHtmlTag,
       price,
-      productTitle) {
+      productTitle,) {
     var key = GlobalKey<FormState>();
     showDialog(
         useSafeArea: true,
@@ -183,6 +183,15 @@ class SavedPage extends StatelessWidget {
                                   }
                                   return null;
                                 },
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                controller: snapshot.weburlController,
+                                decoration: InputDecoration(
+                                    hintText: 'Enter Website Url'),
+                                
                               ),
                               SizedBox(
                                 height: 30,

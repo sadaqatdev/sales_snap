@@ -55,7 +55,7 @@ class UserTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: 12,
+                height: 8,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -87,6 +87,19 @@ class UserTile extends StatelessWidget {
                             width: 12,
                           ),
                           Text(user.email),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('Location'),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text(user.location??'non'),
                         ],
                       ),
                     ],
