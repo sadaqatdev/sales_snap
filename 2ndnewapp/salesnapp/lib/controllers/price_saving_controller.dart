@@ -3,9 +3,9 @@ import 'package:sales_snap/models/buy_model.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
 
 class PriceSavingController extends GetxController {
-  Rx<List<BuyModel>> monthlySaveList = Rx<List<BuyModel>>();
-  Rx<List<BuyModel>> weeklySaveList = Rx<List<BuyModel>>();
-  Rx<List<BuyModel>> quertlySaveList = Rx<List<BuyModel>>();
+  Rx<List<BuyModel>> previosMonth = Rx<List<BuyModel>>();
+  Rx<List<BuyModel>> previosMonthTwo = Rx<List<BuyModel>>();
+  Rx<List<BuyModel>> currentlyMonth = Rx<List<BuyModel>>();
   final _method = FireStoreMethod();
 
   List<double> weeklyList = [];
@@ -14,9 +14,9 @@ class PriceSavingController extends GetxController {
 
   @override
   void onInit() {
-    monthlySaveList.bindStream(_method.getMonthlys());
-    weeklySaveList.bindStream(_method.getWeekly());
-    quertlySaveList.bindStream(_method.getQuaterly());
+    previosMonth.bindStream(_method.getPreviousMonth());
+    previosMonthTwo.bindStream(_method.getPreviousMonthTwo());
+    currentlyMonth.bindStream(_method.getCurrentMonth());
     Future.delayed(Duration(seconds: 3)).then((value) {
       addTo();
     });
@@ -24,15 +24,15 @@ class PriceSavingController extends GetxController {
   }
 
   void addTo() {
-    weeklySaveList.value.forEach((element) {
+    previosMonthTwo.value.forEach((element) {
       weeklyList.add(
           double.parse(element.priceNumber) - double.parse(element.newPrice));
     });
-    monthlySaveList.value.forEach((element) {
+    previosMonth.value.forEach((element) {
       monthlyList.add(
           double.parse(element.priceNumber) - double.parse(element.newPrice));
     });
-    quertlySaveList.value.forEach((element) {
+    currentlyMonth.value.forEach((element) {
       quertlyList.add(
           double.parse(element.priceNumber) - double.parse(element.newPrice));
     });

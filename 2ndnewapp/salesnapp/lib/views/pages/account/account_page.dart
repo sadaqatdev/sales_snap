@@ -9,7 +9,7 @@ import 'package:sales_snap/utils/theme/app_theme.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
 import 'package:sales_snap/views/widgets/custom_button.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
-
+ 
 import 'login_signup_tabs.dart';
 
 class AccountPage extends StatelessWidget {

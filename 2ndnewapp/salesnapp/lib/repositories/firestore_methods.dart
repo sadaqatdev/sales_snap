@@ -128,15 +128,15 @@ class  FireStoreMethod {
     });
   }
 
-  Stream<List<BuyModel>> getMonthlys() {
+  Stream<List<BuyModel>> getPreviousMonth() {
     var date = DateTime.now();
-
+  var prevMonth = new DateTime(date.year, date.month - 1, date.day);
     return _collection
         .doc(_currentUser.uid)
         .collection('buy_products')
         .where('timestamp',
-            isGreaterThanOrEqualTo:
-                new Timestamp.fromDate(DateTime(date.year, date.month, 1)))
+            isEqualTo:
+                new Timestamp.fromDate(prevMonth))
         .orderBy('timestamp', descending: true)
         .snapshots()
         .map((query) {
@@ -146,15 +146,15 @@ class  FireStoreMethod {
     });
   }
 
-  Stream<List<BuyModel>> getWeekly() {
+  Stream<List<BuyModel>> getPreviousMonthTwo() {
     var date = DateTime.now();
-
+var prevMonth = new DateTime(date.year, date.month - 2, date.day);
     return _collection
         .doc(_currentUser.uid)
         .collection('buy_products')
         .where('timestamp',
             isGreaterThanOrEqualTo:
-                new Timestamp.fromDate(DateTime(date.year, date.weekday)))
+                new Timestamp.fromDate(prevMonth))
         .orderBy('timestamp', descending: true)
         .snapshots()
         .map((query) {
@@ -164,15 +164,15 @@ class  FireStoreMethod {
     });
   }
 
-  Stream<List<BuyModel>> getQuaterly() {
+  Stream<List<BuyModel>> getCurrentMonth() {
     var date = DateTime.now();
 
     return _collection
         .doc(_currentUser.uid)
         .collection('buy_products')
         .where('timestamp',
-            isGreaterThanOrEqualTo:
-                new Timestamp.fromDate(DateTime(date.year, date.month, 1)))
+            isEqualTo:
+                new Timestamp.fromDate( date))
         .orderBy('timestamp', descending: true)
         .snapshots()
         .map((query) {

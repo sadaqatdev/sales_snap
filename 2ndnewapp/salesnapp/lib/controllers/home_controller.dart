@@ -65,6 +65,7 @@ class HomeController extends GetxController {
 
   double numb;
   double iosPadding;
+  double recentSave;
   String onesignalUserId;
   bool notifcationEnabled = false;
   @override
@@ -86,9 +87,11 @@ class HomeController extends GetxController {
     if (Platform.isIOS) {
       numb = 7;
       iosPadding = 31;
+      recentSave=50;
     } else {
-      numb = 4;
+      numb = 6;
       iosPadding = 0;
+      recentSave=70;
     }
     super.onInit();
   }
@@ -452,7 +455,7 @@ Future<void> comparePrice() async {
           print(e.toString());
         }
         /*  compare price and show notifcatinon*/
-        if (newPricedoubleVal == oldPricedoubleVal) {
+        if (newPricedoubleVal <oldPricedoubleVal) {
           method.setUserNotification(
               data: NotificationModel(
                 avatarUrl: element.imgUrl,

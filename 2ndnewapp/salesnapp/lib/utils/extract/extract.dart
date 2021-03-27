@@ -147,6 +147,7 @@ class Extractor {
     Selectors.currencyQueries.forEach((String query) {
       List<Element> elements =
           document.querySelectorAll(query.trimRight().trimLeft());
+
       if (query.contains("property=") ||
           query.contains("name=") ||
           query.contains("name*=") ||
@@ -155,8 +156,9 @@ class Extractor {
         elements.forEach((Element element) {
           if (element.attributes['content'] != null) {
             currency = element.attributes['content'];
-            // print(
-            //     "line 115 💎 element $element price ${element.attributes['content']}");
+            print('----------');
+            print(
+                "line 115 💎 element $element price ${element.attributes['content']}");
           }
         });
       }

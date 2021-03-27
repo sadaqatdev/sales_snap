@@ -43,16 +43,16 @@ class AccountCntroller extends GetxController {
   }
 
   void updateUser() {
-    isLoding = true;
+    
     _method
         .updateUser(
-            MUser(dob: dob.text, email: gender.text, name: nameControler.text))
+            MUser(dob: dob.text, email: email.text, name: nameControler.text,gender:  gender.text,createdDate:user.createdDate, intersts: user.intersts,location: user.location,token: user.token,))
         .then((value) {
-      isLoding = true;
+      
       showBar('Sucessfully Updated');
     }).catchError((e) {
       showBar('Not Updated');
-      isLoding = true;
+       
     });
   }
 

@@ -6,8 +6,8 @@ import 'package:sales_snap/models/buy_model.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/utils/theme/app_theme.dart';
 
-class PriceQaterly extends StatelessWidget {
-  PriceQaterly({
+class CurrentMonth extends StatelessWidget {
+  CurrentMonth({
     Key key,
   }) : super(key: key);
   List<double> totalSaving = [];
@@ -15,7 +15,7 @@ class PriceQaterly extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(child: GetX<PriceSavingController>(builder: (controller) {
-      return controller.quertlySaveList.value.isEmpty
+      return controller.currentlyMonth.value.isEmpty
           ? Center(
               child: Text('No Buy History'),
             )
@@ -39,15 +39,15 @@ class PriceQaterly extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: controller.quertlySaveList.value.length,
+                    itemCount: controller.currentlyMonth.value.length,
                     itemBuilder: (context, index) {
                       totalSaving.add(double.parse(controller
-                              .monthlySaveList.value[index].priceNumber) -
+                              .previosMonth.value[index].priceNumber) -
                           double.parse(controller
-                              .monthlySaveList.value[index].newPrice));
+                              .previosMonth.value[index].newPrice));
 
                       return BuyedTileWidget(
-                        buyModel: controller.quertlySaveList.value[index],
+                        buyModel: controller.currentlyMonth.value[index],
                       );
                     },
                   ),

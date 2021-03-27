@@ -41,7 +41,7 @@ class _IntrestPageState extends State<IntrestPage> {
     if(Platform.isIOS){
       numb=195;
     }else{
-      numb=180;
+      numb=200;
     }
     super.initState();
   }

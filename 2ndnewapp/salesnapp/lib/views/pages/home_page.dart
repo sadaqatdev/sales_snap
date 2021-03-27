@@ -35,27 +35,11 @@ class HomePage extends StatelessWidget {
                   
                   action: SizedBox(),
                 ),
-                body: SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.only(left: 12, right: 12, top: 12),
-                    color: Color(0xffE5E5E5),
-                    child: Stack(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 60,
-                            ),
-                            getRecentSave(saveController, bodyStyle),
-                            SizedBox(
-                              height: 12,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                body: Container(
+                  padding: EdgeInsets.only(left: 12, right: 12, top: _homeController.recentSave,bottom: 24),
+                  
+                  color: Color(0xffE5E5E5),
+                  child: getRecentSave(saveController, bodyStyle),
                 ),
               ),
               Positioned(

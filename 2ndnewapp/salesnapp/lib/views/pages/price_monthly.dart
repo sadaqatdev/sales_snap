@@ -6,8 +6,8 @@ import 'package:sales_snap/models/buy_model.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/utils/theme/app_theme.dart';
 
-class PriceMonthly extends StatelessWidget {
-  PriceMonthly({
+class PreviosOne extends StatelessWidget {
+  PreviosOne({
     Key key,
   }) : super(key: key);
 
@@ -15,7 +15,7 @@ class PriceMonthly extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(child: GetX<PriceSavingController>(builder: (controller) {
-      return controller.monthlySaveList.value.isEmpty
+      return controller.previosMonth.value.isEmpty
           ? Center(
               child: Text('No Buy History'),
             )
@@ -39,10 +39,10 @@ class PriceMonthly extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: controller.monthlySaveList.value.length,
+                    itemCount: controller.previosMonth.value.length,
                     itemBuilder: (context, index) {
                       return BuyedTileWidget(
-                        buyModel: controller.monthlySaveList.value[index],
+                        buyModel: controller.previosMonth.value[index],
                       );
                     },
                   ),
