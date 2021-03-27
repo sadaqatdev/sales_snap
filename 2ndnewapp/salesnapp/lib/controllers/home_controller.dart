@@ -5,27 +5,25 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:html/dom.dart';
 
-import 'package:html/parser.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/models/save_product_model.dart';
 import 'package:http/http.dart' as http;
- 
+
 import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/utils/extract/extract.dart';
 import 'package:sales_snap/views/pages/notifications_page.dart';
 
 FlutterLocalNotificationsPlugin fltrNotification;
 var doubleRE = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
+Extractor extractor = Extractor();
 
 ////////////CONTROLLER START/////////////////////////////////////////////////////////////
 class HomeController extends GetxController {
@@ -41,13 +39,9 @@ class HomeController extends GetxController {
 
   SavedController _savedController = Get.put(SavedController());
 
-  
-
   FireStoreMethod _fireStoreMethod = FireStoreMethod();
 
   FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Extractor extractor = Extractor();
 
   String imageUrls = '';
 
@@ -70,7 +64,7 @@ class HomeController extends GetxController {
   GetStorage storage;
 
   double numb;
-double iosPadding;
+  double iosPadding;
   String onesignalUserId;
   bool notifcationEnabled = false;
   @override
@@ -79,22 +73,22 @@ double iosPadding;
 
     String notifcations = storage.read('notificationEnable');
 
-    // notifcationEnabled = notifcations?.contains('yes') ?? false ? true : false;
-    // if (notifcationEnabled) {
-    // initBackgroudTask();
+    notifcationEnabled = notifcations?.contains('yes') ?? false ? true : false;
+    if (notifcationEnabled) {
+      initBackgroudTask();
 
-    // BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-    // }
+      BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+    }
 
     initNotifications();
     textEditingController = TextEditingController();
     initOnSignal();
-     if(Platform.isIOS){
-      numb=7;
-      iosPadding=31;
-    }else{
-      numb=4;
-      iosPadding=0;
+    if (Platform.isIOS) {
+      numb = 7;
+      iosPadding = 31;
+    } else {
+      numb = 4;
+      iosPadding = 0;
     }
     super.onInit();
   }
@@ -158,7 +152,7 @@ double iosPadding;
             };
           }
           print("printing prices at lin 143 $price");
-        }, textEditingController.text);
+        });
 
         price = "${priceMap['currency']} ${priceMap['amount']}";
         showProgress = false;
@@ -294,12 +288,11 @@ double iosPadding;
 
   void initOnSignal() async {
     await OneSignal.shared.init('4cd671ff-1756-4e7a-8f03-f90a7bace30f');
-    
+
     OneSignal.shared
         .setInFocusDisplayType(OSNotificationDisplayType.notification);
 
     OneSignal.shared.inFocusDisplayType();
-         
 
     OSPermissionSubscriptionState status =
         await OneSignal.shared.getPermissionSubscriptionState();
@@ -339,7 +332,7 @@ Future<void> initNotifications() async {
   fltrNotification.initialize(
     initilizationsSettings,
   );
-    final bool result = await fltrNotification
+  final bool result = await fltrNotification
       .resolvePlatformSpecificImplementation<
           IOSFlutterLocalNotificationsPlugin>()
       ?.requestPermissions(
@@ -390,19 +383,34 @@ Future<void> comparePrice() async {
     if (response.statusCode == 200) {
       try {
         /*  extrcat dom */
-        Document document = parse(response.body);
-        /*  extrcat price from dom*/
-        String newPrice = document.querySelector(element.priceHtmlTag).text;
+
+        String newPrice;
+        print('Quer selector all');
+
+        extractor.getPrices(response.body,
+            (List<String> _prices, List<Map<String, dynamic>> priceElements) {
+          String price = _prices[0].trim();
+          if (price.isEmpty) {
+            price = _prices[1].trim();
+          }
+
+          int length = price.length;
+          if (length > 10) {
+            price = price.substring(0, 10);
+          }
+          print("printing prices at lin 143 $price");
+          newPrice = price;
+        });
 
         print('---------price----');
-        print(newPrice);
+        print('new price value----- $newPrice');
         print('---------Old Price----');
         print(element.price);
         /*  convert price to double*/
         try {
           if (oldPrice.isNum) {
             print('---in old num $oldPrice');
-            oldPricedoubleVal = double.parse(oldPrice);
+            oldPricedoubleVal = double.parse(oldPrice).toDouble();
           } else {
             /*  extrcat and convert old price using regx*/
             oldParseValue = doubleRE
@@ -411,21 +419,23 @@ Future<void> comparePrice() async {
                 .toList();
 
             concateoldPriceVal = oldParseValue.join('');
-            concateoldPriceVal = oldParseValue.join('');
 
-            oldPricedoubleVal = double.parse(concateoldPriceVal.toString());
+            oldPricedoubleVal =
+                double.parse(concateoldPriceVal.toString()).toDouble();
           }
         } catch (e) {
-          print('1----ERrror occur in background');
+          print('Old Price Error----ERrror occur in background');
           print(e.toString());
         }
 
         try {
           if (newPrice.isNum) {
+            newPricedoubleVal = double.parse(newPrice).toDouble();
+            print(newPricedoubleVal);
             print('---in new num $newPricePareval');
-            newPricedoubleVal = double.parse(newPrice);
           } else {
             /*  extrcat and convert old price using regx*/
+            print('-------------- regx ');
             newPricePareval = doubleRE
                 .allMatches(newPrice)
                 .map((m) => double.parse(m[0]))
@@ -434,33 +444,36 @@ Future<void> comparePrice() async {
             concatenewPriceVal = newPricePareval.join('');
             concatenewPriceVal = newPricePareval.join('');
 
-            newPricedoubleVal = double.parse(concatenewPriceVal.toString());
-          }
-          /*  compare price and show notifcatinon*/
-          if (newPricedoubleVal < oldPricedoubleVal) {
-            method.setUserNotification(
-                data: NotificationModel(
-                  avatarUrl: element.imgUrl,
-                  cuponCode: 'No Copun',
-                  desc: 'The Product You Saved, Now Its Price is Down',
-                  price: oldPricedoubleVal.toString(),
-                  timestamp: Timestamp.now(),
-                  title: 'Hey ',
-                  validDate: '------',
-                  docId: element.id,
-                  productTitle: element.title,
-                  priceHtmlTag: element.priceHtmlTag,
-                  newPrice: newPricedoubleVal.toString(),
-                  webUrl: element.webUrl,
-                ),
-                uid: uid);
-
-            showNotification('Hey, Buy Now',
-                'The Product You Saveed, Now Its Price is Down');
+            newPricedoubleVal =
+                double.parse(concatenewPriceVal.toString()).toDouble();
           }
         } catch (e) {
           print('2---ERrror occur in background');
           print(e.toString());
+        }
+        /*  compare price and show notifcatinon*/
+        if (newPricedoubleVal == oldPricedoubleVal) {
+          method.setUserNotification(
+              data: NotificationModel(
+                avatarUrl: element.imgUrl,
+                cuponCode: 'No Coupon',
+                desc: 'The Product You Saved, Now Its Price is Down',
+                price: oldPricedoubleVal.toString(),
+                timestamp: Timestamp.now(),
+                title: 'Hey ',
+                validDate: '------',
+                docId: element.id,
+                productTitle: element.title,
+                priceHtmlTag: element.priceHtmlTag,
+                newPrice: newPricedoubleVal.toString(),
+                webUrl: element.webUrl,
+              ),
+              uid: uid);
+
+          showNotification(
+              'Hey, Buy Now', 'The Product You Saveed, Now Its Price is Down');
+        } else {
+          print('------not-----');
         }
       } catch (e) {
         print('----Error-----');

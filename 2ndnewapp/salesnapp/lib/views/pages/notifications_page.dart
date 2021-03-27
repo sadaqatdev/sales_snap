@@ -53,7 +53,7 @@ class SavedTileWidget extends StatelessWidget {
     final title = Theme.of(context).textTheme.headline2;
     final bodyText = Theme.of(context).textTheme.bodyText2;
     return Container(
-      height: 145,
+      height: 160,
       width: Get.width,
       padding: EdgeInsets.only(left: 8, right: 8),
       child: Card(
@@ -86,18 +86,14 @@ class SavedTileWidget extends StatelessWidget {
                     SizedBox(width: 12),
                     Row(
                       children: [
-                        Text(
-                          notificationModel.productTitle ?? 'No Tile',
-                          style: title.copyWith(
-                              color: Theme.of(context).primaryColor),
+                        Expanded(
+                          child: Text(
+                            notificationModel.productTitle ?? 'No Tile',
+                            maxLines: 2,
+                            style: title.copyWith(
+                                color: Theme.of(context).primaryColor),
+                          ),
                         ),
-                        Spacer(),
-                        IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              method
-                                  .deleteNotifications(notificationModel.docId);
-                            })
                       ],
                     ),
                     SizedBox(
@@ -136,8 +132,14 @@ class SavedTileWidget extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          width: 12,
-                        )
+                          width: 6,
+                        ),
+                        IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              method
+                                  .deleteNotifications(notificationModel.docId);
+                            })
                       ],
                     ),
                     SizedBox(

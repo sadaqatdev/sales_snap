@@ -99,7 +99,7 @@ class Extractor {
   }
 
   /// @callback (List<String> prices)
-  getPrices(String dom, Function callback, String url) {
+  getPrices(String dom, Function callback) {
     List<String> prices = [];
 
     List<Map<String, dynamic>> priceElements = [];
