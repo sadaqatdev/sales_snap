@@ -26,12 +26,12 @@ class MyItemPage extends StatelessWidget {
                 indicatorColor: Colors.white,
                 indicatorSize: TabBarIndicatorSize.tab,
                 tabs: [
-                  Tab(child: Text('Saved Items')),
-                  Tab(child: Text('Buyed Items')),
+                  Tab(child: Text('Saved')),
+                  Tab(child: Text('Purchased')),
                   Tab(child: Text('Savings'))
                 ],
               ),
-            ),
+            ), 
           ),
           body: TabBarView(
             children: [SavedTab(), BuyedTab(), PriceSavingTab()],

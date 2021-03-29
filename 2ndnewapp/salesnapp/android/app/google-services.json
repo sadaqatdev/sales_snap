@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "781234395144-n525esu2o6p18u7l7ko35q0tug6j0jpi.apps.googleusercontent.com",
+          "client_id": "781234395144-059pnsmdpec444ugsd2ncqj4cfgg98r4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.salesnapp.app",
-            "certificate_hash": "539b8bb6f78c15475321861450f93b37ec0712b5"
+            "certificate_hash": "fc3b8187e5358c4ad354a94df7dad9aeb31b28bc"
           }
         },
         {
@@ -28,7 +28,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDl11a1_-EsbJ8-AK39z15xvwlql8zcikw"
+          "current_key": "AIzaSyAMamSIoCMQmASpnybY8rlzHqrRYqHaqV4"
         }
       ],
       "services": {

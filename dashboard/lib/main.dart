@@ -8,6 +8,6 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   await FirebaseAuth.instance.setPersistence(Persistence.SESSION);
-
+ 
   runApp(App());
 }

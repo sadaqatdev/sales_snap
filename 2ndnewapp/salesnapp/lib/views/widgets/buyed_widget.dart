@@ -78,6 +78,22 @@ class BuyedTileWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                     Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          buyModel
+                              .timestamp
+                              .toDate()
+                              .toLocal()
+                              .toString()
+                              .substring(0, 9),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        )
+                      ],
+                    ),
                     SizedBox(
                       height: 2,
                     ),
@@ -115,7 +131,14 @@ class BuyedTileWidget extends StatelessWidget {
                           icon: Icon(Icons.delete),
                           onPressed: () {
                             print('---------------------');
-                            controller.deleteBuyProduc(buyModel.docId);
+                            controller.deleteBuyProduc(buyModel.docId).then((value) {
+                               Get.showSnackbar(
+                                GetBar(
+                                  message: "Scucessfully Item Deleted",
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            });
                           },
                         ),
                         SizedBox(

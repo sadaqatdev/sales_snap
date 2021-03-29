@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/utils/extract/extractor-contstants.dart';
 import 'package:universal_html/html.dart';
 import 'package:universal_html/parsing.dart';
@@ -156,9 +153,9 @@ class Extractor {
         elements.forEach((Element element) {
           if (element.attributes['content'] != null) {
             currency = element.attributes['content'];
-            print('----------');
+            print('=================================');
             print(
-                "line 115 💎 element $element price ${element.attributes['content']}");
+                "line 115 💎 element  price ${element.attributes['content']}");
           }
         });
       }

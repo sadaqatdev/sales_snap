@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
@@ -7,6 +8,7 @@ import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/pages/items_details_page.dart';
 import 'package:sales_snap/views/pages/product_page.dart';
+import 'package:sales_snap/views/pages/product_view_page.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
 
 class HomePage extends StatelessWidget {
@@ -30,20 +32,19 @@ class HomePage extends StatelessWidget {
               Scaffold(
                 appBar: appBar(
                   context: context,
-                  title: 'Sales Snap',
-                  height: 150,
-                  
+                  title: 'Salesnapp',
+                  height: 130,
                   action: SizedBox(),
                 ),
                 body: Container(
-                  padding: EdgeInsets.only(left: 12, right: 12, top: _homeController.recentSave,bottom: 24),
-                  
+                  padding: EdgeInsets.only(
+                      left: 12, right: 12, top: 170, bottom: 10),
                   color: Color(0xffE5E5E5),
                   child: getRecentSave(saveController, bodyStyle),
                 ),
               ),
               Positioned(
-                  top: (height / _homeController.numb) - 15,
+                  top: (height / _homeController.numb) - 40,
                   left: 12,
                   right: 12,
                   child: searchField(context, forteenFont)),
@@ -52,45 +53,14 @@ class HomePage extends StatelessWidget {
         });
   }
 
-  Container customTextField(Icon suffixicon, Icon prefixIcon, String hintText2,
-      TextEditingController txtController) {
-    return Container(
-      height: 50,
-      width: Get.width,
-      margin: EdgeInsets.only(top: 12, left: 4, right: 4),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12), color: Colors.white),
-      child: Row(
-        children: [
-          Expanded(
-              child: TextFormField(
-            obscureText: false,
-            controller: txtController,
-            decoration: InputDecoration(
-              suffixIcon: suffixicon,
-              prefixIcon: prefixIcon,
-              hintText: hintText2,
-              hintStyle: TextStyle(color: Colors.black54),
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              border: InputBorder.none,
-              fillColor: Colors.transparent,
-              filled: true,
-            ),
-          )),
-        ],
-      ),
-    );
-  }
-
   Widget searchField(BuildContext context, TextStyle forteenFont) {
     return Form(
       key: formKey,
       child: Container(
-        height: 90,
+        height: 200,
         width: Get.width,
         margin: EdgeInsets.only(left: 6, right: 6),
-        padding: EdgeInsets.only(top: 22, bottom: 22, left: 20, right: 20),
+        padding: EdgeInsets.only(top: 12, left: 20, right: 20),
         decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
@@ -101,30 +71,56 @@ class HomePage extends StatelessWidget {
               )
             ],
             borderRadius: BorderRadius.circular(25)),
-        child: Center(
-          child: TextFormField(
-            controller: HomeController.to.textEditingController,
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Url is Empty';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              fillColor: Color(0xffF6F7F8),
-              prefixIcon: Icon(
-                Icons.search,
-                size: 24,
-              ),
-              suffixIcon: buildMaterialButton(context, forteenFont),
-              hintText: 'Paste Link',
-              hintStyle: forteenFont.copyWith(color: Colors.black),
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              border: InputBorder.none,
-              filled: true,
+        child: Column(
+          children: [
+            Text('Paste a link',
+                style: GoogleFonts.rubik().copyWith(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff1B1B4E))),
+            SizedBox(
+              height: 16,
             ),
-          ),
+            Text(
+              'More than 389 chances happen every min. Let’s check them out!',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.rubik().copyWith(
+                  fontSize: 14, fontWeight: FontWeight.w400, height: 1.5),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              height: 50,
+              width: Get.width,
+              margin: EdgeInsets.only(top: 12, left: 4, right: 4),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30), color: Colors.white),
+              child: Center(
+                child: TextFormField(
+                  obscureText: false,
+                  controller: HomeController.to.textEditingController,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Enter Value';
+                    } else {
+                      return null;
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Paste Link',
+                    hintStyle: TextStyle(color: Colors.black54),
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    border: InputBorder.none,
+                    suffixIcon: buildMaterialButton(context, forteenFont),
+                    fillColor: Color(0xffF6F7F8),
+                    filled: true,
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -177,20 +173,8 @@ class HomePage extends StatelessWidget {
                     onTap: () {
                       AppRoute.to(
                           context,
-                          ItemDetailsPage(
-                            product: NotificationModel(
-                              avatarUrl:
-                                  savedController.saveItemList[index].imgUrl,
-                              desc: savedController.saveItemList[index].desc,
-                              docId: savedController.saveItemList[index].id,
-                              price: savedController.saveItemList[index].price,
-                              priceHtmlTag: savedController
-                                  .saveItemList[index].priceHtmlTag,
-                              productTitle:
-                                  savedController.saveItemList[index].title,
-                              webUrl:
-                                  savedController.saveItemList[index].webUrl,
-                            ),
+                          ProductViewPage(
+                          savedProductModel:savedController.saveItemList[index] ,
                           ));
                     },
                     child: Card(
@@ -233,6 +217,9 @@ class HomePage extends StatelessWidget {
                                 SizedBox(
                                   height: 6,
                                 ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [Text(savedController.saveItemList[index].timestamp.toDate().toLocal().toString().substring(0,9))],)
                               ],
                             ),
                           ),

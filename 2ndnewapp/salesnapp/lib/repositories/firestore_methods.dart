@@ -9,7 +9,7 @@ import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/models/save_product_model.dart';
 import 'package:sales_snap/utils/login_info.dart';
 
-class  FireStoreMethod {
+class FireStoreMethod {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference _collection;
@@ -22,21 +22,30 @@ class  FireStoreMethod {
     strageTemp = GetStorage();
   }
 
-  Future<String> saveItems(SavedProductModel details) async {
-    await _collection
+  Future<bool> saveItems(SavedProductModel details) async {
+    QuerySnapshot qsnap = await _collection
         .doc(_currentUser.uid)
         .collection('saved_products')
-        .doc()
-        .set(details.toMap());
-    return 'ok';
+        .where('webUrl', isEqualTo: details.webUrl)
+        .get();
+    if (qsnap.docs.length > 0) {
+     return false;
+    } else {
+       await _collection
+          .doc(_currentUser.uid)
+          .collection('saved_products')
+          .doc()
+          .set(details.toMap());
+      return true;
+    }
   }
-
+ 
   Future<List<SavedProductModel>> getSavedItems() async {
     List<SavedProductModel> tempList = [];
 
     QuerySnapshot _snap = await _collection
         .doc(_currentUser.uid)
-        .collection('saved_products')
+        .collection('saved_products').orderBy('timestamp',descending: true)
         .get();
 
     if (_snap?.docs?.isNotEmpty ?? false)
@@ -130,14 +139,11 @@ class  FireStoreMethod {
 
   Stream<List<BuyModel>> getPreviousMonth() {
     var date = DateTime.now();
-  var prevMonth = new DateTime(date.year, date.month - 1, date.day);
+    var prevMonth = new DateTime(date.year, date.month - 1, date.day);
     return _collection
         .doc(_currentUser.uid)
         .collection('buy_products')
-        .where('timestamp',
-            isEqualTo:
-                new Timestamp.fromDate(prevMonth))
-        .orderBy('timestamp', descending: true)
+        .where('timestamp', isEqualTo: new Timestamp.fromDate(prevMonth))
         .snapshots()
         .map((query) {
       return query.docs.map((doc) {
@@ -148,14 +154,12 @@ class  FireStoreMethod {
 
   Stream<List<BuyModel>> getPreviousMonthTwo() {
     var date = DateTime.now();
-var prevMonth = new DateTime(date.year, date.month - 2, date.day);
+    var prevMonth = new DateTime(date.year, date.month - 2, date.day);
     return _collection
         .doc(_currentUser.uid)
         .collection('buy_products')
         .where('timestamp',
-            isGreaterThanOrEqualTo:
-                new Timestamp.fromDate(prevMonth))
-        .orderBy('timestamp', descending: true)
+            isGreaterThanOrEqualTo: new Timestamp.fromDate(prevMonth))
         .snapshots()
         .map((query) {
       return query.docs.map((doc) {
@@ -170,10 +174,7 @@ var prevMonth = new DateTime(date.year, date.month - 2, date.day);
     return _collection
         .doc(_currentUser.uid)
         .collection('buy_products')
-        .where('timestamp',
-            isEqualTo:
-                new Timestamp.fromDate( date))
-        .orderBy('timestamp', descending: true)
+        .where('timestamp', isEqualTo: new Timestamp.fromDate(date))
         .snapshots()
         .map((query) {
       return query.docs.map((doc) {
@@ -183,7 +184,7 @@ var prevMonth = new DateTime(date.year, date.month - 2, date.day);
   }
 
   Future<String> deleteNotifications(index) async {
-    _firestore
+  await  _firestore
         .collection("user_notification")
         .doc(_currentUser.uid)
         .collection(_currentUser.uid)

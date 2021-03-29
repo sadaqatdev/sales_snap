@@ -76,6 +76,7 @@ class OfferPage extends StatelessWidget {
                                         'sf sdf dsf sdf sd fsd fsd sd s df sdf sdf sd fsd fsd',
                                     style: bodytext,
                                   ),
+                                   
                                 )
                               ],
                             ),
@@ -146,10 +147,21 @@ class OfferPage extends StatelessWidget {
                   SizedBox(
                     height: 100,
                   ),
-                  Text(notificationModel.timestamp
-                      .toDate()
-                      .toString()
-                      .substring(0, 19)),
+                  Row(
+                    children: [
+                      Text(notificationModel.timestamp
+                          .toDate()
+                          .toString()
+                          .substring(0, 19)),
+                          Spacer(),
+                          Text(
+                                    notificationModel.price ??
+                                        ' ',
+                                     
+                                  ),
+                                  SizedBox(width: 16,)
+                    ],
+                  ),
                   Text('You have an Offer',
                       style: lable.copyWith(
                           fontSize: 20,
@@ -158,7 +170,12 @@ class OfferPage extends StatelessWidget {
                   SizedBox(
                     height: 12,
                   ),
-                  Text('Hey ,'),
+                     Text('Hey ,'),
+                     SizedBox(
+                    height: 12,
+                  ),
+                  Text(notificationModel.title,style: Theme.of(context).textTheme.headline1.copyWith(fontSize: 16),),
+               
                   SizedBox(
                     height: 12,
                   ),

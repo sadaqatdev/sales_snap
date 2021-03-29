@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
-import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
 import 'package:sales_snap/views/widgets/custom_button.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
@@ -139,7 +138,7 @@ class ProductPage extends StatelessWidget {
         height: 35,
         color: Colors.black,
         child: Text(
-          'Go',
+          'Search',
           style: forteenFont,
         ),
         onPressed: () async {
@@ -157,6 +156,7 @@ class ProductPage extends StatelessWidget {
     return Stack(
       children: [
         Card(
+          
           elevation: 6,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -200,13 +200,15 @@ class ProductPage extends StatelessWidget {
               ],
             ),
           ),
-        ),
+        ), 
         Positioned(
           left: (Get.width / 2) - 120,
           child: Container(
+       
             height: 198,
             width: 223,
             child: Card(
+             
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(60)),

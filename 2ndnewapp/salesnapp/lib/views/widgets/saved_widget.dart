@@ -7,6 +7,7 @@ import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/models/save_product_model.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/pages/items_details_page.dart';
+import 'package:sales_snap/views/pages/product_view_page.dart';
 
 class SavedTab extends StatelessWidget {
   SavedTab({
@@ -61,17 +62,26 @@ class SavedTileWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              OctoImage(
-                width: 100,
-                height: 100,
-                image: NetworkImage(saveItemList[index].imgUrl),
-                placeholderBuilder: OctoPlaceholder.blurHash(
-                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                ),
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.network('https://via.placeholder.com/150');
+              InkWell(
+                onTap: () {
+                  AppRoute.to(
+                      context,
+                      ProductViewPage(
+                        savedProductModel: saveItemList[index],
+                      ));
                 },
-                fit: BoxFit.cover,
+                child: OctoImage(
+                  width: 100,
+                  height: 100,
+                  image: NetworkImage(saveItemList[index].imgUrl),
+                  placeholderBuilder: OctoPlaceholder.blurHash(
+                    'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                  ),
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.network('https://via.placeholder.com/150');
+                  },
+                  fit: BoxFit.cover,
+                ),
               ),
               SizedBox(
                 width: 12,
@@ -80,6 +90,22 @@ class SavedTileWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          saveItemList[index]
+                              .timestamp
+                              .toDate()
+                              .toLocal()
+                              .toString()
+                              .substring(0, 9),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        )
+                      ],
+                    ),
                     SizedBox(
                       height: 2,
                     ),
@@ -144,7 +170,16 @@ class SavedTileWidget extends StatelessWidget {
                           icon: Icon(Icons.delete),
                           onPressed: () {
                             print('---------------------');
-                            controller.deleteProduct(saveItemList[index].id);
+                            controller
+                                .deleteProduct(saveItemList[index].id)
+                                .then((value) {
+                              Get.showSnackbar(
+                                GetBar(
+                                  message: "Scucessfully Item Deleted",
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            });
                           },
                         ),
                         SizedBox(

@@ -172,7 +172,7 @@ class AccountPage extends StatelessWidget {
               height: 12,
             ),
             Text(
-              '@ ${controller.user.email}',
+              '${controller.user.email}',
               style: style,
             )
           ],

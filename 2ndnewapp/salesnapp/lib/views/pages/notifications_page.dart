@@ -79,16 +79,22 @@ class SavedTileWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(notificationModel.timestamp
-                        .toDate()
-                        .toString()
-                        .substring(0, 18)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(notificationModel.timestamp
+                            .toDate()
+                            .toString()
+                            .substring(0, 18)),
+                            SizedBox(width: 18,)
+                      ],
+                    ),
                     SizedBox(width: 12),
                     Row(
                       children: [
                         Expanded(
                           child: Text(
-                            notificationModel.productTitle ?? 'No Tile',
+                            notificationModel.title ?? 'No Tile',
                             maxLines: 2,
                             style: title.copyWith(
                                 color: Theme.of(context).primaryColor),
@@ -138,7 +144,14 @@ class SavedTileWidget extends StatelessWidget {
                             icon: Icon(Icons.delete),
                             onPressed: () {
                               method
-                                  .deleteNotifications(notificationModel.docId);
+                                  .deleteNotifications(notificationModel.docId).then((value) {
+                                     Get.showSnackbar(
+                                GetBar(
+                                  message: "Scucessfully Item Deleted",
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                                  });
                             })
                       ],
                     ),

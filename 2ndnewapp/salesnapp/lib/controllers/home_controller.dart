@@ -85,13 +85,13 @@ class HomeController extends GetxController {
     textEditingController = TextEditingController();
     initOnSignal();
     if (Platform.isIOS) {
-      numb = 7;
+      numb = 6;
       iosPadding = 31;
-      recentSave=50;
+      recentSave = 200;
     } else {
       numb = 6;
       iosPadding = 0;
-      recentSave=70;
+      recentSave = 70;
     }
     super.onInit();
   }
@@ -143,14 +143,12 @@ class HomeController extends GetxController {
           }
           HomeController.priceHtmlTag = priceElements[0].keys.first;
           int length = price.length;
+          String currency = extractor.getCurrency(response.body);
           if (length > 10) {
-            priceMap = {
-              "currency": extractor.getCurrency(response.body),
-              "amount": price.substring(0, 10)
-            };
+            priceMap = {"currency": currency, "amount": price.substring(0, 10)};
           } else {
             priceMap = {
-              "currency": extractor.getCurrency(response.body),
+              "currency": currency,
               "amount": price,
             };
           }
@@ -199,14 +197,29 @@ class HomeController extends GetxController {
           price: price,
           uid: uid,
           webUrl: textEditingController.text,
+          timestamp: Timestamp.now(),
           msgToken: onesignalUserId);
 
       _fireStoreMethod.saveItems(savedProduct).then((value) {
-        _savedController.getSavedList();
+        if (value) {
+          _savedController.getSavedList();
 
-        snakBar('Save Sucessfully');
+          snakBar('Save Sucessfully');
 
-        showProgrss(false);
+          showProgrss(false);
+          textEditingController.clear(); 
+          Future.delayed(Duration(seconds: 3)).then((value) {
+            Get.back();
+          });
+        } else {
+          snakBar('You have already saved the item');
+          textEditingController.clear(); 
+          showProgrss(false);
+          Future.delayed(Duration(seconds: 3)).then((value) {
+            Get.back();
+          });
+        }
+
         // _helper.setWebDetails(savedProduct).then((i) {
 
         // });
@@ -216,16 +229,18 @@ class HomeController extends GetxController {
     }
   }
 
-  deleteProduct(index) {
+ Future<bool> deleteProduct(index)async {
     _fireStoreMethod.deleteItem(index).then((value) {
       _savedController.getSavedList();
     });
+    return true;
   }
 
-  deleteBuyProduc(index) {
-    _fireStoreMethod.deleteBuyItem(index).then((value) {
+  Future<bool> deleteBuyProduc(index) async{
+  await  _fireStoreMethod.deleteBuyItem(index).then((value) {
       _savedController.getBuyList();
     });
+    return true;
   }
 
   void snakBar(s) {
@@ -455,7 +470,7 @@ Future<void> comparePrice() async {
           print(e.toString());
         }
         /*  compare price and show notifcatinon*/
-        if (newPricedoubleVal <oldPricedoubleVal) {
+        if (newPricedoubleVal < oldPricedoubleVal) {
           method.setUserNotification(
               data: NotificationModel(
                 avatarUrl: element.imgUrl,

@@ -38,7 +38,7 @@ class UsersPage extends StatelessWidget {
 class UserTile extends StatelessWidget {
   final MUser user;
   const UserTile({Key key, this.user}) : super(key: key);
-  static const intersts = ['sdsd', 'asdad', 'asdad', 'asdad'];
+   
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -86,7 +86,7 @@ class UserTile extends StatelessWidget {
                           SizedBox(
                             width: 12,
                           ),
-                          Text(user.email),
+                          Text(user.email??''),
                         ],
                       ),
                       SizedBox(
@@ -130,7 +130,7 @@ class UserTile extends StatelessWidget {
                           SizedBox(
                             width: 12,
                           ),
-                          Text(user.dob),
+                          Text(user.dob??''),
                         ],
                       ),
                       SizedBox(
@@ -166,7 +166,7 @@ class UserTile extends StatelessWidget {
                   SizedBox(
                     width: 12,
                   ),
-                  Wrap(children: intersts.map((e) => Text('$e ,')).toList()),
+                  Wrap(children: user.intersts.map((e) => Text('$e ,')).toList()),
                 ],
               ),
               SizedBox(

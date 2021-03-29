@@ -1,4 +1,6 @@
 gradle-wrapper.jar
+.dart_tool
+.idea
 /.gradle
 /captures/
 /gradlew
