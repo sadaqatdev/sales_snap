@@ -53,7 +53,9 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
                       print('=================================');
                       if (request.url.contains('success') ||
                           request.url.contains('order-received') ||
-                          request.url.contains('order')) {
+                          request.url.contains('order') ||
+                          request.url.contains('completed') ||
+                          request.url.contains('payment')) {
                         print('--------------sucess-------------');
 
                         method

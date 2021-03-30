@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/models/buy_button_click.dart';
 import 'package:sales_snap/models/buy_model.dart';
+import 'package:sales_snap/models/intrest.dart';
 import 'package:sales_snap/models/m_user.dart';
 
 import 'package:sales_snap/models/notification_model.dart';
@@ -21,7 +22,14 @@ class FireStoreMethod {
     _collection = _firestore.collection('user_products');
     strageTemp = GetStorage();
   }
-
+  Future<List<Intrest>> getIntersts()async{
+    List<Intrest> tempList=[];
+   QuerySnapshot qsnap=await _firestore.collection('intrest').get();
+   qsnap.docs.forEach((element) {
+      tempList.add(Intrest.fromMap(element.data()));
+    });
+    return tempList;
+  }
   Future<bool> saveItems(SavedProductModel details) async {
     QuerySnapshot qsnap = await _collection
         .doc(_currentUser.uid)

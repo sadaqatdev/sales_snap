@@ -22,7 +22,7 @@ class ProductViewPage extends StatelessWidget {
               action: SizedBox(),
               context: context,
               height: 110,
-              leading: InkWell(onTap: (){Get.back();},child: Icon(Icons.arrow_back)),
+              leading: InkWell(onTap: (){Get.back();},child: Icon(Icons.arrow_back_ios_rounded,color: Colors.white)),
               title: 'Item Details'),
           body: Container(
             margin: EdgeInsets.only(top: 50),
@@ -33,7 +33,7 @@ class ProductViewPage extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
                   margin: EdgeInsets.only(
-                      top: 100, left: 16, right: 20, bottom: 100),
+                      top: 100, left: 16, right: 20, bottom: 80),
                   child: Padding(
                     padding: const EdgeInsets.only(left: 6),
                     child: Column(

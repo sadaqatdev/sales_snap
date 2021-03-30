@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:sales_snap/controllers/notification_controller.dart';
 import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
@@ -48,6 +49,7 @@ class SavedTileWidget extends StatelessWidget {
   final NotificationModel notificationModel;
   SavedTileWidget({Key key, this.notificationModel}) : super(key: key);
   final FireStoreMethod method = FireStoreMethod();
+  final df = new DateFormat('dd-MM-yyyy hh:mm a');
   @override
   Widget build(BuildContext context) {
     final title = Theme.of(context).textTheme.headline2;
@@ -82,11 +84,10 @@ class SavedTileWidget extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(notificationModel.timestamp
-                            .toDate()
-                            .toString()
-                            .substring(0, 18)),
-                            SizedBox(width: 18,)
+                        Text(df.format(notificationModel.timestamp.toDate()).substring(0,11)),
+                        SizedBox(
+                          width: 18,
+                        )
                       ],
                     ),
                     SizedBox(width: 12),
@@ -94,8 +95,8 @@ class SavedTileWidget extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            notificationModel.title ?? 'No Tile',
-                            maxLines: 2,
+                            notificationModel.productTitle ?? 'No Tile',
+                            maxLines: 3,
                             style: title.copyWith(
                                 color: Theme.of(context).primaryColor),
                           ),
@@ -118,9 +119,11 @@ class SavedTileWidget extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        Text(notificationModel.price),
+                        Spacer(),
                         Container(
                           height: 45,
-                          width: 95,
+                          width: 80,
                           child: MaterialButton(
                             color: AppTheme.customColorThree,
                             padding: EdgeInsets.only(top: 16, bottom: 16),
@@ -138,20 +141,21 @@ class SavedTileWidget extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          width: 6,
+                          width: 3,
                         ),
                         IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
                               method
-                                  .deleteNotifications(notificationModel.docId).then((value) {
-                                     Get.showSnackbar(
-                                GetBar(
-                                  message: "Scucessfully Item Deleted",
-                                  duration: Duration(seconds: 2),
-                                ),
-                              );
-                                  });
+                                  .deleteNotifications(notificationModel.docId)
+                                  .then((value) {
+                                Get.showSnackbar(
+                                  GetBar(
+                                    message: "Scucessfully Item Deleted",
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              });
                             })
                       ],
                     ),

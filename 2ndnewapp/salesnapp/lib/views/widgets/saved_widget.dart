@@ -5,6 +5,7 @@ import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/notification_model.dart';
 import 'package:sales_snap/models/save_product_model.dart';
+import 'package:sales_snap/utils/dateformate.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/pages/items_details_page.dart';
 import 'package:sales_snap/views/pages/product_view_page.dart';
@@ -94,13 +95,12 @@ class SavedTileWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          saveItemList[index]
+                          df.format( saveItemList[index]
                               .timestamp
-                              .toDate()
-                              .toLocal()
-                              .toString()
-                              .substring(0, 9),
-                        ),
+                              .toDate()).substring(0,11)
+                        )
+                             , 
+                         
                         SizedBox(
                           width: 12,
                         )

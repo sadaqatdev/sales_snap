@@ -8,99 +8,101 @@ class NotificationPage extends StatelessWidget {
   FirestoreMethods _methods = FirestoreMethods();
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: Get.width,
-      height: Get.height,
-      child: FutureBuilder<List<NotificationModel>>(
-          future: _methods.getNotifications(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data.length == 0) {
+    return Scaffold(
+      body: Container(
+        width: Get.width,
+        height: Get.height,
+        child: FutureBuilder<List<NotificationModel>>(
+            future: _methods.getNotifications(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data.length == 0) {
+                  return Center(
+                    child: Text('No Notifcations'),
+                  );
+                }
+                return Container(
+                    child: ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: EdgeInsets.only(
+                              left: 16,
+                            ),
+                            height: 140,
+                            child: Card(
+                              margin: EdgeInsets.all(12),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text('Notification Title:-'),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(snapshot.data[index].title ?? '')
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Notification Desc:-'),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(snapshot.data[index].desc ?? '')
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Notification Cupon Code:-'),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(snapshot.data[index].cuponCode ?? '')
+                                    ],
+                                  ),
+                                  // SizedBox(
+                                  //   height: 12,
+                                  // ),
+                                  // Row(
+                                  //   children: [
+                                  //     Text('Notification WebUrl:-'),
+                                  //     SizedBox(
+                                  //       width: 16,
+                                  //     ),
+                                  //     Text(snapshot.data[index].webUrl ?? '')
+                                  //   ],
+                                  // ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Vaildation date and Message'),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(snapshot.data[index].validDate ?? '')
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }));
+              } else {
                 return Center(
-                  child: Text('No Notifcations'),
+                  child: CircularProgressIndicator(),
                 );
               }
-              return Expanded(
-                  child: ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: EdgeInsets.only(
-                            left: 16,
-                          ),
-                          height: 140,
-                          child: Card(
-                            margin: EdgeInsets.all(12),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text('Notification Title:-'),
-                                    SizedBox(
-                                      width: 16,
-                                    ),
-                                    Text(snapshot.data[index].title ?? '')
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 12,
-                                ),
-                                Row(
-                                  children: [
-                                    Text('Notification Desc:-'),
-                                    SizedBox(
-                                      width: 16,
-                                    ),
-                                    Text(snapshot.data[index].desc ?? '')
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 12,
-                                ),
-                                Row(
-                                  children: [
-                                    Text('Notification Cupon Code:-'),
-                                    SizedBox(
-                                      width: 16,
-                                    ),
-                                    Text(snapshot.data[index].cuponCode ?? '')
-                                  ],
-                                ),
-                                // SizedBox(
-                                //   height: 12,
-                                // ),
-                                // Row(
-                                //   children: [
-                                //     Text('Notification WebUrl:-'),
-                                //     SizedBox(
-                                //       width: 16,
-                                //     ),
-                                //     Text(snapshot.data[index].webUrl ?? '')
-                                //   ],
-                                // ),
-                                SizedBox(
-                                  height: 12,
-                                ),
-                                Row(
-                                  children: [
-                                    Text('Vaildation date and Message'),
-                                    SizedBox(
-                                      width: 16,
-                                    ),
-                                    Text(snapshot.data[index].validDate ?? '')
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }));
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
+            }),
+      ),
     );
   }
 }

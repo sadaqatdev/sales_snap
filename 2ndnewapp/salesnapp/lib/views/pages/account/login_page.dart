@@ -32,8 +32,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    userNameController.text = 'sadaqat@gm.com';
-    passworController.text = '1234567';
+ 
     super.initState();
   }
 
@@ -216,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                         } else {
                           Get.showSnackbar(GetBar(
                             message:
-                                'Enter only Email, we send wassword link to your Email address',
+                                'Enter only Email, we send password reset link to your Email address',
                             duration: Duration(seconds: 3),
                           ));
                         }

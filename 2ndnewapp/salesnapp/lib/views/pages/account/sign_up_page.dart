@@ -27,16 +27,14 @@ class _SignUpPageState extends State<SignUpPage> {
   final AuthRepo _repo = AuthRepo();
 
   final _formKey = GlobalKey<FormState>();
-
+  
   final storage = GetStorage();
 
   LoginInfo _loginInfo = LoginInfo();
   bool show = false;
   @override
   void initState() {
-    emailContoller.text = 'sadaqat@gm.com';
-    passworController.text = '1234567';
-    confirmPassword.text = '1234567';
+ 
     super.initState();
   }
 

@@ -37,7 +37,7 @@ class _SignUpNameState extends State<SignUpLocation> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomHeading(
-                    progressWidth: 33,
+                    progressWidth: 260,
                     steps: 'step 4 of 5',
                     lable: 'Your City Name and Postcode'),
                 Form(

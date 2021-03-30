@@ -16,21 +16,21 @@ class _PriceSavingTabState extends State<PriceSavingTab> {
   DateTime date=DateTime.now();
 
   String returnMonth(DateTime date) {
-  return new DateFormat.MMMM().format(date);
+  return new DateFormat.MMMM() .format(date);
 }
 
 DateTime prevMonth  ;
 DateTime prevMonth2  ;
 @override
   void initState() {
- prevMonth = new DateTime(date.year, date.month - 1, date.day);
- prevMonth2 = new DateTime(date.year, date.month - 2, date.day);
+ prevMonth = new DateTime(date.year, date.month - 1, 1,0,0,0,0,0);
+ prevMonth2 = new DateTime(date.year, date.month - 2, 1,0,0,0,0,0);
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
     Get.put(SavedController());
-
+ 
     return SafeArea(
       child: DefaultTabController(
         length: 3,

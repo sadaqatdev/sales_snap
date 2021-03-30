@@ -309,7 +309,7 @@ class HomeController extends GetxController {
 
     OneSignal.shared
         .setInFocusDisplayType(OSNotificationDisplayType.notification);
-
+ 
     OneSignal.shared.inFocusDisplayType();
 
     OSPermissionSubscriptionState status =

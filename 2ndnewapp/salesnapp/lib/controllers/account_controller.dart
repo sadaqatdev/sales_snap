@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sales_snap/models/m_user.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
+import 'package:universal_html/html.dart';
 import 'home_controller.dart';
 
 class AccountCntroller extends GetxController {
@@ -17,11 +19,13 @@ class AccountCntroller extends GetxController {
 
   bool pushNotification;
   final pref = GetStorage();
-
+  String token;
+  GetStorage storage;
   @override
   void onInit() {
     String val = pref.read('notificationEnable');
     pushNotification = val?.contains('yes') ?? false;
+    storage=GetStorage();
     getUser();
     super.onInit();
   }
@@ -70,10 +74,21 @@ class AccountCntroller extends GetxController {
     if (value) {
       pref.write('notificationEnable', 'yes');
       print('---------');
+      getPermission();
     } else {
       print('==============');
       pref.write('notificationEnable', 'no');
     }
     update();
+  }
+
+  
+    void getPermission()async{
+     OSPermissionSubscriptionState status =
+        await OneSignal.shared.getPermissionSubscriptionState();
+   
+    token = status.subscriptionStatus.userId;
+
+    storage.write('id', token);
   }
 }

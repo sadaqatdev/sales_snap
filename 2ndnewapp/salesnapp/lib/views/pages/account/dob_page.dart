@@ -72,7 +72,15 @@ class _DobPageState extends State<DobPage> {
                             if (value.isEmpty) {
                               return 'Enter Day';
                             }
-                            return null;
+                           else if(!value.isNum){
+                              return 'Enter Valid Number';
+                            }
+                           else if(int.parse(value)>0 && int.parse(value)<32){
+                              return null;
+                            }else{
+                              return 'Enter valid Month';
+                            }
+                             
                           },
                         ),
                       ),
@@ -100,7 +108,15 @@ class _DobPageState extends State<DobPage> {
                             if (value.isEmpty) {
                               return 'Enter Month';
                             }
-                            return null;
+                            else if(!value.isNum){
+                              return 'Enter Valid Number';
+                            }
+                             else if(int.parse(value)>0 && int.parse(value)<13){
+                              return null;
+                            }else{
+                              return 'Enter valid Month';
+                            }
+                             
                           },
                         ),
                       ),
@@ -125,10 +141,22 @@ class _DobPageState extends State<DobPage> {
                             node.unfocus();
                           },
                           validator: (value) {
+                                   final year=DateTime.now();
                             if (value.isEmpty) {
                               return 'Enter Year';
                             }
-                            return null;
+                             else if(!value.isNum){
+                              return 'Enter Valid Number';
+                            }
+                     
+                           else if(value.length!=4){
+                              return 'Enter Valid Number';
+                            }
+                             else if(int.parse(value)>0 && int.parse(value)<year.year){
+                              return null;
+                            }else{
+                              return 'Enter valid Month';
+                            }
                           },
                         ),
                       ),

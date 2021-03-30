@@ -21,6 +21,7 @@ class FirestoreMethods {
     List<MUser> _list = [];
     CollectionReference _collection = _firestore.collection('user');
     QuerySnapshot _snap = await _collection.get();
+  
     _snap.docs.forEach((element) {
       _list.add(MUser.fromMap(element.data(), element));
     });

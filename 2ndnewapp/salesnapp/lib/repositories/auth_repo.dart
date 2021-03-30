@@ -72,7 +72,7 @@ class AuthRepo {
       GoogleSignInAccount _signInAccount =
           await _googleSignIn.signIn().catchError((e) {
         Get.showSnackbar(GetBar(
-          message: e.toString(),
+          message: 'Error Try Again',
           duration: Duration(seconds: 3),
         ));
       });

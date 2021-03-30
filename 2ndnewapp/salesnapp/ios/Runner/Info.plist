@@ -67,6 +67,10 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used By Background Service and Used By Push Notifications</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Used By Background Service and Used By Push Notifications</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

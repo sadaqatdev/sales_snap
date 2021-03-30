@@ -4,9 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
-import 'package:sales_snap/models/notification_model.dart';
+import 'package:sales_snap/utils/dateformate.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
-import 'package:sales_snap/views/pages/items_details_page.dart';
 import 'package:sales_snap/views/pages/product_page.dart';
 import 'package:sales_snap/views/pages/product_view_page.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
@@ -183,7 +182,10 @@ class HomePage extends StatelessWidget {
                         children: [
                           Expanded(
                               child: OctoImage(
+                                alignment: Alignment.center,
+                            filterQuality: FilterQuality.high,
                             image: NetworkImage(
+
                                 savedController.saveItemList[index].imgUrl),
                             placeholderBuilder: OctoPlaceholder.blurHash(
                               'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
@@ -219,7 +221,7 @@ class HomePage extends StatelessWidget {
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [Text(savedController.saveItemList[index].timestamp.toDate().toLocal().toString().substring(0,9))],)
+                                  children: [Text( df.format(savedController.saveItemList[index].timestamp.toDate()).substring(0,11))],)
                               ],
                             ),
                           ),

@@ -4,6 +4,7 @@ import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/buy_model.dart';
+import 'package:sales_snap/utils/dateformate.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
 
 class BuyedTab extends StatelessWidget {
@@ -78,17 +79,10 @@ class BuyedTileWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
-                          buyModel
-                              .timestamp
-                              .toDate()
-                              .toLocal()
-                              .toString()
-                              .substring(0, 9),
-                        ),
+                        Text(df.format(buyModel.timestamp.toDate())),
                         SizedBox(
                           width: 12,
                         )
@@ -131,8 +125,10 @@ class BuyedTileWidget extends StatelessWidget {
                           icon: Icon(Icons.delete),
                           onPressed: () {
                             print('---------------------');
-                            controller.deleteBuyProduc(buyModel.docId).then((value) {
-                               Get.showSnackbar(
+                            controller
+                                .deleteBuyProduc(buyModel.docId)
+                                .then((value) {
+                              Get.showSnackbar(
                                 GetBar(
                                   message: "Scucessfully Item Deleted",
                                   duration: Duration(seconds: 2),

@@ -15,6 +15,7 @@ class SaveController extends GetxController {
   List<SaveListModel> searchList = [];
 
   List<String> selectedList = [];
+
   List<String> uidList = [];
 
   List<SaveListModel> userSaveList = [];
@@ -37,9 +38,11 @@ class SaveController extends GetxController {
 
   onInit() {
     super.onInit();
-    getSaveItems();
-    getUserSaveList();
     searchcontroller.addListener(getSearchList);
+    getSaveItems();
+    if(uid!=null)
+     getUserSaveList();
+    
   }
 
   @override
@@ -59,7 +62,7 @@ class SaveController extends GetxController {
     print('------------out');
     if (searchcontroller.text.isEmpty) {
       searchList.addAll(saveItemList);
-      isLoading = false;
+      
       update();
     } else {
       searchList = saveItemList
@@ -78,6 +81,8 @@ class SaveController extends GetxController {
     this.price = price;
     this.priceHtmlTag = priceHtmlTag;
     this.productTitle = productTitle;
+    viseble = true;
+    update();
     print('--------varate--');
     print(avataUrl);
     if (condition) {
@@ -87,7 +92,7 @@ class SaveController extends GetxController {
         viseble = true;
       } else {
         viseble = false;
-      }
+      } 
 
       update();
     } else {
@@ -104,14 +109,9 @@ class SaveController extends GetxController {
   }
 
   void getSaveItems() async {
-    _method.getSavedItems().then((value) {
-      saveItemList = value;
-      searchList = value;
+    saveItemList   =await _method.getSavedItems();
+    getSearchList();
+    isLoading=false;
       update();
-      getSearchList();
-    });
-    Future.delayed(Duration(seconds: 2)).then((value) {
-      update();
-    });
   }
 }

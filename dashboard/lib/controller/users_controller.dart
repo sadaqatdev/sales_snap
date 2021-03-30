@@ -25,7 +25,7 @@ class UserController extends GetxController {
   void dispose() {
     controller.dispose();
     super.dispose();
-  }
+  } 
 
   void getSearchList() {
     searchList = [];

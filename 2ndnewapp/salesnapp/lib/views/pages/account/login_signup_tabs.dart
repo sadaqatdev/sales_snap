@@ -33,7 +33,7 @@ class LoginSignUp extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+          ), 
           body: TabBarView(
             children: [LoginPage(), SignUpPage()],
           ),

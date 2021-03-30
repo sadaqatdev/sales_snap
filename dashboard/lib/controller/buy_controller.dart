@@ -25,10 +25,12 @@ class BuyController extends GetxController {
 
   var endDate = DateTime.now();
   onInit() {
-    controller.addListener(getSearchList);
-    getBuyList();
-    getUserBuyList();
     super.onInit();
+    controller.addListener(getBuySearchList);
+    getBuyList();
+     if(uid!=null)
+     getUserBuyList();
+    
   }
 
   void getUserBuyList() async {
@@ -36,7 +38,7 @@ class BuyController extends GetxController {
     update();
   }
 
-  void getSearchList() {
+  void getBuySearchList() {
     buySearchList = [];
     print('------------out');
     if (controller.text.isEmpty) {
@@ -63,7 +65,7 @@ class BuyController extends GetxController {
     buyItemList = await _method.getBuyedItems(startDate, endDate);
 
     isLoading = false;
-    getSearchList();
+    getBuySearchList();
     update();
   }
 }

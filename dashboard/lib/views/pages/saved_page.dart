@@ -14,7 +14,7 @@ class SavedPage extends StatelessWidget {
   SavedPage({
     Key key,
   }) : super(key: key);
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +112,7 @@ class SavedPage extends StatelessWidget {
           return Builder(builder: (bcontext) {
             return Container(
               margin:
-                  EdgeInsets.only(left: 200, right: 200, top: 250, bottom: 250),
+                  EdgeInsets.only(left: 200, right: 200, top: 250, bottom: 220),
               child: GetBuilder<SendNotification>(
                   init: SendNotification(
                       usersId: ids,

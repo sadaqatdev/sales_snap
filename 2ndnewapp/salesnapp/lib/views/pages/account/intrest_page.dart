@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
+import 'package:sales_snap/models/intrest.dart';
 import 'package:sales_snap/models/m_user.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/views/bottom_navigation.dart';
@@ -17,33 +20,37 @@ class IntrestPage extends StatefulWidget {
 }
 
 class _IntrestPageState extends State<IntrestPage> {
-  List<String> _list = [];
+   
   List<bool> _isChecked = [];
 
   FireStoreMethod _method = FireStoreMethod();
   SignUpController _controller = Get.put(SignUpController());
   double numb;
   String token = '';
+   GetStorage storage;
+
+  bool first=true;
   @override
   void initState() {
-    _list = [
-      'Sports',
-      'Organic',
-      'Coffee',
-      'Runing  ',
-      'Vegan',
-      'Sleep',
-      'Furity',
-      'Meditation',
-      'Eat Clean',
-    ];
-    _isChecked = List<bool>.filled(_list.length, false);
+    
+    
     if(Platform.isIOS){
       numb=195;
     }else{
       numb=200;
     }
+    storage=GetStorage();
+    getPermission();
     super.initState();
+  }
+
+  void getPermission()async{
+     OSPermissionSubscriptionState status =
+        await OneSignal.shared.getPermissionSubscriptionState();
+   
+    token = status.subscriptionStatus.userId;
+
+    storage.write('id', token);
   }
 
   @override
@@ -61,32 +68,47 @@ class _IntrestPageState extends State<IntrestPage> {
                 steps: 'Step 5/5',
                 lable: 'Time to customize your interest',
               ),
-              Container(
-                height: (numb * _list.length) / 2,
-                width: 350,
-                child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
-                        childAspectRatio: 1,
-                        crossAxisSpacing: 5,
-                        mainAxisSpacing: 5),
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: _list.length,
-                    itemBuilder: (BuildContext ctx, index) {
-                      return buildTile(index);
-                    }),
+              FutureBuilder<List<Intrest>>(
+                future: _method.getIntersts(),
+                builder: (context, snapshot) {
+                    if(snapshot.hasData){
+                      if(first){
+                        _isChecked = List<bool>.filled(snapshot.data.length, false);
+                        first=false;
+                      }
+                    
+                  
+                  return Container(
+                    height: (numb * snapshot.data .length) / 2,
+                    width: 350,
+                    child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 1,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 5),
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data .length,
+                        itemBuilder: (BuildContext ctx, index,) {
+                          return buildTile(index,snapshot.data);
+                        }),
+                  );
+                  }else{
+                      return Center(child:CircularProgressIndicator());
+                    }
+                }
               ),
               SizedBox(
                 height: 24,
               ),
-              InkWell(
-                  onTap: () {
-                    setState(() {
-                      _isChecked = List<bool>.filled(_list.length, true);
-                      SignUpController.intersts.addAll(_list);
-                    });
-                  },
-                  child: Text('Select all')),
+              // InkWell(
+              //     onTap: () {
+              //       setState(() {
+              //         _isChecked = List<bool>.filled(_list.length, true);
+              //         SignUpController.intersts.addAll(_list);
+              //       });
+              //     },
+              //     child: Text('Select all')),
               SizedBox(
                 height: 24,
               ),
@@ -136,7 +158,7 @@ class _IntrestPageState extends State<IntrestPage> {
     );
   }
 
-  Widget buildTile(int index) {
+  Widget buildTile(int index,List<Intrest> data) {
     return Column(
       children: [
         Container(
@@ -154,7 +176,7 @@ class _IntrestPageState extends State<IntrestPage> {
           width: 80,
           height: 80,
           padding: EdgeInsets.all(8),
-          child: Center(child: Image.asset('assets/image$index.png')),
+          child: Center(child: Image.network(data[index].avatar)),
         ),
         Row(
           children: [
@@ -167,14 +189,14 @@ class _IntrestPageState extends State<IntrestPage> {
                   _isChecked[index] = value;
                 });
                 if (value) {
-                  SignUpController.intersts.add(_list[index]);
+                  SignUpController.intersts.add(data[index].lable);
                 } else {
-                  SignUpController.intersts.remove(_list.elementAt(index));
+                  SignUpController.intersts.remove(data[index].lable);
                 }
               },
               value: _isChecked[index],
             ),
-            Text(_list[index])
+            Text(data[index].lable)
           ],
         )
       ],

@@ -24,36 +24,36 @@ class SavedTab extends StatelessWidget {
           height: Get.height,
           child: GetBuilder<SaveController>(
               init: SaveController(uid: uid),
-              builder: (bcontroller) {
-                return bcontroller.isLoading
+              builder: (scontroller) {
+                return scontroller.isLoading
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
                     : Column(
                         children: [
                           // SearchWidget(
-                          //   controller: bcontroller.controller,
+                          //   controller: scontroller.controller,
                           // ),
                           SizedBox(
                             height: 12,
                           ),
-                          bcontroller.viseble
+                          scontroller.viseble
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     MaterialButton(
                                       color: Colors.green,
                                       onPressed: () {
-                                        /// bcontroller.sendNotification();
+                                        /// scontroller.sendNotification();
                                         dialog(
                                             context,
-                                            bcontroller.selectedList,
-                                            bcontroller.webUrl,
-                                            bcontroller.uidList,
-                                            bcontroller.avataUrl,
-                                            bcontroller.priceHtmlTag,
-                                            bcontroller.price,
-                                            bcontroller.productTitle);
+                                            scontroller.selectedList,
+                                            scontroller.webUrl,
+                                            scontroller.uidList,
+                                            scontroller.avataUrl,
+                                            scontroller.priceHtmlTag,
+                                            scontroller.price,
+                                            scontroller.productTitle);
                                       },
                                       child: Text('Send Notification Message'),
                                     ),
@@ -66,33 +66,32 @@ class SavedTab extends StatelessWidget {
                           SizedBox(
                             height: 16,
                           ),
-                          bcontroller.userSaveList.isNotEmpty
+                          scontroller.userSaveList.isNotEmpty
                               ? Expanded(
                                   child: ListView.builder(
-                                    itemCount: bcontroller.userSaveList.length,
+                                    itemCount: scontroller.userSaveList.length,
                                     itemBuilder: (context, index) {
                                       return SavedTileWidget(
                                         saveItemList:
-                                            bcontroller.userSaveList[index],
+                                            scontroller.userSaveList[index],
                                         isSelectedFuntction: (value) {
-                                          print(
-                                              bcontroller.selectedList.length);
-                                          bcontroller.addToSelectList(
-                                              bcontroller
+                                      
+                                          scontroller.addToSelectList(
+                                              scontroller
                                                   .userSaveList[index].msgToken,
                                               value,
-                                              bcontroller
+                                              scontroller
                                                   .userSaveList[index].webUrl,
-                                              bcontroller
+                                              scontroller
                                                   .userSaveList[index].uid,
-                                              bcontroller
+                                              scontroller
                                                   .userSaveList[index].imgUrl,
-                                              bcontroller.userSaveList[index]
+                                              scontroller.userSaveList[index]
                                                   .priceHtmlTag,
-                                              bcontroller
+                                              scontroller
                                                   .userSaveList[index].price,
-                                              bcontroller
-                                                  .searchList[index].title);
+                                              scontroller
+                                                  .userSaveList[index].title);
                                         },
                                         key: Key(index.toString()),
                                       );
@@ -125,7 +124,7 @@ class SavedTab extends StatelessWidget {
           return Builder(builder: (bcontext) {
             return Container(
               margin:
-                  EdgeInsets.only(left: 200, right: 200, top: 300, bottom: 280),
+                  EdgeInsets.only(left: 200, right: 200, top: 300, bottom: 230),
               child: GetBuilder<SendNotification>(
                   init: SendNotification(
                       usersId: ids,
