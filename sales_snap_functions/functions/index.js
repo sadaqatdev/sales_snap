@@ -15,7 +15,7 @@ exports.appnotifications = functions.https.onCall((data, context) => {
   data.users.forEach(element => {
     user_list.push(element);
   });
-  avataUrl
+ 
   var message = {
     app_id: "4cd671ff-1756-4e7a-8f03-f90a7bace30f",
     contents: { "en": `${data.body}` },

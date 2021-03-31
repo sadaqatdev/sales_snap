@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:sales_snap_dashboard/models/notification_model.dart';
+import 'package:sales_snap_dashboard/models/notification_model.dart'; 
 import 'package:sales_snap_dashboard/servises/firestore_methods.dart';
 
 class SendNotification extends GetxController {

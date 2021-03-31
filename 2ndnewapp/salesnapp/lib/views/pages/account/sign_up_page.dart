@@ -78,7 +78,15 @@ class _SignUpPageState extends State<SignUpPage> {
                     contentPadding:
                         EdgeInsets.only(top: 14, bottom: 14, left: 8)),
                 validator: (value) {
-                  return emailValid(value);
+                    bool emailValid = RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(emailContoller.text);
+                    if(emailValid){
+                      return null;
+                    }else{
+                      return 'Enter valid Email Address';
+                    }        
+                 
                 },
               ),
               SizedBox(
@@ -152,10 +160,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       onPressed: () {
-                        bool emailValid = RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                            .hasMatch(emailContoller.text);
-                        if (_formKey.currentState.validate() && emailValid) {
+                      
+                        if (_formKey.currentState.validate()) {
                           controller.isLoding(true);
                           _repo
                               .handleSignUp(
@@ -311,16 +317,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return null;
   }
 
-  String emailValid(String value) {
-    if (value.isEmpty)
-      return 'Please Email';
-    else if (!value.contains('@'))
-      return 'Please Enter @';
-    else if (!value.contains('.com'))
-      return 'Please Enter .com';
-    else if (value.length < 7) return 'Enter Valid Email';
-    return null;
-  }
+  
 
   String contactValid(String value) {
     if (value.isEmpty)

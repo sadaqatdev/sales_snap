@@ -62,11 +62,11 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
                             .setbuyItems(BuyModel(
                                 desc: widget.product.desc,
                                 imgUrl: widget.product.avatarUrl,
-                                newPrice: widget.product.newPrice,
-                                price: widget.product.price,
+                                newPrice: widget.product.newPrice??'0',
+                                price: widget.product.price??'0',
                                 priceHtmlTag: widget.product.priceHtmlTag,
                                 title: widget.product.title,
-                                priceNumber: widget.product.price,
+                                priceNumber: widget.product.price??'0',
                                 uid: uid,
                                 webUrl: widget.product.webUrl))
                             .then((value) {

@@ -82,6 +82,7 @@ class HomeController extends GetxController {
     }
 
     initNotifications();
+
     textEditingController = TextEditingController();
     initOnSignal();
     if (Platform.isIOS) {

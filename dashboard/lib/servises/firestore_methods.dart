@@ -1,8 +1,13 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+ 
 import 'package:sales_snap_dashboard/models/buy_button_click.dart';
 import 'package:sales_snap_dashboard/models/buy_model.dart';
+import 'package:sales_snap_dashboard/models/intrest.dart';
 import 'package:sales_snap_dashboard/models/m_user.dart';
 import 'package:sales_snap_dashboard/models/notification_model.dart';
 import 'package:sales_snap_dashboard/models/save_list_model.dart';
@@ -28,7 +33,17 @@ class FirestoreMethods {
 
     return _list;
   }
-
+  
+Future<String> uploadFile( path) async {
+    String fileName = path.image_upload.name;
+    String random = Random().nextInt(5).toString();
+    final Reference storageReference =
+        FirebaseStorage.instance.ref().child("files/s${fileName + random}");
+    final UploadTask uploadTask = storageReference.putBlob(path.image_upload);
+    final TaskSnapshot downloadUrl = (await uploadTask.whenComplete(() {}));
+    final String url = (await downloadUrl.ref.getDownloadURL());
+    return url;
+  }
   Future<List<SaveListModel>> getUserSavedItems(uid) async {
     List<SaveListModel> tempList = [];
 
@@ -135,6 +150,19 @@ class FirestoreMethods {
     print('-------------lenght');
     print(_list.length);
     return _list;
+  }
+  Future<List<Intrest>> getIntersts()async{
+    List<Intrest> tempList=[];
+   QuerySnapshot qsnap=await _firestore.collection('intrest').get();
+   qsnap.docs.forEach((element) {
+      tempList.add(Intrest.fromMap(element.data()));
+    });
+    return tempList;
+  }
+
+  Future<bool> createIntersts(Intrest data)async{
+    await _firestore.collection('intrest').doc().set(data.toMap());
+    return true;
   }
 
   Future<List<SaveListModel>> getSavedItems() async {

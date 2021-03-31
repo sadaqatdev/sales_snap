@@ -91,7 +91,7 @@ class SaveController extends GetxController {
       if (selectedList.length > 0) {
         viseble = true;
       } else {
-        viseble = false;
+        viseble = false; 
       } 
 
       update();

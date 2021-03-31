@@ -16,15 +16,43 @@ class UsersPage extends StatelessWidget {
             builder: (ucontroller) {
               return Column(
                 children: [
+
                   SearchWidget(
                     controller: ucontroller.controller,
                   ),
+                  ucontroller.viseble
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    MaterialButton(
+                                      color: Colors.green,
+                                      onPressed: () {
+                                        /// bcontroller.sendNotification();
+                                        dialog(context);
+                                      },
+                                      child: Text('Send Notification Message'),
+                                    ),
+                                    SizedBox(
+                                      width: 16,
+                                    )
+                                  ],
+                                )
+                              : SizedBox(),
+                          SizedBox(
+                            height: 16,
+                          ),
                   Expanded(
                     child: ListView.builder(
                       itemCount: ucontroller.searchList.length,
                       itemBuilder: (context, index) {
                         return UserTile(
                           user: ucontroller.searchList[index],
+                          isSelectedFuntction: (value) {
+                            ucontroller.selectedUsers(
+                                condition: value,
+                                tokens: ucontroller.searchList[index].token,
+                                uid: ucontroller.searchList[index].uid);
+                          },
                         );
                       },
                     ),
@@ -33,12 +61,174 @@ class UsersPage extends StatelessWidget {
               );
             }));
   }
+
+  void dialog(
+       context) {
+    var key = GlobalKey<FormState>();
+    showDialog(
+        useSafeArea: true,
+        context: context,
+        builder: (context) {
+          return Builder(builder: (bcontext) {
+            return Container(
+              margin:
+                  EdgeInsets.only(left: 200, right: 200, top: 150, bottom: 150),
+              child: GetBuilder<UserController>(
+                   
+                  builder: (snapshot) {
+                    return Material(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Form(
+                          key: key,
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                controller: snapshot.notificatioTitle,
+                                decoration: InputDecoration(
+                                  hintText: 'Notification Title',
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter Notification Title';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                controller: snapshot.descC,
+                                decoration: InputDecoration(
+                                    hintText: 'Notification Body'),
+                                maxLines: 3,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter Notification Body';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                controller: snapshot.cuponCodeC,
+                                decoration: InputDecoration(hintText: 'Code'),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter code';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                controller: snapshot.validDate,
+                                decoration: InputDecoration(
+                                    hintText: 'Validation Date and Message'),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter code';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                controller: snapshot.webUrl,
+                                decoration: InputDecoration(
+                                    hintText: 'Enter Website Url'),
+                                     validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter Value';
+                                  }
+                                  return null;
+                                },
+                                
+                              ),
+                               SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                controller: snapshot.priceC,
+                                decoration: InputDecoration(
+                                    hintText: 'Enter Price'),
+                                      validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter Value';
+                                  }
+                                  return null;
+                                },
+                                
+                              ),
+                               SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                controller: snapshot.productTitle,
+                                decoration: InputDecoration(
+                                    hintText: 'Product Titlte'),
+                                      validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter Value';
+                                  }
+                                  return null;
+                                },
+                                  
+                                
+                              ),
+                               SizedBox(
+                                height: 16,
+                              ),
+                             
+                              snapshot.isLoading
+                                  ? Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        MaterialButton(
+                                          color: Colors.red,
+                                          onPressed: () {
+                                            if (key.currentState.validate()) {
+                                              snapshot.SendNotification();
+                                            }
+                                          },
+                                          child: Text('Send'),
+                                        )
+                                      ],
+                                    )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+            );
+          });
+        });
+}}
+
+class UserTile extends StatefulWidget {
+  final MUser user;
+  final ValueChanged<bool> isSelectedFuntction;
+  final Key key;
+  UserTile({this.user, this.isSelectedFuntction, this.key}) : super(key: key);
+
+  @override
+  _UserTileState createState() => _UserTileState();
 }
 
-class UserTile extends StatelessWidget {
-  final MUser user;
-  const UserTile({Key key, this.user}) : super(key: key);
-   
+class _UserTileState extends State<UserTile> {
+  bool isSelected = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,7 +236,7 @@ class UserTile extends StatelessWidget {
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return UserDetails(
-              uid: user.uid,
+              uid: widget.user.uid,
             );
           }));
         },
@@ -54,8 +244,22 @@ class UserTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 8,
+              Row(
+                children: [
+                  Spacer(),
+                  Checkbox(
+                      value: isSelected,
+                      onChanged: (value) {
+                        setState(() {
+                          isSelected = value;
+
+                          widget.isSelectedFuntction(value);
+                        });
+                      }),
+                  SizedBox(
+                    width: 12,
+                  )
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -73,7 +277,7 @@ class UserTile extends StatelessWidget {
                           SizedBox(
                             width: 12,
                           ),
-                          Text(user.name),
+                          Text(widget.user.name),
                         ],
                       ),
                       SizedBox(
@@ -86,7 +290,7 @@ class UserTile extends StatelessWidget {
                           SizedBox(
                             width: 12,
                           ),
-                          Text(user.email??''),
+                          Text(widget.user.email ?? ''),
                         ],
                       ),
                       SizedBox(
@@ -99,7 +303,7 @@ class UserTile extends StatelessWidget {
                           SizedBox(
                             width: 12,
                           ),
-                          Text(user.location??'non'),
+                          Text(widget.user.location ?? 'non'),
                         ],
                       ),
                     ],
@@ -117,7 +321,7 @@ class UserTile extends StatelessWidget {
                           SizedBox(
                             width: 12,
                           ),
-                          Text(user.gender),
+                          Text(widget.user.gender),
                         ],
                       ),
                       SizedBox(
@@ -130,7 +334,7 @@ class UserTile extends StatelessWidget {
                           SizedBox(
                             width: 12,
                           ),
-                          Text(user.dob??''),
+                          Text(widget.user.dob ?? ''),
                         ],
                       ),
                       SizedBox(
@@ -143,7 +347,8 @@ class UserTile extends StatelessWidget {
                           SizedBox(
                             width: 12,
                           ),
-                          Text(user.createdDate?.toDate().toString() ?? ''),
+                          Text(widget.user.createdDate?.toDate().toString() ??
+                              ''),
                         ],
                       ),
                     ],
@@ -166,7 +371,10 @@ class UserTile extends StatelessWidget {
                   SizedBox(
                     width: 12,
                   ),
-                  Wrap(children: user.intersts.map((e) => Text('$e ,')).toList()),
+                  Wrap(
+                      children: widget.user.intersts
+                          .map((e) => Text('$e ,'))
+                          .toList()),
                 ],
               ),
               SizedBox(
