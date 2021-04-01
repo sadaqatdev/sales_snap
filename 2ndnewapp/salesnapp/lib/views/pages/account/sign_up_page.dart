@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
 import 'package:sales_snap/repositories/auth_repo.dart';
 import 'package:sales_snap/utils/login_info.dart';
+import 'package:sales_snap/views/widgets/custom_button.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
 
 import 'sign_up_name.dart';
@@ -27,14 +28,13 @@ class _SignUpPageState extends State<SignUpPage> {
   final AuthRepo _repo = AuthRepo();
 
   final _formKey = GlobalKey<FormState>();
-  
+
   final storage = GetStorage();
 
   LoginInfo _loginInfo = LoginInfo();
   bool show = false;
   @override
   void initState() {
- 
     super.initState();
   }
 
@@ -47,120 +47,106 @@ class _SignUpPageState extends State<SignUpPage> {
 
     super.dispose();
   }
+//  validator: (value) {
+//                         bool emailValid = RegExp(
+//                                     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+//                                 .hasMatch(emailContoller.text);
+//                         if(emailValid){
+//                           return null;
+//                         }else{
+//                           return 'Enter valid Email Address';
+//                         }
 
+//                     },
+//
+//
+  String emailValidate(String value) {
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(emailContoller.text);
+    if (emailValid) {
+      return null;
+    } else {
+      return 'Enter valid Email Address';
+    }
+  }
+
+  var suffixicon = Icon(
+    Icons.pending,
+    color: Colors.white,
+  );
   @override
   Widget build(BuildContext context) {
     final lablesStyle = Theme.of(context).textTheme.headline2;
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 25),
-        width: Get.width,
-        height: Get.height,
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Sign Up ',
-                style: lablesStyle.copyWith(color: Colors.black),
-              ),
-              SizedBox(
-                height: 18,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                controller: emailContoller,
-                decoration: InputDecoration(
-                    hintText: 'Email',
-                    contentPadding:
-                        EdgeInsets.only(top: 14, bottom: 14, left: 8)),
-                validator: (value) {
-                    bool emailValid = RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                            .hasMatch(emailContoller.text);
-                    if(emailValid){
-                      return null;
-                    }else{
-                      return 'Enter valid Email Address';
-                    }        
-                 
-                },
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.visiblePassword,
-                controller: passworController,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                obscureText: show,
-                decoration: InputDecoration(
-                  hintText: 'Password',
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          show = !show;
-                        });
-                      },
-                      icon: show
-                          ? Icon(Icons.visibility)
-                          : Icon(Icons.visibility_off)),
-                ),
-                validator: (value) {
-                  return passwordValid(value);
-                },
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.visiblePassword,
-                controller: confirmPassword,
-                obscureText: show,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(
-                  hintText: 'Confirm Password',
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          show = !show;
-                        });
-                      },
-                      icon: show
-                          ? Icon(Icons.visibility)
-                          : Icon(Icons.visibility_off)),
-                ),
-                validator: (value) {
-                  return confiemPassword(value);
-                },
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+    final headingStyle = Theme.of(context).textTheme.headline2;
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 25),
+            width: Get.width,
+             
+            child: Form(
+              key: _formKey,
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    'Sign Up ',
+                    style: lablesStyle.copyWith(color: Color(0xff24B4D6)),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    'Create Account',
+                    style: headingStyle.copyWith(color: Colors.black),
+                  ),
+                  SizedBox(
+                    height: 100,
+                  ),
+                  customTextField(suffixicon, Icon(Icons.email), 'Email',
+                      emailContoller, emailValidate),
+                  customTextField(
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              show = !show;
+                            });
+                          },
+                          icon: show
+                              ? Icon(Icons.visibility)
+                              : Icon(Icons.visibility_off)),
+                      Icon(Icons.lock),
+                      'Password',
+                      passworController,
+                      passwordValid),
+                  customTextField(
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              show = !show;
+                            });
+                          },
+                          icon: show
+                              ? Icon(Icons.visibility)
+                              : Icon(Icons.visibility_off)),
+                      Icon(Icons.lock),
+                      'Confirm Password',
+                      confirmPassword,
+                      confiemPassword),
+                  SizedBox(
+                    height: 70,
+                  ),
                   Obx(() {
                     if (controller.isLoding.value == true) {
                       return progressBar();
                     }
-                    return MaterialButton(
-                      padding: EdgeInsets.only(
-                          top: 12, bottom: 12, left: 16, right: 16),
-                      shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.pink),
-                          borderRadius: BorderRadius.circular(22)),
-                      child: Center(
-                        child: Text(
-                          'SignUp',
-                          style: lablesStyle.copyWith(color: Colors.black),
-                        ),
-                      ),
-                      onPressed: () {
-                      
+                    return  CustomButton(lable: 'Continue', onPress: (){
                         if (_formKey.currentState.validate()) {
                           controller.isLoding(true);
                           _repo
@@ -186,78 +172,46 @@ class _SignUpPageState extends State<SignUpPage> {
                             duration: Duration(seconds: 3),
                           ));
                         }
-                      },
-                    );
-                  })
+                    }, color: Colors.black, radius: 22);
+                  }),
+                  SizedBox(height: 14),
                 ],
               ),
-              SizedBox(height: 14),
-              Text('or'),
-              SizedBox(height: 14),
-              MaterialButton(
-                elevation: 6,
-                padding: EdgeInsets.only(top: 18, bottom: 18),
-                shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Color(0xffEA4335)),
-                    borderRadius: BorderRadius.circular(22)),
-                color: Color(0xffEA4335),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/google.png',
-                        width: 24,
-                        height: 24,
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text('Continue with Google', style: lablesStyle),
-                    ],
-                  ),
-                ),
-                onPressed: () {
-                  googleLogin();
-                },
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              MaterialButton(
-                padding: EdgeInsets.only(top: 18, bottom: 18),
-                height: 50,
-                minWidth: 326,
-                shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Color(0xff1877F2)),
-                    borderRadius: BorderRadius.circular(22)),
-                color: Color(0xff1877F2),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/facebook.png',
-                        width: 24,
-                        height: 24,
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        'Continue with Facebook',
-                        style: lablesStyle,
-                      ),
-                    ],
-                  ),
-                ),
-                onPressed: () {
-                  facebookLogin();
-                },
-              ),
-            ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Container customTextField(Widget suffixicon, Icon prefixIcon,
+      String hintText2, TextEditingController txtController, validator) {
+    return Container(
+      //height: 50,
+      width: Get.width,
+      margin: EdgeInsets.only(top: 12, left: 4, right: 4),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12), color: Colors.white),
+      child: Row(
+        children: [
+          Expanded(
+              child: TextFormField(
+            obscureText: false,
+            controller: txtController,
+            validator: validator,
+            decoration: InputDecoration(
+              suffixIcon: suffixicon,
+              prefixIcon: prefixIcon,
+              hintText: hintText2,
+              hintStyle: TextStyle(color: Colors.black54),
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              border: InputBorder.none,
+              fillColor: Colors.transparent,
+              filled: true,
+            ),
+          )),
+        ],
       ),
     );
   }
@@ -316,8 +270,6 @@ class _SignUpPageState extends State<SignUpPage> {
     }
     return null;
   }
-
-  
 
   String contactValid(String value) {
     if (value.isEmpty)

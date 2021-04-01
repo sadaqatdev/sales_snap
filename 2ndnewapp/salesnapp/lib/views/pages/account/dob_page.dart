@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
-import 'package:sales_snap/views/pages/account/intrest_page.dart';
 import 'package:sales_snap/views/pages/account/location.dart';
 import 'package:sales_snap/views/widgets/custom_button.dart';
 import 'package:sales_snap/views/widgets/custom_heading.dart';
@@ -35,6 +34,7 @@ class _DobPageState extends State<DobPage> {
   @override
   Widget build(BuildContext context) {
     final node = FocusScope.of(context);
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -57,7 +57,7 @@ class _DobPageState extends State<DobPage> {
                         width: 100,
                         height: 50,
                         child: TextFormField(
-                          keyboardType: TextInputType.datetime,
+                          keyboardType: TextInputType.number,
                           maxLength: 2,
                           controller: date,
                           decoration: InputDecoration(
@@ -65,22 +65,25 @@ class _DobPageState extends State<DobPage> {
                             filled: true,
                             hintText: 'DD',
                           ),
+                          onChanged: (val) {
+                            if (val.length == 2) {
+                              node.nextFocus();
+                            }
+                          },
                           onEditingComplete: () {
                             node.nextFocus();
                           },
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Enter Day';
-                            }
-                           else if(!value.isNum){
+                            } else if (!value.isNum) {
                               return 'Enter Valid Number';
-                            }
-                           else if(int.parse(value)>0 && int.parse(value)<32){
+                            } else if (int.parse(value) > 0 &&
+                                int.parse(value) < 32) {
                               return null;
-                            }else{
+                            } else {
                               return 'Enter valid Month';
                             }
-                             
                           },
                         ),
                       ),
@@ -94,29 +97,32 @@ class _DobPageState extends State<DobPage> {
                         height: 50,
                         child: TextFormField(
                           controller: month,
-                          keyboardType: TextInputType.datetime,
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             hintText: 'MM',
                             fillColor: Colors.white,
                             filled: true,
                           ),
                           maxLength: 2,
+                          onChanged: (val) {
+                            if (val.length == 2) {
+                              node.nextFocus();
+                            }
+                          },
                           onEditingComplete: () {
                             node.nextFocus();
                           },
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Enter Month';
-                            }
-                            else if(!value.isNum){
+                            } else if (!value.isNum) {
                               return 'Enter Valid Number';
-                            }
-                             else if(int.parse(value)>0 && int.parse(value)<13){
+                            } else if (int.parse(value) > 0 &&
+                                int.parse(value) < 13) {
                               return null;
-                            }else{
+                            } else {
                               return 'Enter valid Month';
                             }
-                             
                           },
                         ),
                       ),
@@ -130,31 +136,25 @@ class _DobPageState extends State<DobPage> {
                         height: 50,
                         child: TextFormField(
                           controller: year,
-                          keyboardType: TextInputType.datetime,
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             hintText: 'YYYY',
                             fillColor: Colors.white,
                             filled: true,
                           ),
                           maxLength: 4,
-                          onEditingComplete: () {
-                            node.unfocus();
-                          },
                           validator: (value) {
-                                   final year=DateTime.now();
+                            final year = DateTime.now();
                             if (value.isEmpty) {
                               return 'Enter Year';
-                            }
-                             else if(!value.isNum){
+                            } else if (!value.isNum) {
                               return 'Enter Valid Number';
-                            }
-                     
-                           else if(value.length!=4){
+                            } else if (value.length != 4) {
                               return 'Enter Valid Number';
-                            }
-                             else if(int.parse(value)>0 && int.parse(value)<year.year){
+                            } else if (int.parse(value) > 1950 &&
+                                int.parse(value) < year.year) {
                               return null;
-                            }else{
+                            } else {
                               return 'Enter valid Month';
                             }
                           },

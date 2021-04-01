@@ -25,6 +25,7 @@ class _GenderPageState extends State<GenderPage> {
   @override
   Widget build(BuildContext context) {
     final lableStyel = Theme.of(context).textTheme.bodyText2;
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -43,6 +44,7 @@ class _GenderPageState extends State<GenderPage> {
                         setState(() {
                           maleSelected = true;
                           femaleSelected = false;
+                          notToSay=false;
                           SignUpController.gender = 'male';
                         });
                       },
@@ -90,6 +92,7 @@ class _GenderPageState extends State<GenderPage> {
                         setState(() {
                           maleSelected = false;
                           femaleSelected = true;
+                          notToSay=false;
                           SignUpController.gender = 'female';
                         });
                       },
@@ -152,7 +155,13 @@ class _GenderPageState extends State<GenderPage> {
                           });
                           print(SignUpController.gender);
                         },
-                        child: const Text('Prefer not to say')),
+                        child: Container(
+                            height: 40,
+                            padding: EdgeInsets.all(8),
+                          decoration: notToSay?  BoxDecoration(
+                                border: Border.all(color: Colors.blueAccent)):BoxDecoration(),
+                            child: Center(
+                                child: const Text('Prefer not to say')))),
                   ],
                 ),
                 SizedBox(

@@ -39,7 +39,7 @@ class _SignUpNameState extends State<SignUpLocation> {
                 CustomHeading(
                     progressWidth: 260,
                     steps: 'step 4 of 5',
-                    lable: 'Your City Name and Postcode'),
+                    lable: 'Your Postcode'),
                 Form(
                   key: fomKey,
                   child: Container(
@@ -53,7 +53,7 @@ class _SignUpNameState extends State<SignUpLocation> {
                       decoration: InputDecoration(
                           prefixIcon: Icon(Icons.person),
                           border: InputBorder.none,
-                          hintText: 'City Name and Post Code',
+                          hintText: 'Post Code',
                           fillColor: Colors.transparent,
                           contentPadding:
                               EdgeInsets.only(top: 12, bottom: 12, left: 12)),

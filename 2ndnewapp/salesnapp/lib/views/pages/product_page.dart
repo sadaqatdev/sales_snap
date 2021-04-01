@@ -26,7 +26,7 @@ class ProductPage extends StatelessWidget {
                 Scaffold(
                   appBar: appBar(
                     context: context,
-                    title: 'Sales Snap',
+                    title: 'Salesnapp',
                     height: 130,
                     action: SizedBox(),
                   ),
@@ -70,12 +70,12 @@ class ProductPage extends StatelessWidget {
                         )
                       : Container(),
                 ),
-                Positioned(
-                  top: 140,
-                  left: 12,
-                  right: 12,
-                  child: searchField(homecontroller, context, forteenFont),
-                ),
+                // Positioned(
+                //   top: 140,
+                //   left: 12,
+                //   right: 12,
+                //   child: searchField(homecontroller, context, forteenFont),
+                // ),
               ],
             );
           }),

@@ -6,9 +6,13 @@ import 'package:sales_snap/controllers/sign_up_controller.dart';
 import 'package:sales_snap/repositories/auth_repo.dart';
 
 import 'package:sales_snap/utils/login_info.dart';
+import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/views/bottom_navigation.dart';
 import 'package:sales_snap/views/pages/account/sign_up_name.dart';
+import 'package:sales_snap/views/pages/account/sign_with_email.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
+
+import 'sign_up_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -32,7 +36,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
- 
     super.initState();
   }
 
@@ -48,191 +51,186 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final lablesStyle = Theme.of(context).textTheme.headline2;
 
-    return SingleChildScrollView(
-      child: Container(
-        height: Get.height,
-        padding: EdgeInsets.only(left: 20, right: 20, top: 25),
-        child: Form(
-          key: formKey,
-          child: Obx(() {
-            return Stack(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            child: Form(
+              key: formKey,
+              child: Obx(() {
+                return Stack(
                   children: [
-                    SizedBox(
-                      height: 32,
-                    ),
-                    Text(
-                      'Login To App',
-                      style: lablesStyle.copyWith(color: Colors.black),
-                    ),
-                    SizedBox(
-                      height: 32,
-                    ),
-                    TextFormField(
-                      controller: userNameController,
-                      keyboardType: TextInputType.name,
-                      decoration: InputDecoration(hintText: 'User Name'),
-                      validator: (value) {
-                        return userNameValidate(value);
-                      },
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    TextFormField(
-                      controller: passworController,
-                      obscureText: show,
-                      keyboardType: TextInputType.visiblePassword,
-                      decoration: InputDecoration(
-                        hintText: 'Password',
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                show = !show;
-                              });
-                            },
-                            icon: show
-                                ? Icon(Icons.visibility)
-                                : Icon(Icons.visibility_off)),
-                      ),
-                      validator: (value) {
-                        return passwordValidate(value);
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              height: 240,
+                              width: 38,
+                              decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(18),
+                                      bottomRight: Radius.circular(18))),
+                            ),
+                            Container(
+                              height: 320,
+                              width: 275,
+                              decoration: BoxDecoration(
+                                  color: Color(0xff24B4D6),
+                                  borderRadius: BorderRadius.all(Radius.circular(18))),
+                            ),
+                            Container(
+                              height: 240,
+                              width: 38,
+                             decoration: BoxDecoration(
+                                  color: Color(0xff24B4D6),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(18),
+                                      bottomLeft: Radius.circular(18))),
+                            )
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 16, right: 16, top: 22),
+                          child: MaterialButton(
+                            padding: EdgeInsets.only(
+                                top: 18, bottom: 18, left: 12, right: 12),
+                            height: 50,
+                            minWidth: 326,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(color: Color(0xff1877F2)),
+                                borderRadius: BorderRadius.circular(22)),
+                            color: Color(0xff1877F2),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.mail,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    'Sign In with Email',
+                                    style: lablesStyle,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onPressed: () {
+                              AppRoute.to(context, SignWithEmail());
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16, right: 16),
+                          child: MaterialButton(
+                            elevation: 6,
+                            padding: EdgeInsets.only(top: 18, bottom: 18),
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(color: Color(0xffEA4335)),
+                                borderRadius: BorderRadius.circular(22)),
+                            color: Color(0xffEA4335),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/google.png',
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text('Continue with Google',
+                                      style: lablesStyle),
+                                ],
+                              ),
+                            ),
+                            onPressed: () {
+                              googleLogin();
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16, right: 16),
+                          child: MaterialButton(
+                            padding: EdgeInsets.only(top: 18, bottom: 18),
+                            height: 50,
+                            minWidth: 326,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(color: Color(0xff1877F2)),
+                                borderRadius: BorderRadius.circular(22)),
+                            color: Color(0xff1877F2),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/facebook.png',
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    'Continue with Facebook',
+                                    style: lablesStyle,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onPressed: () {
+                              facebookLogin();
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 14),
+                        Text('or'),
+                        SizedBox(height: 14),
                         MaterialButton(
-                          shape: RoundedRectangleBorder(
-                              side: BorderSide(color: Colors.pink),
-                              borderRadius: BorderRadius.circular(22)),
                           child: Center(
                             child: Text(
-                              'Login',
-                              style: lablesStyle.copyWith(color: Colors.black),
+                              'Create account with Email',
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
                             ),
                           ),
-                          onPressed: () {
-                            login();
+                          onPressed: () async {
+                            AppRoute.to(context, SignUpPage());
                           },
-                        )
+                        ),
                       ],
                     ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    MaterialButton(
-                      elevation: 6,
-                      padding: EdgeInsets.only(top: 18, bottom: 18),
-                      shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Color(0xffEA4335)),
-                          borderRadius: BorderRadius.circular(22)),
-                      color: Color(0xffEA4335),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/google.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text('Continue with Google', style: lablesStyle),
-                          ],
-                        ),
-                      ),
-                      onPressed: () {
-                        googleLogin();
-                      },
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    MaterialButton(
-                      padding: EdgeInsets.only(top: 18, bottom: 18),
-                      height: 50,
-                      minWidth: 326,
-                      shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Color(0xff1877F2)),
-                          borderRadius: BorderRadius.circular(22)),
-                      color: Color(0xff1877F2),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/facebook.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              'Continue with Facebook',
-                              style: lablesStyle,
-                            ),
-                          ],
-                        ),
-                      ),
-                      onPressed: () {
-                        facebookLogin();
-                      },
-                    ),
-                    SizedBox(height: 14),
-                    Text('or'),
-                    SizedBox(height: 14),
-                    MaterialButton(
-                      child: Center(
-                        child: Text(
-                          'Reset Password',
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      onPressed: () async {
-                        bool emailValid = RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                            .hasMatch(userNameController.text);
-                        if (userNameController.text.isNotEmpty && emailValid) {
-                          await _authRepo
-                              .resetPassword(userNameController.text)
-                              .then((msg) {
-                            if (msg == 'ok') {
-                              Get.defaultDialog(
-                                  content: Text(
-                                      'Password Reset link is send to your Email address.'));
-                            } else {
-                              Get.dialog(Text(msg));
-                            }
-                          });
-                        } else {
-                          Get.showSnackbar(GetBar(
-                            message:
-                                'Enter only Email, we send password reset link to your Email address',
-                            duration: Duration(seconds: 3),
-                          ));
-                        }
-                      },
-                    ),
+                    _controller.isLoding.value
+                        ? Positioned(
+                            top: 110,
+                            left: Get.width / 2 - 50,
+                            child: progressBar(),
+                          )
+                        : SizedBox()
                   ],
-                ),
-                _controller.isLoding.value
-                    ? Positioned(
-                        top: 110,
-                        left: Get.width / 2 - 50,
-                        child: progressBar(),
-                      )
-                    : SizedBox()
-              ],
-            );
-          }),
+                );
+              }),
+            ),
+          ),
         ),
       ),
     );

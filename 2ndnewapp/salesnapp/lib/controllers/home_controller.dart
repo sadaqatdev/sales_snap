@@ -20,6 +20,7 @@ import 'package:http/http.dart' as http;
 import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/utils/extract/extract.dart';
 import 'package:sales_snap/views/pages/notifications_page.dart';
+import 'package:sales_snap/views/pages/save_page.dart';
 
 FlutterLocalNotificationsPlugin fltrNotification;
 var doubleRE = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
@@ -205,18 +206,18 @@ class HomeController extends GetxController {
         if (value) {
           _savedController.getSavedList();
 
-          snakBar('Save Sucessfully');
+          //snakBar('Save Sucessfully');
 
           showProgrss(false);
           textEditingController.clear(); 
-          Future.delayed(Duration(seconds: 3)).then((value) {
-            Get.back();
+          Future.delayed(Duration(seconds: 0)).then((value) {
+            Get.off(SavePage());
           });
         } else {
           snakBar('You have already saved the item');
           textEditingController.clear(); 
           showProgrss(false);
-          Future.delayed(Duration(seconds: 3)).then((value) {
+          Future.delayed(Duration(seconds: 2)).then((value) {
             Get.back();
           });
         }

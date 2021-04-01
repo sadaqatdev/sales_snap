@@ -3,6 +3,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sales_snap/utils/theme/app_theme.dart';
 import 'views/bottom_navigation.dart';
+import 'views/pages/account/login_page.dart';
 import 'views/pages/account/login_signup_tabs.dart';
 
 class App extends StatelessWidget {
@@ -11,10 +12,10 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     String login = storage.read('isLogin');
     login?.contains('yes') ?? false ? isLogin = true : isLogin = false;
-    return GetMaterialApp(
+    return GetMaterialApp( 
       theme: AppTheme.themeData,
       debugShowCheckedModeBanner: false,
-      home: isLogin ? BottomNavBar() : LoginSignUp(),
+      home: isLogin ? BottomNavBar() : LoginPage(),
     );
   }
 }

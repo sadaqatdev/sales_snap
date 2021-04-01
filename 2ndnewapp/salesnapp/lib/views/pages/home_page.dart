@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
               Scaffold(
                 appBar: appBar(
                   context: context,
-                  title: 'Salesnapp',
+                  title: '',
                   height: 130,
                   action: SizedBox(),
                 ),
@@ -181,28 +181,25 @@ class HomePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  OctoImage(
-                                    alignment: Alignment.center,
-                                
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: OctoImage(
+                                  alignment: Alignment.center,
+                                  
                             filterQuality: FilterQuality.high,
                          
                             image: NetworkImage(
-                                  
-                                    savedController.saveItemList[index].imgUrl),
+                                
+                                  savedController.saveItemList[index].imgUrl),
                             placeholderBuilder: OctoPlaceholder.blurHash(
-                                  'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                                'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
                             ),
                             errorBuilder: (context, error, stackTrace) {
-                                  return Image.network(
-                                      'https://via.placeholder.com/350x150',fit: BoxFit.fill,);
+                                return Image.network(
+                                    'https://via.placeholder.com/350x150',fit: BoxFit.fill,);
                             },
                             fit: BoxFit.fill,
                           ),
-                                ],
                               )),
                           SizedBox(
                             height: 6,
