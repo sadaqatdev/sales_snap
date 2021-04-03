@@ -31,32 +31,30 @@ DateTime prevMonth2  ;
   Widget build(BuildContext context) {
     Get.put(SavedController());
  
-    return SafeArea(
-      child: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0.0,
-            backgroundColor: Color(0xffE5E5E5),
-            flexibleSpace: TabBar(
-              indicatorColor: Colors.white,
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabs: [
-                Tab(
-                  child: Text(returnMonth(prevMonth2)),
-                ),
-                Tab(
-                  child: Text(returnMonth(prevMonth)),
-                ),
-                Tab(
-                  child: Text(returnMonth(DateTime.now())),
-                 )
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: [PreviousMonthTwo(), PreviosOne(), CurrentMonth()],
-          ),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Color(0xffE5E5E5),
+          flexibleSpace: TabBar(
+            indicatorColor: Colors.white,
+            indicatorSize: TabBarIndicatorSize.tab,
+            tabs: [
+              Tab(
+                child: Text(returnMonth(prevMonth2)),
+              ),
+              Tab(
+                child: Text(returnMonth(prevMonth)),
+              ),
+              Tab(
+                child: Text(returnMonth(DateTime.now())),
+               )
+            ],
+          ), 
+        ),
+        body: TabBarView(
+          children: [PreviousMonthTwo(), PreviosOne(), CurrentMonth()],
         ),
       ),
     );

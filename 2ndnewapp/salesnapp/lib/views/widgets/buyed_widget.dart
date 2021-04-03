@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/home_controller.dart';
 import 'package:sales_snap/controllers/saved_item_controller.dart';
 import 'package:sales_snap/models/buy_model.dart';
 import 'package:sales_snap/utils/dateformate.dart';
-import 'package:sales_snap/views/widgets/snakbar.dart';
 
 class BuyedTab extends StatelessWidget {
   const BuyedTab({
@@ -20,7 +20,12 @@ class BuyedTab extends StatelessWidget {
             builder: (controller) {
               return controller.buyItemList.isEmpty
                   ? Center(
-                      child: Text('No Buy History'),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Your purchase history will appear here',style: GoogleFonts.montserrat(fontSize: 16),),
+                        ],
+                      ),
                     )
                   : ListView.builder(
                       itemCount: controller.buyItemList.length,
@@ -130,7 +135,7 @@ class BuyedTileWidget extends StatelessWidget {
                                 .then((value) {
                               Get.showSnackbar(
                                 GetBar(
-                                  message: "Scucessfully Item Deleted",
+                                  message: "Item successfully deleted",
                                   duration: Duration(seconds: 2),
                                 ),
                               );

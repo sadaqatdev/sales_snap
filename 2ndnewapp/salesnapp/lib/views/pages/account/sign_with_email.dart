@@ -49,116 +49,114 @@ class _SignWithEmailState extends State<SignWithEmail> {
   @override
   Widget build(BuildContext context) {
     final lablesStyle = Theme.of(context).textTheme.headline2;
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          margin: EdgeInsets.all(22),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 32,
-                ),
-                Text(
-                  'Login to App',
-                  style: lablesStyle.copyWith(color: Colors.black),
-                ),
-                SizedBox(
-                  height: 32,
-                ),
-                customTextField(suffixicon, Icon(Icons.email), 'Email',
-                    userNameController, userNameValidate),
-                customTextField(
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            show = !show;
-                          });
-                        },
-                        icon: show
-                            ? Icon(Icons.visibility)
-                            : Icon(Icons.visibility_off)),
-                    Icon(Icons.lock),
-                    'Password',
-                    passworController,
-                    passwordValidate),
-                SizedBox(height: 70),
-                Obx(() {
-                  if (_controller.isLoding.value == true) {
-                    return progressBar();
-                  }
-                  return CustomButton(
-                      lable: 'Login',
-                      onPress: () {
-                        login();
+    return Scaffold(
+      body: Container(
+        margin: EdgeInsets.all(22),
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 32,
+              ),
+              Text(
+                'Login to App',
+                style: lablesStyle.copyWith(color: Colors.black),
+              ),
+              SizedBox(
+                height: 32,
+              ),
+              customTextField(suffixicon, Icon(Icons.email), 'Email',
+                  userNameController, userNameValidate),
+              customTextField(
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          show = !show;
+                        });
                       },
-                      color: Colors.black,
-                      radius: 18);
-                }),
-                SizedBox(
-                  height: 35,
-                ),
-                MaterialButton(
-                  child: Center(
-                    child: Text(
-                      'Reset Password',
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
+                      icon: show
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off)),
+                  Icon(Icons.lock),
+                  'Password',
+                  passworController,
+                  passwordValidate),
+              SizedBox(height: 70),
+              Obx(() {
+                if (_controller.isLoding.value == true) {
+                  return progressBar();
+                }
+                return CustomButton(
+                    lable: 'Login',
+                    onPress: () {
+                      login();
+                    },
+                    color: Colors.black,
+                    radius: 18);
+              }),
+              SizedBox(
+                height: 35,
+              ),
+              MaterialButton(
+                child: Center(
+                  child: Text(
+                    'Reset Password',
+                    style:
+                        TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                   ),
-                  onPressed: () async {
-                    Get.defaultDialog(
-                        backgroundColor: Colors.grey,
-                        title: 'Enter Email Address',
-                        content: customTextField(suffixicon, Icon(Icons.email),
-                            'Email', emailSend, userNameValidate),
-                        confirm: InkWell(
-                            child: Text('Send'),
-                            onTap: () async {
-                              if (emailSend.text != null) {
-                                await _authRepo
-                                    .resetPassword(emailSend.text)
-                                    .then((msg) {
-                                  if (msg == 'ok') {
-                                    Navigator.pop(context);
-                                    Get.defaultDialog(
-                                        content: Text(
-                                            'Password Reset link is send to your Email address.'));
-                                  } else {
-                                    Get.dialog(Text(msg));
-                                  }
-                                });
-                              } else {
-                                Get.defaultDialog(
-                                    content: Text('Enter Email Address'));
-                              }
-                            }));
-                    //emailSend
-                    // if (formKey.currentState.validate()) {
-                    //   await _authRepo
-                    //       .resetPassword(userNameController.text)
-                    //       .then((msg) {
-                    //     if (msg == 'ok') {
-                    //       Get.defaultDialog(
-                    //           content: Text(
-                    //               'Password Reset link is send to your Email address.'));
-                    //     } else {
-                    //       Get.dialog(Text(msg));
-                    //     }
-                    //   });
-                    // } else {
-                    //   Get.showSnackbar(GetBar(
-                    //     message:
-                    //         'Enter only Email, we send password reset link to your Email address',
-                    //     duration: Duration(seconds: 3),
-                    //   ));
-                    // }
-                  },
                 ),
-              ],
-            ),
+                onPressed: () async {
+                  Get.defaultDialog(
+                      backgroundColor: Colors.grey,
+                      title: 'Enter Email Address',
+                      content: customTextField(suffixicon, Icon(Icons.email),
+                          'Email', emailSend, userNameValidate),
+                      confirm: InkWell(
+                          child: Text('Send'),
+                          onTap: () async {
+                            if (emailSend.text != null) {
+                              await _authRepo
+                                  .resetPassword(emailSend.text)
+                                  .then((msg) {
+                                if (msg == 'ok') {
+                                  Navigator.pop(context);
+                                  Get.defaultDialog(
+                                      content: Text(
+                                          'Password Reset link is send to your Email address.'));
+                                } else {
+                                  Get.dialog(Text(msg));
+                                }
+                              });
+                            } else {
+                              Get.defaultDialog(
+                                  content: Text('Enter Email Address'));
+                            }
+                          }));
+                  //emailSend
+                  // if (formKey.currentState.validate()) {
+                  //   await _authRepo
+                  //       .resetPassword(userNameController.text)
+                  //       .then((msg) {
+                  //     if (msg == 'ok') {
+                  //       Get.defaultDialog(
+                  //           content: Text(
+                  //               'Password Reset link is send to your Email address.'));
+                  //     } else {
+                  //       Get.dialog(Text(msg));
+                  //     }
+                  //   });
+                  // } else {
+                  //   Get.showSnackbar(GetBar(
+                  //     message:
+                  //         'Enter only Email, we send password reset link to your Email address',
+                  //     duration: Duration(seconds: 3),
+                  //   ));
+                  // }
+                },
+              ),
+            ],
           ),
         ),
       ),

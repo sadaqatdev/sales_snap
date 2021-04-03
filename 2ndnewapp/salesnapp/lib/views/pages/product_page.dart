@@ -9,12 +9,9 @@ import 'package:sales_snap/views/widgets/snakbar.dart';
 class ProductPage extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
 
-  final _homeController = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
-    final bodyStyle = Theme.of(context).textTheme.bodyText2;
-    final forteenFont = Theme.of(context).textTheme.bodyText1;
     final lable = Theme.of(context).textTheme.headline1;
 
     return Scaffold(
@@ -55,8 +52,7 @@ class ProductPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  floatingActionButton: homecontroller.enable
-                      ? Container(
+                  floatingActionButton: Container(
                           height: 50,
                           width: 319,
                           margin: EdgeInsets.only(right: 31),
@@ -68,7 +64,7 @@ class ProductPage extends StatelessWidget {
                               color: Colors.black,
                               radius: 10),
                         )
-                      : Container(),
+                       
                 ),
                 // Positioned(
                 //   top: 140,

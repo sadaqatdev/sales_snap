@@ -3,9 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:sales_snap/models/buy_model.dart';
 import 'package:sales_snap/models/notification_model.dart';
-import 'package:sales_snap/models/save_product_model.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
 import 'package:sales_snap/utils/routes/routes.dart';
 import 'package:sales_snap/utils/theme/app_theme.dart';
@@ -73,7 +71,7 @@ class OfferPage extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     notificationModel.validDate ??
-                                        'sf sdf dsf sdf sd fsd fsd sd s df sdf sdf sd fsd fsd',
+                                        '--',
                                     style: bodytext,
                                   ),
                                    

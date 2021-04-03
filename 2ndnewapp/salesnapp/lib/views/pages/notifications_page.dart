@@ -8,8 +8,14 @@ import 'package:sales_snap/utils/theme/app_theme.dart';
 import 'package:sales_snap/views/pages/offer_page.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
 
-class NotificationPage extends StatelessWidget {
+class NotificationPage extends StatefulWidget {
+  @override
+  _NotificationPageState createState() => _NotificationPageState();
+}
+
+class _NotificationPageState extends State<NotificationPage> {
   final notifica = Get.put(NotificationController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +37,11 @@ class NotificationPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return SavedTileWidget(
                   notificationModel: controller.notificationList.value[index],
+                  onpress: (){
+                    setState(() {
+                                          
+                                        });
+                  },
                 );
               },
             );
@@ -45,11 +56,20 @@ class NotificationPage extends StatelessWidget {
   }
 }
 
-class SavedTileWidget extends StatelessWidget {
+class SavedTileWidget extends StatefulWidget {
   final NotificationModel notificationModel;
-  SavedTileWidget({Key key, this.notificationModel}) : super(key: key);
+  final Function onpress;
+  SavedTileWidget({Key key, this.notificationModel,this.onpress}) : super(key: key);
+
+  @override
+  _SavedTileWidgetState createState() => _SavedTileWidgetState();
+}
+
+class _SavedTileWidgetState extends State<SavedTileWidget> {
   final FireStoreMethod method = FireStoreMethod();
+
   final df = new DateFormat('dd-MM-yyyy hh:mm a');
+
   @override
   Widget build(BuildContext context) {
     final title = Theme.of(context).textTheme.headline2;
@@ -67,7 +87,7 @@ class SavedTileWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Image.network(
-                notificationModel.avatarUrl ??
+                widget.notificationModel.avatarUrl ??
                     'https://artgalleryofballarat.com.au/wp-content/uploads/2020/06/placeholder-image.png',
                 width: 130,
                 height: 130,
@@ -84,7 +104,7 @@ class SavedTileWidget extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(df.format(notificationModel.timestamp.toDate()).substring(0,11)),
+                        Text(df.format(widget.notificationModel.timestamp.toDate()).substring(0,11)),
                         SizedBox(
                           width: 18,
                         )
@@ -95,7 +115,7 @@ class SavedTileWidget extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            notificationModel.productTitle ?? 'No Tile',
+                            widget.notificationModel.productTitle ?? 'No Tile',
                             maxLines: 3,
                             style: title.copyWith(
                                 color: Theme.of(context).primaryColor),
@@ -109,7 +129,7 @@ class SavedTileWidget extends StatelessWidget {
                     Expanded(
                       child: Row(
                         children: [
-                          Text(notificationModel.cuponCode),
+                          Text(widget.notificationModel.cuponCode),
                         ],
                       ),
                     ),
@@ -119,7 +139,7 @@ class SavedTileWidget extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(notificationModel.price),
+                        Text(widget.notificationModel.price),
                         Spacer(),
                         Container(
                           height: 45,
@@ -130,8 +150,9 @@ class SavedTileWidget extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(22)),
                             onPressed: () {
+                              method.updateNotificationSatus(widget.notificationModel.docId);
                               Get.to(() => OfferPage(
-                                    notificationModel: notificationModel,
+                                    notificationModel: widget.notificationModel,
                                   ));
                             },
                             child: Text(
@@ -147,11 +168,12 @@ class SavedTileWidget extends StatelessWidget {
                             icon: Icon(Icons.delete),
                             onPressed: () {
                               method
-                                  .deleteNotifications(notificationModel.docId)
+                                  .deleteNotifications(widget.notificationModel.docId)
                                   .then((value) {
+                               widget.onpress();
                                 Get.showSnackbar(
                                   GetBar(
-                                    message: "Scucessfully Item Deleted",
+                                    message: "Item successfully deleted",
                                     duration: Duration(seconds: 2),
                                   ),
                                 );

@@ -5,6 +5,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:sales_snap/controllers/sign_up_controller.dart';
 
 class AuthRepo {
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -121,7 +122,10 @@ class AuthRepo {
         final graphResponse = await http.get(
             'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
         final profile = json.decode(graphResponse.body);
-          
+        print(profile);
+        print('--email------');
+        print(profile['email']);
+          SignUpController.email = profile['email']==null?profile['name']:profile['email'];
         break;
       case FacebookLoginStatus.cancelledByUser:
         break;

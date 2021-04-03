@@ -36,101 +36,99 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
   @override
   Widget build(BuildContext context) {
     String uid = storage.read('uid');
-    return SafeArea(
-      child: Scaffold(
-        key: scafoldKey,
-        body: Column(
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  WebView(
-                    initialUrl: widget.product.webUrl,
-                    onWebViewCreated: (WebViewController _webViewController) {
-                      webViewcontroller = _webViewController;
-                    },
-                    navigationDelegate: (NavigationRequest request) {
-                      print('=================================');
-                      if (request.url.contains('success') ||
-                          request.url.contains('order-received') ||
-                          request.url.contains('order') ||
-                          request.url.contains('completed') ||
-                          request.url.contains('payment')) {
-                        print('--------------sucess-------------');
-
-                        method
-                            .setbuyItems(BuyModel(
-                                desc: widget.product.desc,
-                                imgUrl: widget.product.avatarUrl,
-                                newPrice: widget.product.newPrice??'0',
-                                price: widget.product.price??'0',
-                                priceHtmlTag: widget.product.priceHtmlTag,
-                                title: widget.product.title,
-                                priceNumber: widget.product.price??'0',
-                                uid: uid,
-                                webUrl: widget.product.webUrl))
-                            .then((value) {
-                          SavedController.to.getBuyList();
-                        });
-                      } else if (request.url.contains('cancel')) {
-                        print('-------------fail------------');
-                      }
-                      return NavigationDecision.navigate;
-                    },
-                    javascriptMode: JavascriptMode.unrestricted,
-                    onPageStarted: (url) {
-                      setState(() {
-                        isLoading = true;
+    return Scaffold(
+      key: scafoldKey,
+      body: Column(
+        children: [
+          Expanded(
+            child: Stack(
+              children: [
+                WebView(
+                  initialUrl: widget.product.webUrl,
+                  onWebViewCreated: (WebViewController _webViewController) {
+                    webViewcontroller = _webViewController;
+                  },
+                  navigationDelegate: (NavigationRequest request) {
+                    print('=================================');
+                    if (request.url.contains('success') ||
+                        request.url.contains('order-received') ||
+                        request.url.contains('order') ||
+                        request.url.contains('completed') ||
+                        request.url.contains('payment')) {
+                      print('--------------sucess-------------');
+                      method.sucessfullBuy();
+                      method
+                          .setbuyItems(BuyModel(
+                              desc: widget.product.desc,
+                              imgUrl: widget.product.avatarUrl,
+                              newPrice: widget.product.newPrice ?? '0',
+                              price: widget.product.price ?? '0',
+                              priceHtmlTag: widget.product.priceHtmlTag,
+                              title: widget.product.title,
+                              priceNumber: widget.product.price ?? '0',
+                              uid: uid,
+                              webUrl: widget.product.webUrl))
+                          .then((value) {
+                        SavedController.to.getBuyList();
                       });
-                    },
-                    onPageFinished: (url) {
-                      setState(() {
-                        isLoading = false;
-                      });
-                    },
-                  ),
-                  isLoading
-                      ? Center(
-                          child: SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                      : SizedBox()
-                ],
-              ),
-            ),
-            ButtonBar(
-              alignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                ElevatedButton(
-                  child: Icon(Icons.arrow_back),
-                  onPressed: () async {
-                    bool go = await webViewcontroller.canGoBack();
-                    if (go) {
-                      webViewcontroller?.goBack();
-                    } else {
-                      Navigator.of(context).pop();
+                    } else if (request.url.contains('cancel')) {
+                      print('-------------fail------------');
                     }
+                    return NavigationDecision.navigate;
+                  },
+                  javascriptMode: JavascriptMode.unrestricted,
+                  onPageStarted: (url) {
+                    setState(() {
+                      isLoading = true;
+                    });
+                  },
+                  onPageFinished: (url) {
+                    setState(() {
+                      isLoading = false;
+                    });
                   },
                 ),
-                ElevatedButton(
-                  child: Icon(Icons.arrow_forward),
-                  onPressed: () {
-                    webViewcontroller?.goForward();
-                  },
-                ),
-                ElevatedButton(
-                  child: Icon(Icons.refresh),
-                  onPressed: () {
-                    webViewcontroller?.reload();
-                  },
-                ),
+                isLoading
+                    ? Center(
+                        child: SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : SizedBox()
               ],
             ),
-          ],
-        ),
+          ),
+          ButtonBar(
+            alignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              ElevatedButton(
+                child: Icon(Icons.arrow_back),
+                onPressed: () async {
+                  bool go = await webViewcontroller.canGoBack();
+                  if (go) {
+                    webViewcontroller?.goBack();
+                  } else {
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+              ElevatedButton(
+                child: Icon(Icons.arrow_forward),
+                onPressed: () {
+                  webViewcontroller?.goForward();
+                },
+              ),
+              ElevatedButton(
+                child: Icon(Icons.refresh),
+                onPressed: () {
+                  webViewcontroller?.reload();
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

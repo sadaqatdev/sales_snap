@@ -36,6 +36,8 @@ class Selectors {
     '[property="og:images"]',
     '[name="twitter:image"]',
     '[name="image"]',
+    '[id*="imgTagWrapperId"]',
+    '[class*="imgTagWrapper"]',
     '[itemprop*="image"]',
     '[class*="Product"] img',
     '[class*="ProductImagery"] img',

@@ -10,32 +10,30 @@ class MyItemPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(SavedController());
 
-    return SafeArea(
-      child: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 90,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24))),
-            flexibleSpace: Padding(
-              padding: const EdgeInsets.only(top: 16, left: 12, right: 12),
-              child: TabBar(
-                indicatorColor: Colors.white,
-                indicatorSize: TabBarIndicatorSize.tab,
-                tabs: [
-                  Tab(child: Text('Saved')),
-                  Tab(child: Text('Purchased')),
-                  Tab(child: Text('Savings'))
-                ],
-              ),
-            ), 
-          ),
-          body: TabBarView(
-            children: [SavedTab(), BuyedTab(), PriceSavingTab()],
-          ),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 90,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24))),
+          flexibleSpace: Padding(
+            padding: const EdgeInsets.only(top: 50, left: 12, right: 12),
+            child: TabBar(
+              indicatorColor: Colors.white,
+              indicatorSize: TabBarIndicatorSize.tab,
+              tabs: [
+                Tab(child: Text('Saved')),
+                Tab(child: Text('Purchased')),
+                Tab(child: Text('Savings'))
+              ],
+            ),
+          ), 
+        ),
+        body: TabBarView(
+          children: [SavedTab(), BuyedTab(), PriceSavingTab()],
         ),
       ),
     );

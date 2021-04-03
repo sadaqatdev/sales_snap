@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sales_snap/controllers/account_controller.dart';
 import 'package:sales_snap/models/m_user.dart';
 import 'package:sales_snap/utils/theme/app_theme.dart';
+import 'package:sales_snap/views/pages/account/login_page.dart';
 import 'package:sales_snap/views/widgets/appBar.dart';
 import 'package:sales_snap/views/widgets/custom_button.dart';
 import 'package:sales_snap/views/widgets/snakbar.dart';
  
-import 'login_signup_tabs.dart';
+ 
 
 class AccountPage extends StatelessWidget {
   final AccountCntroller controller = Get.put(AccountCntroller());
@@ -93,7 +95,7 @@ class AccountPage extends StatelessWidget {
                             width: 6,
                           ),
                           Expanded(
-                            child: Text('Notifications'),
+                            child: Text('Notifications',style: GoogleFonts.montserrat(fontSize: 14),),
                           ),
                           Switch(
                             onChanged: (bool value) {
@@ -105,18 +107,18 @@ class AccountPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12, left: 6),
-                      child: Text('Your Intrests'),
-                    ),
-                    Wrap(
-                        children: controller.user.intersts
-                            .map((e) => Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 8, top: 8),
-                                  child: Text('$e ,'),
-                                ))
-                            .toList()),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 12, left: 6),
+                    //   child: Text('Your Intrests'),
+                    // ),
+                    // Wrap(
+                    //     children: controller.user.intersts
+                    //         .map((e) => Padding(
+                    //               padding:
+                    //                   const EdgeInsets.only(left: 8, top: 8),
+                    //               child: Text('$e ,'),
+                    //             ))
+                    //         .toList()),
                     SizedBox(
                       height: 18,
                     ),
@@ -138,7 +140,7 @@ class AccountPage extends StatelessWidget {
                             storageINfo.remove('isLogin');
                             FirebaseAuth.instance.signOut();
 
-                            Get.offAll(() => LoginSignUp());
+                            Get.offAll(() => LoginPage());
                           },
                           color: AppTheme.customColorThree,
                           radius: 12),
@@ -195,11 +197,12 @@ class AccountPage extends StatelessWidget {
               child: TextFormField(
             obscureText: false,
             controller: txtController,
+            style: GoogleFonts.montserrat(fontSize: 14),
             decoration: InputDecoration(
               suffixIcon: suffixicon,
               prefixIcon: prefixIcon,
               hintText: hintText2,
-              hintStyle: TextStyle(color: Colors.black54),
+              hintStyle: GoogleFonts.montserrat(fontSize: 14),
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               border: InputBorder.none,

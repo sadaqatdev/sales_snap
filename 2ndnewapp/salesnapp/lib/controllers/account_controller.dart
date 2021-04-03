@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sales_snap/models/m_user.dart';
 import 'package:sales_snap/repositories/firestore_methods.dart';
-import 'package:universal_html/html.dart';
 import 'home_controller.dart';
 
 class AccountCntroller extends GetxController {
@@ -53,7 +51,7 @@ class AccountCntroller extends GetxController {
             MUser(dob: dob.text, email: email.text, name: nameControler.text,gender:  gender.text,createdDate:user.createdDate, intersts: user.intersts,location: user.location,token: user.token,))
         .then((value) {
       
-      showBar('Sucessfully Updated');
+      showBar('Successfully Updated');
     }).catchError((e) {
       showBar('Not Updated');
        

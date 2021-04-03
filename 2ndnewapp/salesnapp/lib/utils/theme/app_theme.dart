@@ -14,19 +14,19 @@ class AppTheme {
     scaffoldBackgroundColor: Color(0xffE5E5E5),
 
     textTheme: TextTheme(
-      headline1: GoogleFonts.rubik().copyWith(
+      headline1: GoogleFonts.montserrat().copyWith(
           fontSize: 28,
           color: Colors.black,
           fontWeight: FontWeight.bold,
           fontStyle: FontStyle.normal),
-      headline2: GoogleFonts.rubik().copyWith(
+      headline2: GoogleFonts.montserrat().copyWith(
           fontSize: 16,
           fontWeight: FontWeight.w700,
           color: Colors.white,
           fontStyle: FontStyle.normal),
-      bodyText2: GoogleFonts.alegreya()
+      bodyText2: GoogleFonts.montserrat()
           .copyWith(fontSize: 18, fontWeight: FontWeight.w500),
-      bodyText1: GoogleFonts.rubik().copyWith(
+      bodyText1: GoogleFonts.montserrat().copyWith(
         fontSize: 14,
         color: Colors.white,
         fontWeight: FontWeight.w500,
@@ -34,9 +34,9 @@ class AppTheme {
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       type: BottomNavigationBarType.fixed,
-      selectedLabelStyle: GoogleFonts.rubik()
+      selectedLabelStyle: GoogleFonts.montserrat()
           .copyWith(fontSize: 14, fontWeight: FontWeight.w500),
-      unselectedLabelStyle: GoogleFonts.alegreya().copyWith(
+      unselectedLabelStyle: GoogleFonts.montserrat().copyWith(
           fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black),
     ),
     // inputDecorationTheme: InputDecorationTheme(

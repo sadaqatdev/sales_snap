@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../bottom_navigation.dart';
 
 class SavePage extends StatefulWidget {
   @override
@@ -35,10 +34,10 @@ class _SavePageState extends State<SavePage> {
               color: Color(0xff24B4D6),
               shape:
                   RoundedRectangleBorder(borderRadius: BorderRadius.circular(120)),
-              child: Icon(Icons.arrow_right_alt_outlined)),
+              child: Icon(Icons.done,size:100,color: Colors.white,)),
       ),
       SizedBox(height: 25,),
-      Text('Saved Succesfuly',style: style,),
+      Text('Saved successfully',style: style,),
       SizedBox(height: 25,),
        Text('Your item is saved for later',),
       SizedBox(height: 25,)

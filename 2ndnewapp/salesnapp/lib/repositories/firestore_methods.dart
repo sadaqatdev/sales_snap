@@ -118,6 +118,13 @@ class FireStoreMethod {
     return tempList;
   }
 
+  updateNotificationSatus(docId)async{
+    _firestore
+        .collection("user_notification")
+        .doc(_currentUser.uid)
+        .collection(_currentUser.uid).doc(docId).update({'status':'view'},);
+  }
+
   Future<void> buyButtonClick() async {
     String location = strageTemp.read('location');
 
@@ -125,6 +132,15 @@ class FireStoreMethod {
         location: location, timestamp: Timestamp.now(), uid: _currentUser.uid);
 
     _firestore.collection('buyButtonClick').doc().set(buyButtonClick.toMap());
+  } 
+
+  Future<void> sucessfullBuy() async {
+    String location = strageTemp.read('location');
+
+    BuyButtonClick buyButtonClick = BuyButtonClick(
+        location: location, timestamp: Timestamp.now(), uid: _currentUser.uid);
+
+    _firestore.collection('Successfully').doc().set(buyButtonClick.toMap());
   }
 
   Stream<List<NotificationModel>> getNotification() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sales_snap/controllers/sign_up_controller.dart';
 import 'package:sales_snap/repositories/auth_repo.dart';
 import 'package:sales_snap/utils/login_info.dart';
@@ -79,104 +80,102 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     final lablesStyle = Theme.of(context).textTheme.headline2;
     final headingStyle = Theme.of(context).textTheme.headline2;
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 25),
-            width: Get.width,
-             
-            child: Form(
-              key: _formKey,
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    'Sign Up ',
-                    style: lablesStyle.copyWith(color: Color(0xff24B4D6)),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    'Create Account',
-                    style: headingStyle.copyWith(color: Colors.black),
-                  ),
-                  SizedBox(
-                    height: 100,
-                  ),
-                  customTextField(suffixicon, Icon(Icons.email), 'Email',
-                      emailContoller, emailValidate),
-                  customTextField(
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              show = !show;
-                            });
-                          },
-                          icon: show
-                              ? Icon(Icons.visibility)
-                              : Icon(Icons.visibility_off)),
-                      Icon(Icons.lock),
-                      'Password',
-                      passworController,
-                      passwordValid),
-                  customTextField(
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              show = !show;
-                            });
-                          },
-                          icon: show
-                              ? Icon(Icons.visibility)
-                              : Icon(Icons.visibility_off)),
-                      Icon(Icons.lock),
-                      'Confirm Password',
-                      confirmPassword,
-                      confiemPassword),
-                  SizedBox(
-                    height: 70,
-                  ),
-                  Obx(() {
-                    if (controller.isLoding.value == true) {
-                      return progressBar();
-                    }
-                    return  CustomButton(lable: 'Continue', onPress: (){
-                        if (_formKey.currentState.validate()) {
-                          controller.isLoding(true);
-                          _repo
-                              .handleSignUp(
-                                  email: emailContoller.text,
-                                  password: passworController.text)
-                              .then((user) {
-                            controller.isLoding(false);
-                            SignUpController.email = emailContoller.text;
-                            Get.to(() => SignUpName());
-                          }).catchError((error) {
-                            controller.isLoding(false);
-                            Get.showSnackbar(GetBar(
-                              message:
-                                  'The email address is already in use by another account',
-                              duration: Duration(seconds: 3),
-                            ));
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 70),
+          width: Get.width,
+           
+          child: Form(
+            key: _formKey,
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'Sign Up ',
+                  style: lablesStyle.copyWith(color: Color(0xff24B4D6)),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'Create Account',
+                  style: headingStyle.copyWith(color: Colors.black),
+                ),
+                SizedBox(
+                  height: 100,
+                ),
+                customTextField(suffixicon, Icon(Icons.email), 'Email',
+                    emailContoller, emailValidate),
+                customTextField(
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            show = !show;
                           });
-                        } else {
+                        },
+                        icon: show
+                            ? Icon(Icons.visibility)
+                            : Icon(Icons.visibility_off)),
+                    Icon(Icons.lock),
+                    'Password',
+                    passworController,
+                    passwordValid),
+                customTextField(
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            show = !show;
+                          });
+                        },
+                        icon: show
+                            ? Icon(Icons.visibility)
+                            : Icon(Icons.visibility_off)),
+                    Icon(Icons.lock),
+                    'Confirm Password',
+                    confirmPassword,
+                    confiemPassword),
+                SizedBox(
+                  height: 70,
+                ),
+                Obx(() {
+                  if (controller.isLoding.value == true) {
+                    return progressBar();
+                  }
+                  return  CustomButton(lable: 'Continue', onPress: (){
+                      if (_formKey.currentState.validate()) {
+                        controller.isLoding(true);
+                        _repo
+                            .handleSignUp(
+                                email: emailContoller.text,
+                                password: passworController.text)
+                            .then((user) {
+                          controller.isLoding(false);
+                          SignUpController.email = emailContoller.text;
+                          Get.to(() => SignUpName());
+                        }).catchError((error) {
                           controller.isLoding(false);
                           Get.showSnackbar(GetBar(
-                            message: 'Enter Valid Email Address',
+                            message:
+                                'The email address is already in use by another account',
                             duration: Duration(seconds: 3),
                           ));
-                        }
-                    }, color: Colors.black, radius: 22);
-                  }),
-                  SizedBox(height: 14),
-                ],
-              ),
+                        });
+                      } else {
+                        controller.isLoding(false);
+                        Get.showSnackbar(GetBar(
+                          message: 'Enter Valid Email Address',
+                          duration: Duration(seconds: 3),
+                        ));
+                      }
+                  }, color: Colors.black, radius: 22);
+                }),
+                SizedBox(height: 14),
+              ],
             ),
           ),
         ),
@@ -203,7 +202,7 @@ class _SignUpPageState extends State<SignUpPage> {
               suffixIcon: suffixicon,
               prefixIcon: prefixIcon,
               hintText: hintText2,
-              hintStyle: TextStyle(color: Colors.black54),
+              hintStyle: GoogleFonts.montserrat(fontSize: 14),
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               border: InputBorder.none,

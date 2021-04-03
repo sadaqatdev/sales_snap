@@ -35,7 +35,7 @@ class _IntrestPageState extends State<IntrestPage> {
     
     
     if(Platform.isIOS){
-      numb=195;
+      numb=225;
     }else{
       numb=200;
     }
@@ -60,13 +60,13 @@ class _IntrestPageState extends State<IntrestPage> {
       body: SingleChildScrollView(
         child: Container(
           width: Get.width,
-          padding: EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 16),
+          padding: EdgeInsets.only(left: 24, right: 24, top: 70, bottom: 16),
           child: Column(
             children: [
               CustomHeading(
                 progressWidth: Get.width - 50,
                 steps: 'Step 5/5',
-                lable: 'Time to customize your interest',
+                lable: 'Time to customize your interests',
               ),
               FutureBuilder<List<Intrest>>(
                 future: _method.getIntersts(),
@@ -178,6 +178,7 @@ class _IntrestPageState extends State<IntrestPage> {
           padding: EdgeInsets.all(8),
           child: Center(child: Image.network(data[index].avatar)),
         ),
+        SizedBox(height: 8,),
         Row(
           children: [
             SizedBox(
@@ -196,7 +197,8 @@ class _IntrestPageState extends State<IntrestPage> {
               },
               value: _isChecked[index],
             ),
-            Text(data[index].lable)
+
+            Expanded(child: Text(data[index].lable))
           ],
         )
       ],

@@ -71,7 +71,7 @@ String onesignalUserId;
     isLoding(true);
     _fireStoreMethod.updateUser(user).then((value) {
       isLoding(false);
-      showBar('Sucessfully Updated');
+      showBar('Successfully Updated');
     }).catchError((e) {
       showBar('Not Updated');
       isLoding(false);

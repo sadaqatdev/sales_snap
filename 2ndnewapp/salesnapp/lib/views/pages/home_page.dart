@@ -81,7 +81,7 @@ class HomePage extends StatelessWidget {
               height: 16,
             ),
             Text(
-              'More than 389 chances happen every min. Let’s check them out!',
+              'Copy and paste your link below',
               textAlign: TextAlign.center,
               style: GoogleFonts.rubik().copyWith(
                   fontSize: 14, fontWeight: FontWeight.w400, height: 1.5),
@@ -98,6 +98,8 @@ class HomePage extends StatelessWidget {
               child: Center(
                 child: TextFormField(
                   obscureText: false,
+                  enableInteractiveSelection: true,
+                  keyboardType: TextInputType.text,
                   controller: HomeController.to.textEditingController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -155,7 +157,7 @@ class HomePage extends StatelessWidget {
         ? Container(
             padding: EdgeInsets.only(top: 30),
             child: Center(
-              child: Text('You have not save any product.'),
+              child: Text('You have not saved any product.'),
             ))
         : Container(
             height: Get.height,
@@ -218,7 +220,7 @@ class HomePage extends StatelessWidget {
                                   height: 6,
                                 ),
                                 Text(
-                                  savedController.saveItemList[index].price,
+                                  'Price ${savedController.saveItemList[index].price}',
                                   style: bodyStyle.copyWith(color: Colors.red),
                                 ),
                                 SizedBox(

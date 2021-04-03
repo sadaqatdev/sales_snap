@@ -175,7 +175,7 @@ class SavedTileWidget extends StatelessWidget {
                                 .then((value) {
                               Get.showSnackbar(
                                 GetBar(
-                                  message: "Scucessfully Item Deleted",
+                                  message: "Item successfully deleted",
                                   duration: Duration(seconds: 2),
                                 ),
                               );

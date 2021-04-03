@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:sales_snap/controllers/price_saving_controller.dart';
 import 'package:sales_snap/models/buy_model.dart';
@@ -17,8 +18,13 @@ class CurrentMonth extends StatelessWidget {
     return Container(child: GetX<PriceSavingController>(builder: (controller) {
       return controller.currentlyMonth.value.isEmpty
           ? Center(
-              child: Text('No Buy History'),
-            )
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                        Text('Your savings history will appear here',style: GoogleFonts.montserrat(fontSize: 16),),
+                ],
+              ),
+            ) 
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

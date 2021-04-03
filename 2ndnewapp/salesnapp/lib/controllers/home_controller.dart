@@ -76,11 +76,11 @@ class HomeController extends GetxController {
     String notifcations = storage.read('notificationEnable');
 
     notifcationEnabled = notifcations?.contains('yes') ?? false ? true : false;
-    if (notifcationEnabled) {
-      initBackgroudTask();
+    // if (false) {
+    //   initBackgroudTask();
 
-      BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-    }
+      
+    // }
 
     initNotifications();
 
@@ -257,7 +257,7 @@ class HomeController extends GetxController {
 
     // Configure BackgroundFetch.
     try {
-      int status = await BackgroundFetch.configure(
+      await BackgroundFetch.configure(
           BackgroundFetchConfig(
             minimumFetchInterval: 15,
             forceAlarmManager: false,
@@ -268,7 +268,7 @@ class HomeController extends GetxController {
             requiresCharging: false,
             requiresStorageNotLow: false,
             requiresDeviceIdle: false,
-            requiredNetworkType: NetworkType.NONE,
+            requiredNetworkType: NetworkType.ANY,
           ),
           _onBackgroundFetch,
           _onBackgroundFetchTimeout);
@@ -284,7 +284,10 @@ class HomeController extends GetxController {
           forceAlarmManager: true,
           stopOnTerminate: false,
           enableHeadless: true));
-    } catch (e) {}
+          BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   void _onBackgroundFetch(String taskId) async {
@@ -352,7 +355,7 @@ Future<void> initNotifications() async {
   fltrNotification.initialize(
     initilizationsSettings,
   );
-  final bool result = await fltrNotification
+   await fltrNotification
       .resolvePlatformSpecificImplementation<
           IOSFlutterLocalNotificationsPlugin>()
       ?.requestPermissions(
