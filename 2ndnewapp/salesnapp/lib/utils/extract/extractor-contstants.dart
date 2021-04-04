@@ -29,6 +29,8 @@ class Selectors {
   ];
 
   static List<String> imagesQueries = [
+    'img[data-old-hires]',
+    'span[data-action="main-image-click"] img',
     '[id*="imgProduct"]',
     '[id*="imgProduct"] img',
     '[name="og:image"]',

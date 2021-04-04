@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:sales_snap/views/bottom_navigation.dart';
+import 'package:sales_snap/views/pages/account/login_page.dart';
 
 class SpalshScreen extends StatefulWidget {
   @override
@@ -14,8 +17,8 @@ class _SpalshScreenState extends State<SpalshScreen> {
     String login = storage.read('isLogin');
     login?.contains('yes') ?? false ? isLogin = true : isLogin = false;
     Future.delayed(Duration(seconds: 3)).then((value) {
-      // Widget page = isLogin ? BottomNavBar() : LoginPage();
-      // Get.offAll(page);
+      Widget page = isLogin ? BottomNavBar() : LoginPage();
+      Get.offAll(page);
     });
     super.initState();
   }

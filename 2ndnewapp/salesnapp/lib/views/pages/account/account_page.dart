@@ -135,7 +135,7 @@ class AccountPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 12, bottom: 12),
                       child: CustomButton(
-                          lable: 'LogOut',
+                          lable: 'Log out',
                           onPress: () {
                             storageINfo.remove('isLogin');
                             FirebaseAuth.instance.signOut();
