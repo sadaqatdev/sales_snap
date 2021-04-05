@@ -41,7 +41,9 @@ class AccountPage extends StatelessWidget {
               right: 24,
               top: 10,
             ),
-            child: GetBuilder<AccountCntroller>(builder: (controller) {
+            child: GetBuilder<AccountCntroller>(
+              init: AccountCntroller(),
+              builder: (controller) {
               if (controller.isLoding) {
                 return progressBar();
               }

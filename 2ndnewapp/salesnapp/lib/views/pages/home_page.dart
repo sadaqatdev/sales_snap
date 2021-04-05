@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
     return Form(
       key: formKey,
       child: Container(
-        height: 200,
+        height: 180,
         width: Get.width,
         margin: EdgeInsets.only(left: 6, right: 6),
         padding: EdgeInsets.only(top: 12, left: 20, right: 20),
@@ -89,37 +89,47 @@ class HomePage extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            Container(
-              height: 50,
-              width: Get.width,
-              margin: EdgeInsets.only(top: 12, left: 4, right: 4),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30), color: Colors.white),
-              child: Center(
-                child: TextFormField(
-                  obscureText: false,
-                  enableInteractiveSelection: true,
-                  keyboardType: TextInputType.text,
-                  controller: HomeController.to.textEditingController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Enter Value';
-                    } else {
-                      return null;
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Paste Link',
-                    hintStyle: TextStyle(color: Colors.black54),
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    border: InputBorder.none,
-                    suffixIcon: buildMaterialButton(context, forteenFont),
-                    fillColor: Color(0xffF6F7F8),
-                    filled: true,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Color(0xffF6F6FC)),
+                    child: TextFormField(
+                      obscureText: false,
+                     
+                      keyboardType: TextInputType.text,
+                      controller: HomeController.to.textEditingController,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Enter Product Url';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Paste Link',
+                        hintStyle: GoogleFonts.montserrat(fontSize: 14),
+                        suffixIcon: InkWell(
+                            onTap: () {
+                              HomeController.to.textEditingController.clear();
+                            },
+                            child: Icon(Icons.close)),
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+                        border: InputBorder.none,
+                        fillColor: Colors.transparent,
+                        filled: true,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                buildMaterialButton(context, forteenFont)
+              ],
             )
           ],
         ),
@@ -133,6 +143,7 @@ class HomePage extends StatelessWidget {
       child: MaterialButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         height: 35,
+        minWidth: 20,
         color: Colors.black,
         child: Text(
           'Go',
@@ -175,7 +186,8 @@ class HomePage extends StatelessWidget {
                       AppRoute.to(
                           context,
                           ProductViewPage(
-                          savedProductModel:savedController.saveItemList[index] ,
+                            savedProductModel:
+                                savedController.saveItemList[index],
                           ));
                     },
                     child: Card(
@@ -184,25 +196,24 @@ class HomePage extends StatelessWidget {
                         children: [
                           Expanded(
                               child: Align(
-                                alignment: Alignment.center,
-                                child: OctoImage(
-                                  alignment: Alignment.center,
-                                  
-                            filterQuality: FilterQuality.high,
-                         
-                            image: NetworkImage(
-                                
+                            alignment: Alignment.center,
+                            child: OctoImage(
+                              alignment: Alignment.center,
+                              filterQuality: FilterQuality.high,
+                              image: NetworkImage(
                                   savedController.saveItemList[index].imgUrl),
-                            placeholderBuilder: OctoPlaceholder.blurHash(
+                              placeholderBuilder: OctoPlaceholder.blurHash(
                                 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                            ),
-                            errorBuilder: (context, error, stackTrace) {
+                              ),
+                              errorBuilder: (context, error, stackTrace) {
                                 return Image.network(
-                                    'https://via.placeholder.com/350x150',fit: BoxFit.fill,);
-                            },
-                            fit: BoxFit.fill,
-                          ),
-                              )),
+                                  'https://via.placeholder.com/350x150',
+                                  fit: BoxFit.fill,
+                                );
+                              },
+                              fit: BoxFit.fill,
+                            ),
+                          )),
                           SizedBox(
                             height: 6,
                           ),
@@ -228,7 +239,14 @@ class HomePage extends StatelessWidget {
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [Text( df.format(savedController.saveItemList[index].timestamp.toDate()).substring(0,11))],)
+                                  children: [
+                                    Text(df
+                                        .format(savedController
+                                            .saveItemList[index].timestamp
+                                            .toDate())
+                                        .substring(0, 11))
+                                  ],
+                                )
                               ],
                             ),
                           ),
