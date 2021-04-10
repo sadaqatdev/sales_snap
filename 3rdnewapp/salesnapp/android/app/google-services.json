@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "781234395144",
+    "project_id": "salessnap-80f98",
+    "storage_bucket": "salessnap-80f98.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781234395144:android:265cbfa84effb6becd59bd",
+        "android_client_info": {
+          "package_name": "com.salesnapp.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "781234395144-382fq7ghkurrhl05l7a9l40a0pssb9q1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.salesnapp.app",
+            "certificate_hash": "539b8bb6f78c15475321861450f93b37ec0712b5"
+          }
+        },
+        {
+          "client_id": "781234395144-miu8hihv83k6cadrepfnafpprtvr9ju0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMamSIoCMQmASpnybY8rlzHqrRYqHaqV4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781234395144-miu8hihv83k6cadrepfnafpprtvr9ju0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "781234395144-f9dlrqf8q708abr4nb4veept987jddjm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.salesnap.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

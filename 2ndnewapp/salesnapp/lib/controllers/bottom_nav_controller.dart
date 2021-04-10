@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sales_snap/views/pages/account/account_page.dart';
@@ -8,7 +10,16 @@ import 'package:sales_snap/views/pages/notifications_page.dart';
 class BottomNavController extends GetxController {
   Widget currentPage = HomePage();
   int currentIndex = 0;
-
+  double padding;
+  @override
+    void onInit() {
+    if(Platform.isAndroid){
+      padding=16;
+    }else{
+      padding=35;
+    }
+      super.onInit();
+    }
   void updateCurrentPage(int index) {
     switch (index) {
       case 0:
